@@ -1,0 +1,89 @@
+# Nozzle exit to Isocenter distance
+NOZZLE_EXIT_DIST
+# SMX to Isocenter distance
+2000
+# SMY to Isocenter distance
+2560
+# ENERGY
+# mean energy
+# polynomial order
+1
+# polynomial parameters (highest to lowest)
+0.9716
+1.588
+# energy spread
+# polynomial order
+4
+# polynomial parameters (highest to lowest)
+-0.000000001073
+0.0000007138
+-0.0002354
+0.0347
+-0.4118
+# SPOT x y theta phi
+# x
+# polynomial order
+3
+# polynomial parameters
+-0.0000004054
+0.000267
+-0.05898
+7.942
+# Theta
+# polynomial order
+3
+# polynomial parameters
+-0.000000001312
+0.0000008056
+-0.0001721
+0.01888
+# y
+# polynomial order
+3
+# polynomial parameters
+-0.0000004054
+0.000267
+-0.05898
+7.942
+# Phi
+# polynomial order
+3
+# polynomial parameters
+-0.000000001312
+0.0000008056
+-0.0001721
+0.01888
+# SPOT emmittances
+# x-theta emmittance
+# polynomial order
+4
+# polynomial parameters
+0.0000000001043
+-0.000000101
+0.0000361
+-0.005771
+0.4205
+# y-phi emmittance
+# polynomial order
+4
+# polynomial parameters
+0.0000000001043
+-0.000000101
+0.0000361
+-0.005771
+0.4205
+# Beam monitor calibration
+# N/MU
+# polynomial order
+9
+# polynomial parameters FROM SKANDION https://github.com/OpenGATE/GateContrib/blob/master/dosimetry/dosimetry/protontherapy/data/Source-Properties.txt
+-0.0000000000005984490922947305
+0.0000000010784400314569827
+-0.0000007598937570035222
+0.00027937202589281356
+-0.059977540330568506
+7.991201233899195
+-692.4982726864837
+39470.879309031465
+-757267.7950206206
+38305849.80777806

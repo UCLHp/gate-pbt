@@ -1,0 +1,410 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 11 15:59:37 2019
+@author: SCOURT01
+
+Script to generate a Gate mac file plus a plan description and
+source descrition file *for each field*. 
+
+Currently no cropping and no rangeshifter implemented
+
+"""
+import os
+import pydicom
+import numpy as np
+from math import radians, degrees, sqrt, isclose
+
+import descriptionfiles as gfdf
+
+
+def rnd( num ):
+    return round( num, 3 )
+
+
+'''def rotate_vector_yaxis( vect, deg ):
+    """Rotate the vector by some degrees about the y-axis"""
+    # Rotation matrix Ry (rotate about (0,1,0) )
+    # NOTE: Using this matrix we need to rotate image in Gate by -deg
+    y_rot_matrix = np.array([ [np.cos(radians(deg)), 0, np.sin(radians(deg))], 
+                              [0, 1.0, 0], 
+                              [-np.sin(radians(deg)), 0, np.cos(radians(deg))]
+                           ])
+    return np.dot( y_rot_matrix, vect ) '''
+
+
+def rotation_matrix_x( deg ):
+    """Return X rotation matrix for some angle in degrees"""
+    x_rot_matrix = np.array([ [1.0, 0, 0], 
+                              [0, np.cos(radians(deg)), -np.sin(radians(deg))], 
+                              [0, np.sin(radians(deg)), np.cos(radians(deg))]
+                           ])
+    return x_rot_matrix 
+
+def rotation_matrix_y( deg ):
+    """Return Y rotation matrix for inout degrees  
+        COUCH KICKS ARE -ANGLE ABOUT THIS AXIS
+    """
+    y_rot_matrix = np.array([ [np.cos(radians(deg)), 0, np.sin(radians(deg))], 
+                              [0, 1.0, 0], 
+                              [-np.sin(radians(deg)), 0, np.cos(radians(deg))]
+                           ])
+    return y_rot_matrix 
+
+def rotation_matrix_z( deg ):
+    """Return Z rotation matrix for input degrees"""
+    z_rot_matrix = np.array([ [np.cos(radians(deg)), -np.sin(radians(deg)), 0], 
+                              [np.sin(radians(deg)), np.cos(radians(deg)), 0], 
+                              [0, 0, 1]
+                           ])
+    return z_rot_matrix
+
+
+def get_rotation_matrix(ct_files, field):
+    """Return combined matrix for patient setup and couchkick rotations"""
+ 
+    img_props = get_img_properties( ct_files )
+    
+    # Setup as HFS, HFP, FFS etc...
+    patient_position = img_props["PatientPosition"]
+    
+    # Find rotation matrix for patient set-up
+    rot_matrix = None    
+    if patient_position=="HFS":
+        rot_matrix = rotation_matrix_y(0.0001)
+        #PUT THIS TO 0.00001?
+        #WHAT SHOULD I DO? Don't want a symmetric matrix.
+    elif patient_position=="HFP":
+        rot_matrix = rotation_matrix_z(180.0001)
+    elif patient_position=="FFS":
+        rot_matrix = rotation_matrix_y(180.0001)
+    elif patient_position=="FFP":
+        rot_matrix = np.dot(rotation_matrix_z(180.001),rotation_matrix_y(180.001))
+    else:
+        print("UNSUPPORTED PATIENT SETUP: {} in get_rotation_matrix".format(patient_position))
+        exit(0)
+                
+    # Add couch kick to this
+    couchkick = field.IonControlPointSequence[0].PatientSupportAngle 
+    couch_rot = rotation_matrix_y( -couchkick )        
+
+    total_rotation = np.dot( couch_rot, rot_matrix )  ## ORDER MATTERS HERE!
+        
+    return total_rotation
+
+
+
+
+# THIS WILL NOT WORK IF ROTATION MATRIX IS SYMMETRIC!!
+def get_rotation_axis( rotation_matrix ):
+    """Single axis for composite rotation"""
+    # See https://en.wikipedia.org/wiki/Rotation_matrix
+    paral_v = np.array([ rotation_matrix[2][1]-rotation_matrix[1][2],
+                         rotation_matrix[0][2]-rotation_matrix[2][0],
+                         rotation_matrix[1][0]-rotation_matrix[0][1]
+                      ])
+    norm = sqrt( np.dot( paral_v, paral_v ) )
+    print("  rotation axis={}".format( paral_v/norm) )
+    return paral_v / norm
+
+    
+
+def get_rotation_angle( rotation_matrix ):
+    """Angle of composite rotations"""
+    #https://en.wikipedia.org/wiki/Rotation_matrix
+    trace = rotation_matrix[0][0]+rotation_matrix[1][1]+rotation_matrix[2][2]    
+    angle = degrees( np.arccos( (trace-1.0)/2.0  ) )
+    print("  (trace-1)/2={}".format( (trace-1.0)/2.0) )
+    print("  rotation angle={}".format(angle) )
+    return angle 
+
+
+
+'''def get_rotation_angle_OLDZZZZZ( rotation_matrix ):
+    """Angle of composite rotations"""
+    #https://en.wikipedia.org/wiki/Rotation_matrix
+    paral_v = np.array([ rotation_matrix[2][1]-rotation_matrix[1][2],
+                         rotation_matrix[0][2]-rotation_matrix[2][0],
+                         rotation_matrix[1][0]-rotation_matrix[0][1]
+                      ])
+    norm = sqrt( np.dot( paral_v, paral_v ) )
+    
+    angle = degrees( np.arcsin( norm/2.0 ) )
+    return angle'''  ## THIS METHOD FAILS IF ROTATION MATRIX IS SYMMETRIC
+
+
+
+def get_translation_vector( ct_files, field, rotation_matrix ):
+    """Return the translation vector required to shift plan isocentre
+    to origin of World volume (to be applied AFTER couch rotation)
+    """
+    img_props = get_img_properties( ct_files )
+    
+    imgPosPat = np.array( img_props["ImagePositionPatient"] ) #TODO: RENAME TO SOMETHING MORE APPROPRIATE
+    voxelDims_mm = np.array( [img_props["PixelSpacing_x"],img_props["PixelSpacing_y"],img_props["SliceThickness"]  ] )
+    imgDims_pixels = np.array( [img_props["Columns"],img_props["Rows"],img_props["Slices"]]  ) #ROWS AND COLUMNS WRONG WAY ROUND?
+    
+    print("  imgPosPat={}".format(imgPosPat))
+    print("  voxelDims_mm={}".format(voxelDims_mm))
+    print("  imgDims_pixels={}".format(imgDims_pixels))
+
+    #Centre of 3D CT image in patient coords
+    imgCenter = imgPosPat - 0.5*voxelDims_mm + 0.5*imgDims_pixels*voxelDims_mm
+    
+    print("  imgCenter={}".format(imgCenter))
+
+    dcmIso = np.array( field.IonControlPointSequence[0].IsocenterPosition )
+    
+    print("  dcmIso={}".format(dcmIso))
+        
+    #Translation required to position isocentre at World origin     
+    trans_without_rot = imgCenter - dcmIso 
+    
+    print("  trans_without_rot={}".format(trans_without_rot))
+    
+    print("  rotation_matrix={}".format(rotation_matrix))
+    
+    #Rotated translation to account for PatientSupportAngle
+    trans_after_rot = np.dot( rotation_matrix, trans_without_rot )
+    
+    print("  trans_after_rot={}".format(trans_after_rot))
+    
+    return trans_after_rot
+
+
+
+def get_img_properties( ct_files ):
+    """Method to retrieve Rows, Columns, pixelSpacing from DICOM image"""
+    
+    properties = {}
+    
+    #ct_files = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and "CT" in f  ]
+    ## NOT GOOD; CHECK FILE TAGS
+    ## CHECK ALL IMAGES BELONG TO SAME SEQUENCE
+    
+    #ds = pydicom.dcmread( os.path.join(input_dir,ct_files[0]) )
+    ds = pydicom.dcmread( ct_files[0] )
+
+    
+    properties["Rows"] = ds.Rows
+    properties["Columns"] = ds.Columns
+    properties["Slices"] = len(ct_files) ## NO - TODO THIS PROPERLY!!!
+    properties["PixelSpacing_x"] = ds.PixelSpacing[0]
+    properties["PixelSpacing_y"] = ds.PixelSpacing[1]
+    properties["SliceThickness"] = ds.SliceThickness
+        
+    properties["ImageOrientationPatient"] = ds.ImageOrientationPatient
+    
+    img_limits = find_image_limits( ct_files, ds.ImageOrientationPatient )
+    properties["ImagePositionPatient"] = [ img_limits["minX"], img_limits["minY"], img_limits["minZ"]]  #TODO: THIS IS NOT IMAGEPATIENTPOSITION. RENAME
+    
+    # Patient setup ("HFS", "FFS" etc)
+    properties["PatientPosition"] = ds.PatientPosition
+    
+    return properties
+    
+
+
+
+def find_image_limits( ct_files, imageorientationpatient ):  ## TO DO ALL WRONG
+    """X,Y,Z limits of image in patient coords
+    """
+    #allfiles = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and "CT" in f  ]    
+    
+    iop = imageorientationpatient
+    
+    xmin, xmax = 99999.0, -99999.0
+    ymin, ymax = 99999.0, -99999.0
+    zmin, zmax = 99999.0, -99999.0  
+       
+    for i,f in enumerate(ct_files):
+        
+        ds = pydicom.dcmread( f )
+        
+        z = ds.SliceLocation
+        if z<zmin:
+            zmin = z
+        if z>zmax:
+            zmax = z
+            
+        if i==0:
+            #Only get x and y 1 time
+            rows = ds.Rows
+            cols = ds.Columns
+            
+            if ds.ImagePositionPatient[0]<0:  ## TODO could use ImageOrientation here instead? TODO: IS THIS SAFE?
+                 xmin = ds.ImagePositionPatient[0]
+                 xmax = xmin + cols * ds.PixelSpacing[0]
+            else:
+                 xmax = ds.ImagePositionPatient[0]         
+                 xmin = xmax - (cols-1) * ds.PixelSpacing[0]         # COLS-1 since we want centre of final voxel!       
+          
+            if ds.ImagePositionPatient[1]<0:
+                ymin = ds.ImagePositionPatient[1]
+                ymax = ymin + rows * ds.PixelSpacing[1]
+            else:
+                ymax = ds.ImagePositionPatient[1]
+                ymin = ymax - (rows-1) * ds.PixelSpacing[1]   # COLS-1 since we want centre of final voxel! 
+            
+            '''xmin = ds.ImagePositionPatient[0] ##* imageorientationpatient[0]   # ImagePositionPatient changes with patient setup
+            ymin = ds.ImagePositionPatient[1] ##* imageorientationpatient[4]   # THIS IS A HACK FIX. THINK ABOUT THIS.
+            xmax = xmin + cols * ds.PixelSpacing[0]
+            ymax = ymin + rows * ds.PixelSpacing[1]'''
+         
+    dct = {"minX":xmin, "maxX":xmax, "minY":ymin, "maxY":ymax, "minZ":zmin, "maxZ":zmax }
+    return dct
+
+
+
+def get_dose_voxel_dims( dcm_dose ):
+    """Returns x,y,z dims of dose grid from single DICOM dose file"""
+    ds = pydicom.dcmread( dcm_dose )
+    if not isclose(ds.PixelSpacing[0],ds.PixelSpacing[1]):
+        print("Dose voxels not symmetric")   
+    thickness = ds.GridFrameOffsetVector[1]-ds.GridFrameOffsetVector[0] # TODO: is this best way?
+    return [ ds.PixelSpacing[0], ds.PixelSpacing[1], thickness]
+
+
+
+
+def write_mac_file(template, output, planDescription, sourceDescription, 
+                   setRotationAngle=None, setRotationAxis=None,
+                   setTranslation=None,
+                   setVoxelSize=None, setImage=None
+                   ):
+    """Write the main .mac file to be run in Gate
+    Takes a template file and modifies appropriate lines"""
+    #TODO: add setTotalNumberOfPrimaries
+    #TODO: only edit fields provided, not "None"
+    with open(output,'w') as out:
+        for line in open( template, "r" ):
+            if "setRotationAngle" in line:
+                out.write( "/gate/patient/placement/setRotationAngle    {} deg\n".format( setRotationAngle  ) )
+            elif "setRotationAxis" in line:
+                out.write( "/gate/patient/placement/setRotationAxis    {} {} {}\n".format(
+                    setRotationAxis[0],setRotationAxis[1],setRotationAxis[2]) 
+                    )
+            elif "setTranslation" in line:
+                out.write( "/gate/patient/placement/setTranslation    {} {} {} mm\n".format(
+                        setTranslation[0],setTranslation[1],setTranslation[2] )
+                         )
+            elif "setPlan" in line:
+                out.write( "/gate/source/PBS/setPlan    data/{}\n".format(planDescription) )
+            elif "setSourceDescriptionFile" in line:
+                out.write( "/gate/source/PBS/setSourceDescriptionFile    data/{}\n".format(sourceDescription) )
+            elif "dose3d/setVoxelSize" in line:
+                out.write( "/gate/actor/dose3d/setVoxelSize    {} {} {} mm\n".format(
+                    setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
+                    )
+            elif "let3d/setVoxelSize" in line:
+                out.write( "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
+                    setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
+                    )                
+            elif "setImage" in line:
+                out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )                
+            else:
+                out.write(line)
+
+
+
+
+
+def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_mhd, sim_dir):
+    """Method to generate all description and mac files"""
+    
+    # TODO: assumes all dose files are same plan; write check
+    #dose_vox_dims = get_dose_voxel_dims( os.path.join(dcm_data_dir,dose_files[0])  ) 
+    dose_vox_dims = get_dose_voxel_dims(dose_files[0]) 
+
+    #dcmPlan = pydicom.dcmread(  os.path.join(dcm_data_dir,plan_file)  )
+    dcmPlan = pydicom.dcmread( plan_file )
+
+        
+    for field in dcmPlan.IonBeamSequence:       
+        beamname = str(field.BeamName).replace(" ","")
+        
+        ## Make field-specific PlanDescriptionFile
+        fld_dsc = gfdf.get_field_description(field)
+        plan_dsc = gfdf.get_plan_description(dcmPlan, field)   
+        pdf_filename = "PlanDescFile_"+beamname+".txt"
+        gfdf.make_field_description( os.path.join(sim_dir,"data",pdf_filename),
+                                    plan_dsc, fld_dsc 
+                                    )
+        
+        ## Make field-specific SourceDescriptionFile
+        snout_pos = field.IonControlPointSequence[0].SnoutPosition
+        sdf_filename = "SourceDescFile_"+beamname+".txt"
+        gfdf.make_source_description(TEMPLATE_SOURCE, 
+                                     os.path.join(sim_dir,"data",sdf_filename), snout_pos
+                                     )
+        
+        ## Make field-specific .mac Gate file for simulation    
+        rotation_matrix = get_rotation_matrix(ct_files, field)
+        axis = get_rotation_axis(rotation_matrix)
+        angle = get_rotation_angle(rotation_matrix)
+        translation_vector = get_translation_vector( ct_files, field, rotation_matrix )
+        #print( translation_vector )
+        mac_filename = os.path.join(sim_dir,"mac",beamname+".mac")
+        write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename, sdf_filename,
+                       # setRotationAngle=-field.IonControlPointSequence[0].PatientSupportAngle,
+                       setRotationAngle=angle,
+                       setRotationAxis=axis,
+                       setTranslation=translation_vector,
+                       setVoxelSize=dose_vox_dims,
+                       setImage=ct_mhd
+                      )
+ 
+    
+
+
+
+
+
+
+
+'''
+def main():
+   
+    TEMPLATE_SOURCE = "TEMPLATE_SourceDescFile.txt"
+    TEMPLATE_MAC = "TEMPLATE_simulateField.txt"
+    
+    dcm_data_dir = "zzzPaedCranio02_data"
+    
+    #Check all images belong to same image and that only one plan and one structure set are present
+    ct_files, plan_file, dose_files = search_dcm_dir( dcm_data_dir )
+    
+    # TODO: assumes all dose files are same plan; write check
+    dose_vox_dims = get_dose_voxel_dims( os.path.join(dcm_data_dir,dose_files[0])  ) 
+    
+    dcmPlan = pydicom.dcmread(  os.path.join(dcm_data_dir,plan_file)  )
+        
+    for field in dcmPlan.IonBeamSequence:       
+        beamname = str(field.BeamName).replace(" ","")
+        
+        #Make field-specific PlanDescriptionFile
+        fld_dsc = gfdf.get_field_description(field)
+        plan_dsc = gfdf.get_plan_description(dcmPlan, field)   
+        pdf_filename = "PlanDescFile_"+beamname+".txt"
+        gfdf.make_field_description( pdf_filename, plan_dsc, fld_dsc  )
+        
+        #Make field-specific SourceDescriptionFile
+        snout_pos = field.IonControlPointSequence[0].SnoutPosition
+        sdf_filename = "SourceDescFile_"+beamname+".txt"
+        gfdf.make_source_description(TEMPLATE_SOURCE, sdf_filename, snout_pos)
+        
+        #Make field-specific .mac Gate file for simulation    
+        translation_vector = get_translation_vector( ct_files, field )
+        #print( translation_vector )
+        mac_filename = beamname+".mac"
+        write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename, sdf_filename,
+                       setRotationAngle=-field.IonControlPointSequence[0].PatientSupportAngle,
+                       setTranslation=translation_vector,
+                       setVoxelSize=dose_vox_dims
+                      )
+    
+    #if not os.path.isdir('/simulationFiles'):
+    #    os.mkdir('/simulationFiles')
+
+
+if __name__=="__main__":
+    main()
+'''  
