@@ -1,29 +1,39 @@
 # gate-pbt
 ![Current Version](https://img.shields.io/badge/version-0.1.0-green.svg)
 
-Simulating proton therapy treatments using GATE/GateTools/Geant4
+Simulating proton therapy treatments using Gate/GateTools/Geant4
+
+## Prerequisites
+Python dependencies are listed in requirements.txt. To run the simulations you'll need
+Gate and Geant4 installed. All of my work has been performed using the virtual machine
+version 8.2, available [here](http://www.opengatecollaboration.org/node/91). 
+This includes the Geant4 10.03.p03 install along with various other useful software.
 
 
-## File preparation
+## Usage
+
+### File preparation
 First export the relevant dicom files from the TPS to new folder.
 You will need the plan file, the structure set, the plan dose and all CT images.
 
 In the simulation directory, ```python run.py``` will prompt for the directory containing
 your exported dicom files and generate a new directory containing all files required for 
 a Gate simulation. Individual mac files will be generated separately for each field in
-in the plan.
+the plan.
 
-If running on a cluster you can split a simulation: ```jobsplitter.split_by_primaries( field.mac, N )``` 
+If running on a cluster you can split a simulation: ```jobsplitter.split_by_primaries(field.mac, N)``` 
 will split a mac file into N separate files based purely on the number of primaries. E.g. providing
 a simulation field.mac that has 100E6 primaries and specifying N=10, 10 mac files will be generated
 each with 10E6 primaries. It will also rename the output appropriately.
 
 
-## Simulation
+### Simulation
 To run the simulations you will need Gate installed: ```Gate filename.mac```.
+See the Gate documentation [here](http://www.opengatecollaboration.org/UsersGuide) for more info
+and examples. 
 
 
-## Analysis
+### Analysis
 The simulations will generate, for each mac file, mhd and raw files for dose, LET, and uncertainty.
 
 ```python mergeresults.py``` prompts for the directory with these files and combines them. 

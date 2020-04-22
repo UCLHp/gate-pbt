@@ -3,6 +3,11 @@
 #   This software is distributed under the terms
 #   of the GNU Lesser General  Public Licence (LGPL)
 #   See LICENSE.md for further details
+#
+#
+# Both boundingbox.py and roiutils.py have been taken and modified from 
+# GateTools here: https://github.com/OpenGATE/GateTools
+#
 # -----------------------------------------------------------------------------
 
 """

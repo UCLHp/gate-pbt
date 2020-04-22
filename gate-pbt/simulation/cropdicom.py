@@ -2,6 +2,9 @@
 """
 Created on Tue Oct 22 09:30:48 2019
 
+This was experimental and I don't recommend using it.
+See the GateTools library now available
+
 @author: scourt01
 """
 

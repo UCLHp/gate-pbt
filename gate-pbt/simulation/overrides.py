@@ -56,7 +56,7 @@ def set_air_external( img_file, structure_file, output_img_file ):
     # MODIFYING GATETOOLS; get_mask() disn't work for HFP setup
     aroi = roiutils.region_of_interest(ds,contour)
     mask = aroi.get_mask(img, corrected=False)
-    itk.imwrite(mask, "mask.mhd")
+    #itk.imwrite(mask, "mask.mhd")
     
     '''
     aroi = rt.region_of_interest( ds, contour)

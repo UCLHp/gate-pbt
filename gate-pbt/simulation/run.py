@@ -10,6 +10,8 @@ generate all files required for gate simulation.
 import sys
 import os
 import shutil
+from pathlib import Path
+
 
 import pydicom
 import easygui
@@ -21,7 +23,7 @@ import generatefiles
 
 
 
-def make_gate_dirs(dir_name):
+def make_gate_dirs(dir_name, path_to_templates):
     """Make dir structure for gate files and copy fixed files"""
     # Make directory tree
     if not os.path.exists(dir_name):
@@ -32,12 +34,12 @@ def make_gate_dirs(dir_name):
     # Copy over data files
     fs = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt","UCLH2019MaterialsTable_v1.txt"]
     for f in fs:
-        source = os.path.join("templates",f)  
+        source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"data",f)
         shutil.copyfile(source,destination)
     ffs = ["verbose.mac","visu.mac"]
     for f in ffs:
-        source = os.path.join("templates",f)  
+        source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"mac",f)  
         shutil.copyfile(source,destination)
 
@@ -47,6 +49,7 @@ def make_gate_dirs(dir_name):
 def list_all_files(dirName):
     """For the given path, get the List of all files in the directory tree"""
     # Create a list of file and sub-dirs in given dir 
+    print(dirName)
     listOfFile = os.listdir(dirName)
     allFiles = list()
     # Iterate over all the entries
@@ -122,6 +125,12 @@ def search_dcm_dir( input_dir ):
 
 def main():
     
+    
+    base_path = Path(__file__).parent
+    path_to_templates = (base_path / "../../data/templates").resolve()
+    path_to_simfiles = (base_path / "../../data/simulationfiles").resolve()
+
+        
     # Select directory containing the DICOM files
     msg = "Select directory containing DICOM files"
     msg += "\nCT files must be contained in a subdirectory called \"ct\""
@@ -134,21 +143,23 @@ def main():
     
     
     CT_DIR = os.path.join(DICOM_DIR,"ct")
-    TEMPLATE_MAC = os.path.join("templates","TEMPLATE_simulateField.txt")
-    TEMPLATE_SOURCE = os.path.join("templates","TEMPLATE_SourceDescFile.txt")
-
+    #TEMPLATE_MAC = os.path.join("templates","TEMPLATE_simulateField.txt")
+    #TEMPLATE_SOURCE = os.path.join("templates","TEMPLATE_SourceDescFile.txt")
+    TEMPLATE_MAC = os.path.join(path_to_templates,"TEMPLATE_simulateField.txt")
+    TEMPLATE_SOURCE = os.path.join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
     #Check all images belong to same image and that only one plan and one structure set are present
     ct_files,plan_file,dose_files,struct_file = search_dcm_dir(DICOM_DIR)    
     
     # Make Gate directory structure and copy fixed files
     print("Making directories")
-    sim_dir = pydicom.dcmread(plan_file).RTPlanLabel 
-    make_gate_dirs(sim_dir)   
+    plan_name = pydicom.dcmread(plan_file).RTPlanLabel
+    sim_dir = os.path.join(path_to_simfiles,plan_name)
+    make_gate_dirs(sim_dir, path_to_templates)   
  
     
-    img_name = "ct_air.mhd"         #TODO: SELECT SENSIBLE NAME
-    temp_ct = "ct_orig.mhd"
+    img_name = os.path.join(sim_dir,"data","ct_air.mhd")        #TODO: SELECT SENSIBLE NAME
+    temp_ct = os.path.join(sim_dir,"data","ct_orig.mhd")
     
 
     # Convert dicom series to mhd + raw
@@ -166,7 +177,7 @@ def main():
     
     # Set all external HUs to air
     #print("Overriding all external structures to air")
-    #overrides.set_air_external( temp_ct, struct_file, os.path.join(sim_dir,"data",img_name) )
+    overrides.set_air_external( temp_ct, struct_file, os.path.join(sim_dir,"data",img_name) )
     
     # Check for density overrides and apply
     # TODO ??
