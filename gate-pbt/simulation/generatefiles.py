@@ -127,18 +127,20 @@ def get_translation_vector( ct_files, field, rotation_matrix ):
     """Return the translation vector required to shift plan isocentre
     to origin of World volume (to be applied AFTER couch rotation)
     """
+    
     img_props = get_img_properties( ct_files )
     
-    imgPosPat = np.array( img_props["ImagePositionPatient"] ) #TODO: RENAME TO SOMETHING MORE APPROPRIATE
+    minCornerVox = np.array( img_props["MinCornerVoxelCentre"] ) 
     voxelDims_mm = np.array( [img_props["PixelSpacing_x"],img_props["PixelSpacing_y"],img_props["SliceThickness"]  ] )
-    imgDims_pixels = np.array( [img_props["Columns"],img_props["Rows"],img_props["Slices"]]  ) #ROWS AND COLUMNS WRONG WAY ROUND?
+    imgDims_pixels = np.array( [img_props["Columns"],img_props["Rows"],img_props["Slices"]]  ) 
+    # rows and columns correct way round?
     
-    print("  imgPosPat={}".format(imgPosPat))
+    print("  minCornerVox={}".format(minCornerVox))
     print("  voxelDims_mm={}".format(voxelDims_mm))
     print("  imgDims_pixels={}".format(imgDims_pixels))
 
     #Centre of 3D CT image in patient coords
-    imgCenter = imgPosPat - 0.5*voxelDims_mm + 0.5*imgDims_pixels*voxelDims_mm
+    imgCenter = minCornerVox - 0.5*voxelDims_mm + 0.5*imgDims_pixels*voxelDims_mm
     
     print("  imgCenter={}".format(imgCenter))
 
@@ -184,8 +186,8 @@ def get_img_properties( ct_files ):
         
     properties["ImageOrientationPatient"] = ds.ImageOrientationPatient
     
-    img_limits = find_image_limits( ct_files, ds.ImageOrientationPatient )
-    properties["ImagePositionPatient"] = [ img_limits["minX"], img_limits["minY"], img_limits["minZ"]]  #TODO: THIS IS NOT IMAGEPATIENTPOSITION. RENAME
+    img_limits = corner_voxel_centres( ct_files, ds.ImageOrientationPatient )
+    properties["MinCornerVoxelCentre"] = [ img_limits["minX"], img_limits["minY"], img_limits["minZ"]]
     
     # Patient setup ("HFS", "FFS" etc)
     properties["PatientPosition"] = ds.PatientPosition
@@ -194,11 +196,10 @@ def get_img_properties( ct_files ):
     
 
 
-
-def find_image_limits( ct_files, imageorientationpatient ):  ## TO DO ALL WRONG
-    """X,Y,Z limits of image in patient coords
+ ## TODO: appraoch may need rethink
+def corner_voxel_centres( ct_files, imageorientationpatient ): 
+    """X,Y,Z limits: centre of corner voxels
     """
-    #allfiles = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and "CT" in f  ]    
     
     iop = imageorientationpatient
     
@@ -221,24 +222,23 @@ def find_image_limits( ct_files, imageorientationpatient ):  ## TO DO ALL WRONG
             rows = ds.Rows
             cols = ds.Columns
             
-            if ds.ImagePositionPatient[0]<0:  ## TODO could use ImageOrientation here instead? TODO: IS THIS SAFE?
+            ## TODO: is this approach valid/robust?
+            ## TODO could use ImageOrientation here?
+            if ds.ImagePositionPatient[0]<0:  
                  xmin = ds.ImagePositionPatient[0]
                  xmax = xmin + cols * ds.PixelSpacing[0]
             else:
                  xmax = ds.ImagePositionPatient[0]         
-                 xmin = xmax - (cols-1) * ds.PixelSpacing[0]         # COLS-1 since we want centre of final voxel!       
+                 xmin = xmax - (cols-1) * ds.PixelSpacing[0]
+                 # cols-1 since we want centre of final voxel       
           
             if ds.ImagePositionPatient[1]<0:
                 ymin = ds.ImagePositionPatient[1]
                 ymax = ymin + rows * ds.PixelSpacing[1]
             else:
                 ymax = ds.ImagePositionPatient[1]
-                ymin = ymax - (rows-1) * ds.PixelSpacing[1]   # COLS-1 since we want centre of final voxel! 
-            
-            '''xmin = ds.ImagePositionPatient[0] ##* imageorientationpatient[0]   # ImagePositionPatient changes with patient setup
-            ymin = ds.ImagePositionPatient[1] ##* imageorientationpatient[4]   # THIS IS A HACK FIX. THINK ABOUT THIS.
-            xmax = xmin + cols * ds.PixelSpacing[0]
-            ymax = ymin + rows * ds.PixelSpacing[1]'''
+                ymin = ymax - (rows-1) * ds.PixelSpacing[1]   
+                # rows-1 since we want centre of final voxel
          
     dct = {"minX":xmin, "maxX":xmax, "minY":ymin, "maxY":ymax, "minZ":zmin, "maxZ":zmax }
     return dct
