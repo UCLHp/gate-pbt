@@ -23,7 +23,7 @@ def dcm2mhd( dirName, output ):
     Code taken from: https://itk.org/ITKExamples/src/IO/GDCM/ReadDICOMSeriesAndWrite3DImage/Documentation.html
     """
 
-    PixelType = itk.ctype('signed short')  ## need floats for extended CT range?
+    PixelType = itk.ctype('signed short')  ## will we need floats for extended CT range?
     Dimension = 3
     ImageType = itk.Image[PixelType, Dimension]
     
@@ -57,12 +57,9 @@ def dcm2mhd( dirName, output ):
     
         writer = itk.ImageFileWriter[ImageType].New()
     
-        #outFileName = os.path.join(dirName, 'out_2' + '.mhd')
-        #outFileName = os.path.join(output + '.mhd')
         outFileName = os.path.join(output)
     
         writer.SetFileName(outFileName)
-        #writer.UseCompressionOn() # Will make .zraw
         writer.SetInput(reader.GetOutput())
         print('Writing: ' + outFileName)
         writer.Update()
@@ -79,8 +76,7 @@ def dose_dcm2mhd_norm(ds):
     Method to convert a dcm dose file into mhd+raw image 
     Dose is normalized to max
     """            
-    # Pixel values as numpy array 
-    # ESSENTIAL: must cast to numpy.float32 for ITK to write mhd with ElementType MET_FLOAT
+    # Must cast to numpy.float32 for ITK to write mhd with ElementType MET_FLOAT
     px_data = ds.pixel_array.astype(np.float32)   
     
     print( "\n***Generating mhd from dose dicom ***")
@@ -178,21 +174,23 @@ def dose_mhd2dcm(mhdFile, dcmFile, prescription=None):
     #Is GridFrameOffsetVector always in "relative interpretations"?
     dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
     
-    MAX_UINT32 = 2147483647
-    #scale_to_int = (MAX_UINT32/mhdpix.max())*0.8
+    # No - we want to scale all by same amount so that in Eclipse we can scale
+    #  the dose and LET-weighted doses by the same factor.
+    ###MAX_UINT32 = 2147483647
+    ###scale_to_int = (MAX_UINT32/mhdpix.max())*0.8 
+    #
+    ###dcmvals = dcm.pixel_array  
+    ###PRESCRIPTION_GY = prescription
+    ###scale_to_presc = PRESCRIPTION_GY*1.0/dcmvals.max()
+     
     scale_to_int = 1E8
     #scale_to_int = 1.0E4 ## NEED THIS IS YOU'RE DOING STRAIGHT LET (keV/um)
     mhd_scaled = mhdpix*scale_to_int
-    mhd_scaled = mhd_scaled.astype(int)
-        
+    mhd_scaled = mhd_scaled.astype(int)       
     dcm.PixelData = mhd_scaled.tobytes()
     
-    dcmvals = dcm.pixel_array
-    PRESCRIPTION_GY = prescription
-    #scale_to_presc = PRESCRIPTION_GY*1.0/dcmvals.max()
     scale_to_presc = 1.0E-6
-    #scale_to_presc = 1.0E-4 ## NEED THIS IS YOU'RE DOING STRAIGHT LET (keV/um)
-        
+    #scale_to_presc = 1.0E-4 ## NEED THIS IS YOU'RE DOING STRAIGHT LET (keV/um)    
     dcm.DoseGridScaling = scale_to_presc
     
     #doseunits = dcm.DoseUnits
@@ -207,21 +205,6 @@ def dose_mhd2dcm(mhdFile, dcmFile, prescription=None):
 
 
 
-
-
-
-
-
-
-
 ### https://discourse.itk.org/t/dividereal-always-returns-double-image/282
-
-
-'''
-dcm2mhd( "zzzPaedCranio02_data", "ct_image" )
-'''
-
-
-
 
 

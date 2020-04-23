@@ -12,14 +12,12 @@ import os
 import shutil
 from pathlib import Path
 
-
 import pydicom
 import easygui
 
 import imageconversion
 import overrides
 import generatefiles
-
 
 
 
@@ -42,7 +40,6 @@ def make_gate_dirs(dir_name, path_to_templates):
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"mac",f)  
         shutil.copyfile(source,destination)
-
 
 
 
@@ -72,10 +69,10 @@ def search_dcm_dir( input_dir ):
     
     #allfiles = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and ".dcm" in f ]  
     allfiles = list_all_files( input_dir )
+    dcmfiles = [ f for f in allfiles if f[-4:]==".dcm" ]
 
     cnt_CT, cnt_plan, cnt_struct, cnt_dose = 0,0,0,0   
-    #studyInstanceUID = pydicom.dcmread(os.path.join(input_dir,allfiles[0])).StudyInstanceUID
-    studyInstanceUID = pydicom.dcmread(allfiles[0]).StudyInstanceUID
+    studyInstanceUID = pydicom.dcmread(dcmfiles[0]).StudyInstanceUID
     
     problem = False
     ct_files = []
@@ -83,8 +80,8 @@ def search_dcm_dir( input_dir ):
     dose_files = []
     struct_file = ""
     
-    for file in allfiles:        
-        #dcm = pydicom.dcmread( os.path.join(input_dir,file) )
+    for file in dcmfiles:        
+
         dcm = pydicom.dcmread(file)
         
         if dcm.StudyInstanceUID != studyInstanceUID:
@@ -125,7 +122,7 @@ def search_dcm_dir( input_dir ):
 
 def main():
     
-    
+    # Get absolute path to template files and destination of simulation files
     base_path = Path(__file__).parent
     path_to_templates = (base_path / "../../data/templates").resolve()
     path_to_simfiles = (base_path / "../../data/simulationfiles").resolve()
@@ -139,12 +136,9 @@ def main():
         pass
     else:
         sys.exit(0)
+        
     DICOM_DIR = easygui.diropenbox()
-    
-    
     CT_DIR = os.path.join(DICOM_DIR,"ct")
-    #TEMPLATE_MAC = os.path.join("templates","TEMPLATE_simulateField.txt")
-    #TEMPLATE_SOURCE = os.path.join("templates","TEMPLATE_SourceDescFile.txt")
     TEMPLATE_MAC = os.path.join(path_to_templates,"TEMPLATE_simulateField.txt")
     TEMPLATE_SOURCE = os.path.join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
@@ -158,7 +152,7 @@ def main():
     make_gate_dirs(sim_dir, path_to_templates)   
  
     
-    img_name = os.path.join(sim_dir,"data","ct_air.mhd")        #TODO: SELECT SENSIBLE NAME
+    img_name = os.path.join(sim_dir,"data","ct_air.mhd")
     temp_ct = os.path.join(sim_dir,"data","ct_orig.mhd")
     
 
@@ -174,13 +168,12 @@ def main():
     # is RAI (or whatever i s"standard").
     
     
-    
     # Set all external HUs to air
-    #print("Overriding all external structures to air")
+    print("Overriding all external structures to air")
     overrides.set_air_external( temp_ct, struct_file, os.path.join(sim_dir,"data",img_name) )
     
     # Check for density overrides and apply
-    # TODO ??
+    # TODO
     
     # Generate all files required for simulation
     print("Generating simulation files")

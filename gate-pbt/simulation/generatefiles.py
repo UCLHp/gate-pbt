@@ -21,17 +21,6 @@ def rnd( num ):
     return round( num, 3 )
 
 
-'''def rotate_vector_yaxis( vect, deg ):
-    """Rotate the vector by some degrees about the y-axis"""
-    # Rotation matrix Ry (rotate about (0,1,0) )
-    # NOTE: Using this matrix we need to rotate image in Gate by -deg
-    y_rot_matrix = np.array([ [np.cos(radians(deg)), 0, np.sin(radians(deg))], 
-                              [0, 1.0, 0], 
-                              [-np.sin(radians(deg)), 0, np.cos(radians(deg))]
-                           ])
-    return np.dot( y_rot_matrix, vect ) '''
-
-
 def rotation_matrix_x( deg ):
     """Return X rotation matrix for some angle in degrees"""
     x_rot_matrix = np.array([ [1.0, 0, 0], 
@@ -40,15 +29,17 @@ def rotation_matrix_x( deg ):
                            ])
     return x_rot_matrix 
 
+
 def rotation_matrix_y( deg ):
     """Return Y rotation matrix for inout degrees  
-        COUCH KICKS ARE -ANGLE ABOUT THIS AXIS
+    **Couch kicks are -deg about this axis
     """
     y_rot_matrix = np.array([ [np.cos(radians(deg)), 0, np.sin(radians(deg))], 
                               [0, 1.0, 0], 
                               [-np.sin(radians(deg)), 0, np.cos(radians(deg))]
                            ])
     return y_rot_matrix 
+
 
 def rotation_matrix_z( deg ):
     """Return Z rotation matrix for input degrees"""
@@ -68,11 +59,10 @@ def get_rotation_matrix(ct_files, field):
     patient_position = img_props["PatientPosition"]
     
     # Find rotation matrix for patient set-up
+    # Offset all by 0.001 to prevent a symmetric matrix.
     rot_matrix = None    
     if patient_position=="HFS":
         rot_matrix = rotation_matrix_y(0.0001)
-        #PUT THIS TO 0.00001?
-        #WHAT SHOULD I DO? Don't want a symmetric matrix.
     elif patient_position=="HFP":
         rot_matrix = rotation_matrix_z(180.0001)
     elif patient_position=="FFS":
@@ -87,7 +77,7 @@ def get_rotation_matrix(ct_files, field):
     couchkick = field.IonControlPointSequence[0].PatientSupportAngle 
     couch_rot = rotation_matrix_y( -couchkick )        
 
-    total_rotation = np.dot( couch_rot, rot_matrix )  ## ORDER MATTERS HERE!
+    total_rotation = np.dot( couch_rot, rot_matrix )  # Order matters 
         
     return total_rotation
 
@@ -277,29 +267,37 @@ def write_mac_file(template, output, planDescription, sourceDescription,
     #TODO: only edit fields provided, not "None"
     with open(output,'w') as out:
         for line in open( template, "r" ):
-            if "setRotationAngle" in line:
+            
+            if "setRotationAngle" in line and setRotationAngle is not None:
                 out.write( "/gate/patient/placement/setRotationAngle    {} deg\n".format( setRotationAngle  ) )
-            elif "setRotationAxis" in line:
+                
+            elif "setRotationAxis" in line and setRotationAxis is not None:
                 out.write( "/gate/patient/placement/setRotationAxis    {} {} {}\n".format(
                     setRotationAxis[0],setRotationAxis[1],setRotationAxis[2]) 
                     )
-            elif "setTranslation" in line:
+            
+            elif "setTranslation" in line and setTranslation is not None:
                 out.write( "/gate/patient/placement/setTranslation    {} {} {} mm\n".format(
                         setTranslation[0],setTranslation[1],setTranslation[2] )
                          )
-            elif "setPlan" in line:
+            
+            elif "setPlan" in line and planDescription is not None:
                 out.write( "/gate/source/PBS/setPlan    data/{}\n".format(planDescription) )
-            elif "setSourceDescriptionFile" in line:
+            
+            elif "setSourceDescriptionFile" in line and sourceDescription is not None:
                 out.write( "/gate/source/PBS/setSourceDescriptionFile    data/{}\n".format(sourceDescription) )
-            elif "dose3d/setVoxelSize" in line:
+            
+            elif "dose3d/setVoxelSize" in line and setVoxelSize is not None:
                 out.write( "/gate/actor/dose3d/setVoxelSize    {} {} {} mm\n".format(
                     setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
                     )
-            elif "let3d/setVoxelSize" in line:
+            
+            elif "let3d/setVoxelSize" in line and setVoxelSize is not None:
                 out.write( "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
                     setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
                     )                
-            elif "setImage" in line:
+            
+            elif "setImage" in line and setImage is not None:
                 out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )                
             else:
                 out.write(line)
