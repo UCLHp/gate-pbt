@@ -88,41 +88,6 @@ def set_air_external( img_file, structure_file, output_img_file ):
 
 
 
-# def set_air_external( img_file, structure_file, output_img_file ):
-#     """Set all HUs outside of BODY/EXTERNAL contour to air HU=-1000
-    
-#     The img_file must be the .mhd
-#     """
-
-#     img = itk.imread( img_file )
-#     ds = pydicom.dcmread( structure_file )
-    
-#     contour = get_external_name( structure_file )
-  
-#     aroi = rt.region_of_interest( ds, contour)
-#     mask = aroi.get_mask(img, corrected=False)  
-#     # NOTE: if corrected=True mask has dtype=np.float32; if not dtype=np.uint8
-    
-#     pix_mask = itk.array_view_from_image(mask)
-#     pix_img = itk.array_view_from_image(img) 
-#     if( pix_mask.shape!=pix_img.shape ):
-#         print( "Inconsistent shapes of mask and image"  )
-    
-#     pix_img_flat = pix_img.flatten()
-#     for i,val in enumerate( pix_mask.flatten() ):
-#         if val==0:
-#             pix_img_flat[i] = HU_AIR
-#     pix_img = pix_img_flat.reshape( pix_img.shape )
-#     img_modified = itk.image_view_from_array( pix_img )
-    
-#     img_modified.SetSpacing( img.GetSpacing()  ) # "ElementSpacing" in .mhd
-#     img_modified.SetOrigin( img.GetOrigin() )    # "Offset" in .mhd
-
-#     itk.imwrite(img_modified, output_img_file )
-
-
-
-
 def override_hu( img_file, structure_file, output_img, structure, hu ):   #MAYBE JUST PASS THE IMAGE OBJECT AND DICOM OBJECT??
     """Override all HUs inside of specified structure"""
 
@@ -153,48 +118,4 @@ def override_hu( img_file, structure_file, output_img, structure, hu ):   #MAYBE
     ##img_modified.SetOrigin( img.GetOrigin() )    # "Offset" in .mhd
 
     itk.imwrite(img_modified, output_img )
-
-
-
-
-
-
-
-'''
-# Specify mhd image and dicom structure files
-ds_file = "zzzPaedCranio02_STRCT.dcm"
-img_file = "CT_zzzPaedCranio02.mhd"
-
-
-# Set all external air HU to -1000
-set_air_external( img_file, ds_file, "SET_AIR.mhd")
-# Override some structure
-override_hu( "SET_AIR.mhd", ds_file, "LEFT_EYE.mhd", "Left Eye", 2000)
-'''
-
-
-
-## What does the corrected flag do!? Look at source code.
-'''
-img = itk.imread( img_file )
-ds = pydicom.dcmread( ds_file )
-aroi = rt.region_of_interest( ds, "EXTERNAL" )
-mask = aroi.get_mask(img, corrected=True)
-itk.imwrite(mask, "CORRECTED_mask.mhd")
-'''
-
-
-'''
-# compare arrays:  a.all()==b.all(), since a==b will return a list of True and Falses
-# array_from_image() will make a copy of data; _view_from_ does not
-
-# Just making a new image from modified pixel array will lose header info
-#img_modified.SetMetaDataDictionary( img.GetMetaDataDictionary() ) ## No idea what this is; doesn't work
-############
-img_modified.SetSpacing( img.GetSpacing()  )      # "ElementSpacing" in .mhd
-img_modified.SetOrigin( img.GetOrigin() )         # "Offset" in .mhd
-#img_modified.SetOffsetTable( img.GetOffsetTable) # ???
-############
-'''
-
 

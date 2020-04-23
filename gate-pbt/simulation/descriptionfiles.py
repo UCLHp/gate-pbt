@@ -89,11 +89,9 @@ def get_spot_descriptions(field):
         if isinstance( cp.ScanSpotMetersetWeights, float ):
             if not isclose(cp.ScanSpotMetersetWeights,0):
                 nonzero_CPs.append( cp )
-        elif isinstance( cp.ScanSpotMetersetWeights, list ):   #TODO this is stupid; write method to check all
-            if not isclose(cp.ScanSpotMetersetWeights[0],0) and \
-                not isclose(cp.ScanSpotMetersetWeights[1],0): #and \
-                #not isclose(cp.ScanSpotMetersetWeights[2],0):      ## BREAKS IF ONLY 2!
-                    nonzero_CPs.append( cp )
+        elif isinstance( cp.ScanSpotMetersetWeights, list ):
+            if not all( isclose(w,0) for w in cp.ScanSpotMetersetWeights 0):
+                nonzero_CPs.append( cp )
     
     for cp in nonzero_CPs:
         sd.append("####ControlPointIndex")

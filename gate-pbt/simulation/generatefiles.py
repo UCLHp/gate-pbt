@@ -99,6 +99,8 @@ def get_rotation_axis( rotation_matrix ):
     
 
 def get_rotation_angle( rotation_matrix ):
+    # TODO: This is magnitude of rotation... 
+    #   will it always be in correct direction for our matrices?
     """Angle of composite rotations"""
     #https://en.wikipedia.org/wiki/Rotation_matrix
     trace = rotation_matrix[0][0]+rotation_matrix[1][1]+rotation_matrix[2][2]    
@@ -119,7 +121,8 @@ def get_rotation_angle( rotation_matrix ):
     norm = sqrt( np.dot( paral_v, paral_v ) )
     
     angle = degrees( np.arcsin( norm/2.0 ) )
-    return angle'''  ## THIS METHOD FAILS IF ROTATION MATRIX IS SYMMETRIC
+    return angle'''  
+    ## This method will fail if rotation matrix is symmetric
 
 
 
