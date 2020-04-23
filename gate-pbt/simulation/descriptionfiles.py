@@ -90,7 +90,7 @@ def get_spot_descriptions(field):
             if not isclose(cp.ScanSpotMetersetWeights,0):
                 nonzero_CPs.append( cp )
         elif isinstance( cp.ScanSpotMetersetWeights, list ):
-            if not all( isclose(w,0) for w in cp.ScanSpotMetersetWeights 0):
+            if not all( isclose(w,0) for w in cp.ScanSpotMetersetWeights ):
                 nonzero_CPs.append( cp )
     
     for cp in nonzero_CPs:
