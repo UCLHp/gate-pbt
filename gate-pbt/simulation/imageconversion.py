@@ -19,7 +19,7 @@ import pydicom
 
 def dcm2mhd( dirName, output ):
     """Convert series of 2D dicom images to mhd + raw files
-    
+
     Code taken from: https://itk.org/ITKExamples/src/IO/GDCM/ReadDICOMSeriesAndWrite3DImage/Documentation.html
     """
 

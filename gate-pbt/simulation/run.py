@@ -126,8 +126,7 @@ def main():
     base_path = Path(__file__).parent
     path_to_templates = (base_path / "../../data/templates").resolve()
     path_to_simfiles = (base_path / "../../data/simulationfiles").resolve()
-
-        
+     
     # Select directory containing the DICOM files
     msg = "Select directory containing DICOM files"
     msg += "\nCT files must be contained in a subdirectory called \"ct\""
@@ -138,7 +137,7 @@ def main():
         sys.exit(0)
         
     DICOM_DIR = easygui.diropenbox()
-    CT_DIR = os.path.join(DICOM_DIR,"ct")
+    #CT_DIR = os.path.join(DICOM_DIR,"ct")
     TEMPLATE_MAC = os.path.join(path_to_templates,"TEMPLATE_simulateField.txt")
     TEMPLATE_SOURCE = os.path.join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
@@ -147,8 +146,9 @@ def main():
     
     # Make Gate directory structure and copy fixed files
     print("Making directories")
-    plan_name = pydicom.dcmread(plan_file).RTPlanLabel
-    sim_dir = os.path.join(path_to_simfiles,plan_name)
+    plandcm = pydicom.dcmread(plan_file)
+    identifier = plandcm.PatientID+"--"+plandcm.RTPlanLabel
+    sim_dir = os.path.join(path_to_simfiles,identifier)
     make_gate_dirs(sim_dir, path_to_templates)   
  
     
@@ -158,7 +158,7 @@ def main():
 
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
-    imageconversion.dcm2mhd(CT_DIR, temp_ct)
+    imageconversion.dcm2mhd(DICOM_DIR, temp_ct)
     
     
     
