@@ -14,7 +14,8 @@ This includes the Geant4 10.03.p03 install along with various other useful softw
 
 ### File preparation
 First export the relevant dicom files from the TPS to new folder.
-You will need the plan file, the structure set, the plan dose and all CT images.
+You will need the plan file, the structure set, the plan dose and all CT images. 
+All CT files must be placed in a subdirectory called "ct".
 
 In the simulation directory, ```python run.py``` will prompt for the directory containing
 your exported dicom files and generate a new directory containing all files required for 
