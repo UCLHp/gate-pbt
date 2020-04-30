@@ -14,7 +14,14 @@ import itk
 import numpy as np
 
 import pydicom
+from gatetools.image_convert import read_dicom
 
+
+
+def dcm2mhd_gatetools(ct_files):
+    """Testing gatetools; matches below method"""
+    itk_img = read_dicom( ct_files )
+    itk.imwrite(itk_img, "ct_gatetools.mhd") 
 
 
 
@@ -27,7 +34,11 @@ def dcm2mhd( dirName, output ):
     from CT then wrong voxel sizes / image dims will be used
     """
 
-    PixelType = itk.ctype('signed short')  ## will we need floats for extended CT range?
+    ## Using MET_SHORT will half the file size in comparison to
+    ## MET_FLOAT. Allows values -32768 to 32767. 
+    ## Is this sufficient for an extended CT range?
+    PixelType = itk.ctype('signed short')  
+    #PixelType = itk.ctype('float')  
     Dimension = 3
     ImageType = itk.Image[PixelType, Dimension]
     

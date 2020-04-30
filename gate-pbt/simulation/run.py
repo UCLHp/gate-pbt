@@ -161,7 +161,7 @@ def main():
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
     imageconversion.dcm2mhd(os.path.join(DICOM_DIR,"ct"), ct_unmod)
-    
+    ##imageconversion.dcm2mhd_gatetools(ct_files)
     
     
     # roi_utils does not like image properties of HFP set-up
