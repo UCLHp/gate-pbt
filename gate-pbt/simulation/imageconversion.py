@@ -17,10 +17,14 @@ import pydicom
 
 
 
+
 def dcm2mhd( dirName, output ):
     """Convert series of 2D dicom images to mhd + raw files
 
     Code taken from: https://itk.org/ITKExamples/src/IO/GDCM/ReadDICOMSeriesAndWrite3DImage/Documentation.html
+
+    Need to aovid case of multiple seriesUIDs being found: if dose is different
+    from CT then wrong voxel sizes / image dims will be used
     """
 
     PixelType = itk.ctype('signed short')  ## will we need floats for extended CT range?

@@ -80,26 +80,26 @@ def search_dcm_dir( input_dir ):
     dose_files = []
     struct_file = ""
     
-    for file in dcmfiles:        
+    for f in dcmfiles:        
 
-        dcm = pydicom.dcmread(file)
+        dcm = pydicom.dcmread(f)
         
         if dcm.StudyInstanceUID != studyInstanceUID:
             problem = True
-            print("File {} has inconsistent StudyInstanceUID".format(file) )
+            print("File {} has inconsistent StudyInstanceUID".format(f) )
         
         if dcm.Modality=="CT":
             cnt_CT+=1
-            ct_files.append(file)
+            ct_files.append(f)
         elif dcm.Modality=="RTPLAN":
-            plan_file = file
+            plan_file = f
             cnt_plan+=1
         elif dcm.Modality=="RTDOSE":
             cnt_dose+=1
-            dose_files.append(file)
+            dose_files.append(f)
         elif dcm.Modality=="RTSTRUCT":
             cnt_struct+=1
-            struct_file = file
+            struct_file = f
         else:
             print("Dicom file of {} modality found".format(dcm.Modality))
         
@@ -151,14 +151,16 @@ def main():
     sim_dir = os.path.join(path_to_simfiles,identifier)
     make_gate_dirs(sim_dir, path_to_templates)   
  
-    
-    img_name = os.path.join(sim_dir,"data","ct_air.mhd")
-    temp_ct = os.path.join(sim_dir,"data","ct_orig.mhd")
+
+
+    ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")    
+    ct_air = os.path.join(sim_dir,"data","ct_air.mhd")
+
     
 
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
-    imageconversion.dcm2mhd(DICOM_DIR, temp_ct)
+    imageconversion.dcm2mhd(os.path.join(DICOM_DIR,"ct"), ct_unmod)
     
     
     
@@ -170,14 +172,14 @@ def main():
     
     # Set all external HUs to air
     print("Overriding all external structures to air")
-    overrides.set_air_external( temp_ct, struct_file, os.path.join(sim_dir,"data",img_name) )
+    overrides.set_air_external( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air) )
     
     # Check for density overrides and apply
     # TODO
     
     # Generate all files required for simulation
     print("Generating simulation files")
-    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, img_name, sim_dir)
+    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_air, sim_dir)
     
     
     
