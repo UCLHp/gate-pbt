@@ -536,9 +536,13 @@ class region_of_interest(object):
         orig = roimask.GetOrigin()  
         space = roimask.GetSpacing()   
 
-        dir_dot_orig = roimask.GetDirection() * roimask.GetOrigin() 
+        #dir_dot_orig = roimask.GetDirection()*roimask.GetOrigin() 
+        #directions = [ i/j for i,j in zip(dir_dot_orig,orig) ]
+
         # directions +/- 1 for each axis       
-        directions    = [ i/j for i,j in zip(dir_dot_orig,orig) ]         
+        directions = list( roimask.GetDirection()*(1,1,1) )
+
+        #print("directions = {}".format(directions))  
 
         # Find minimum corner (voxel centre)
         # This assumes image (x,y) is centred close to zero
