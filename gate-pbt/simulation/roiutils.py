@@ -528,17 +528,36 @@ class region_of_interest(object):
         
         
         roimask = itk.image_from_array(aroimask)
-        
-        
         roimask.CopyInformation(img)
-        #orig = roimask.GetOrigin()     
-        orig = roimask.GetDirection() * roimask.GetOrigin()   ## XX STEVE     
-        space = roimask.GetSpacing()
-        
-        initorig = roimask.GetOrigin()  # Need this later for meshgrid or mask image will be wrong way round
-        
 
+
+        ###  EDITED ---------------------------------------------
+        #im_size = itk.size(img)  
+        orig = roimask.GetOrigin()  
+        space = roimask.GetSpacing()   
+
+        #dir_dot_orig = roimask.GetDirection()*roimask.GetOrigin() 
+        #directions = [ i/j for i,j in zip(dir_dot_orig,orig) ]
+
+        # directions +/- 1 for each axis       
+        directions = list( roimask.GetDirection()*(1,1,1) )
+
+        #print("directions = {}".format(directions))  
+
+        # Find minimum corner (voxel centre)
+        # This assumes image (x,y) is centred close to zero
+        orig_min_corner = []
+        for o,dim,s,direction in zip(orig,dims,space,directions):
+            if direction>0:
+                orig_min_corner.append(o)
+            else:
+                orig_min_corner.append(o-(dim-1)*s)
         
+        #print( "dims = {}".format(dims) )
+        #print( "im_size = {}".format(im_size) )
+        #print( "orig_min_corner = {}".format(orig_min_corner) )        
+    
+        # --------------------------------------------------------
         
         roisize=np.array(roimask.GetLargestPossibleRegion().GetSize())
         
@@ -549,7 +568,7 @@ class region_of_interest(object):
         # check that the bounding box of this ROI is contained within the volume of the given image #
         #############################################################################################
         contained = True
-        for o,s,d,rmin,rmax in zip(orig,space,dims,self.bb.mincorner,self.bb.maxcorner):
+        for o,s,d,rmin,rmax in zip(orig_min_corner,space,dims,self.bb.mincorner,self.bb.maxcorner):
             contained &= (int(np.round(rmin-o)/s) in range(d))
             contained &= (int(np.round(rmax-o)/s) in range(d))
         if not contained:
@@ -558,10 +577,21 @@ class region_of_interest(object):
             logger.debug(f'YAY: roi "{self.roiname}" is contained in image')
         #logger.debug("copied infor orig={} spacing={}".format(orig,space))
             
+
+
         # ITK: the "origin" has the coordinates of the *center* of the corner voxel
         # zmin and zmax are the z coordinates of the boundary of the volume
-        zmin = orig[2] - 0.5*space[2]
-        zmax = orig[2] + (dims[2]-0.5)*space[2]
+
+        # EDITED ---------------------------------------------
+        if directions[2]>0:
+            zmin = orig[2] - 0.5*space[2]
+            zmax = orig[2] + (dims[2]-0.5)*space[2]
+        else:
+            zmin = orig[2] + (0.5-dims[2])*space[2]
+            zmax = orig[2] + 0.5*space[2]
+        # ---------------------------------------------------
+
+
         eps=0.001*np.abs(self.dz)
         #logger.debug("got point mesh")
         if zmin-eps>self.bb.zmax+self.dz or zmax+eps<self.bb.zmin-self.dz:
@@ -582,13 +612,15 @@ class region_of_interest(object):
         # xpoints and ypoints contain the x/y coordinates of the voxel centers
             
         # SHOULD BE THE UNEDITED ORIGIN HERE OR MASK WIL BE FLIPPED WRT TO IMAGE
-        #initorig =     
-        #xpoints=np.linspace(orig[0],orig[0]+space[0]*dims[0],dims[0],False)
-        #ypoints=np.linspace(orig[1],orig[1]+space[1]*dims[1],dims[1],False)
-        xpoints=np.linspace(initorig[0],initorig[0]+(initorig[0]/orig[0])*space[0]*dims[0],dims[0],False)
-        ypoints=np.linspace(initorig[1],initorig[1]+(initorig[1]/orig[1])*space[1]*dims[1],dims[1],False)
+        ##xpoints=np.linspace(orig[0],orig[0]+space[0]*dims[0],dims[0],False)
+        ##ypoints=np.linspace(orig[1],orig[1]+space[1]*dims[1],dims[1],False)
+        # EDITED ----------------------------------------------------------------------
+        xpoints=np.linspace(orig[0],orig[0]+directions[0]*space[0]*dims[0],dims[0],False)
+        ypoints=np.linspace(orig[1],orig[1]+directions[1]*space[1]*dims[1],dims[1],False)
+        # ------------------------------------------------------------------------------
         xymesh = np.meshgrid(xpoints,ypoints)
         xyflat = np.array([(x,y) for x,y in zip(xymesh[0].flat,xymesh[1].flat)])
+
         
         clayer0 = self.contour_layers[0]
         #logger.debug contour0pts.shape
