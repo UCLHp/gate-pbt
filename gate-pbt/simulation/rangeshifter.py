@@ -43,7 +43,7 @@ def get_translation( field, thick, gantryangle ):
     shift = snout + 0.5*thick + NOZZLE_OFFSET
     
     d_x = shift * sin( radians(gantryangle) )
-    d_y = shift * cos( radians(gantryangle) )
+    d_y = -1.0 * shift * cos( radians(gantryangle) )
     
     translation = [d_x, d_y, 0]
     return translation

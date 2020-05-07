@@ -52,8 +52,8 @@
 /gate/HounsfieldMaterialGenerator/Generate
 
 # Create parameterized phantom object
-/gate/GlobalVolume/daughters/name                      patient
-/gate/GlobalVolume/daughters/insert                    ImageNestedParametrisedVolume
+/gate/GlobalVol/daughters/name                      patient
+/gate/GlobalVol/daughters/insert                    ImageNestedParametrisedVolume
 /gate/geometry/setMaterialDatabase              data/patient-HUmaterials.db
 /gate/patient/geometry/setHUToMaterialFile      data/patient-HU2mat.txt
 
