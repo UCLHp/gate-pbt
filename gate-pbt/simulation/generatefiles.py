@@ -15,6 +15,7 @@ import numpy as np
 from math import radians, degrees, sqrt, isclose
 
 import descriptionfiles as gfdf
+import rangeshifter
 
 
 def rnd( num ):
@@ -262,7 +263,10 @@ def get_dose_voxel_dims( dcm_dose ):
 def write_mac_file(template, output, planDescription, sourceDescription, 
                    setRotationAngle=None, setRotationAxis=None,
                    setTranslation=None,
-                   setVoxelSize=None, setImage=None
+                   setVoxelSize=None, setImage=None,
+                   rangeshift_rot=None,
+                   rangeshift_trans=None,
+                   rangeshift_thick=None
                    ):
     """Write the main .mac file to be run in Gate
     Takes a template file and modifies appropriate lines"""
@@ -271,15 +275,15 @@ def write_mac_file(template, output, planDescription, sourceDescription,
     with open(output,'w') as out:
         for line in open( template, "r" ):
             
-            if "setRotationAngle" in line and setRotationAngle is not None:
+            if "/patient/placement/setRotationAngle" in line and setRotationAngle is not None:
                 out.write( "/gate/patient/placement/setRotationAngle    {} deg\n".format( setRotationAngle  ) )
                 
-            elif "setRotationAxis" in line and setRotationAxis is not None:
+            elif "patient/placement/setRotationAxis" in line and setRotationAxis is not None:
                 out.write( "/gate/patient/placement/setRotationAxis    {} {} {}\n".format(
                     setRotationAxis[0],setRotationAxis[1],setRotationAxis[2]) 
                     )
             
-            elif "setTranslation" in line and setTranslation is not None:
+            elif "/patient/placement/setTranslation" in line and setTranslation is not None:
                 out.write( "/gate/patient/placement/setTranslation    {} {} {} mm\n".format(
                         setTranslation[0],setTranslation[1],setTranslation[2] )
                          )
@@ -300,8 +304,20 @@ def write_mac_file(template, output, planDescription, sourceDescription,
                     setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
                     )                
             
-            elif "setImage" in line and setImage is not None:
-                out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )                
+            elif "patient/geometry/setImage" in line and setImage is not None:
+                out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )    
+                
+            elif  "rangeshifter/placement/setRotationAngle" in line and rangeshift_rot is not None:
+                out.write( "/gate/rangeshifter/placement/setRotationAngle    {} deg\n".format(rangeshift_rot) )
+                
+            elif "rangeshifter/placement/setTranslation" in line and rangeshift_trans is not None:
+                out.write( "/gate/rangeshifter/placement/setTranslation    {} {} {} mm\n".format(
+                    rangeshift_trans[0],rangeshift_trans[1],rangeshift_trans[2]) 
+                    )
+            elif "rangeshifter/geometry/setYLength" in line and rangeshift_thick is not None:
+                out.write("/gate/rangeshifter/geometry/setYLength    {} mm\n".format(rangeshift_thick) )
+                
+                
             else:
                 out.write(line)
 
@@ -331,6 +347,7 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                                     plan_dsc, fld_dsc 
                                     )
         
+        
         ## Make field-specific SourceDescriptionFile
         snout_pos = field.IonControlPointSequence[0].SnoutPosition
         sdf_filename = "SourceDescFile_"+beamname+".txt"
@@ -338,12 +355,14 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                                      os.path.join(sim_dir,"data",sdf_filename), snout_pos
                                      )
         
+        
         ## Make field-specific .mac Gate file for simulation    
         rotation_matrix = get_rotation_matrix(ct_files, field)
         axis = get_rotation_axis(rotation_matrix)
         angle = get_rotation_angle(rotation_matrix)
         translation_vector = get_translation_vector( ct_files, field, rotation_matrix )
         #print( translation_vector )
+        rs = rangeshifter.get_props( field )    
         mac_filename = os.path.join(sim_dir,"mac",beamname+".mac")
         write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename, sdf_filename,
                        # setRotationAngle=-field.IonControlPointSequence[0].PatientSupportAngle,
@@ -351,7 +370,10 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                        setRotationAxis=axis,
                        setTranslation=translation_vector,
                        setVoxelSize=dose_vox_dims,
-                       setImage=ct_mhd
+                       setImage=ct_mhd,
+                       rangeshift_rot=rs.rotation,
+                       rangeshift_tran=rs.translation,
+                       rangeshift_thick=rs.thickness
                       )
  
     
