@@ -372,7 +372,7 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                        setVoxelSize=dose_vox_dims,
                        setImage=ct_mhd,
                        rangeshift_rot=rs.rotation,
-                       rangeshift_tran=rs.translation,
+                       rangeshift_trans=rs.translation,
                        rangeshift_thick=rs.thickness
                       )
  
