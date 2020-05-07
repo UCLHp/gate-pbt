@@ -22,7 +22,7 @@ from math import sin, cos, degrees, radians
 
 
 
-NOZZLE_OFFSET = 18.0  # mm
+NOZZLE_OFFSET = 0  # mm
 
 
 class Rangeshifter:
@@ -47,7 +47,7 @@ def get_translation( field, thick, gantryangle ):
     
     translation = [d_x, d_y, 0]
     return translation
-    s
+
 
 
 def get_props( field ):
@@ -65,7 +65,7 @@ def get_props( field ):
     if has_RS:
         # Get properties
         #thick = field.RangeShifterSettingsSequence[0].RangeShifterWaterEquivalentThickness
-        thick = 5.0
+        thick = 50 #mm
         gantryangle = field.IonControlPointSequence[0].GantryAngle
         trans = get_translation(field, thick, gantryangle)
         

@@ -71,9 +71,9 @@
 /gate/GlobalVol/daughters/name                     rangeshifter
 /gate/GlobalVol/daughters/insert                   box
 
-/gate/rangeshifter/geometry/setXLength         20 cm        
-/gate/rangeshifter/geometry/setYLength         0 cm       
-/gate/rangeshifter/geometry/setZLength         20 cm         
+/gate/rangeshifter/geometry/setXLength         200 mm        
+/gate/rangeshifter/geometry/setYLength         0 mm       
+/gate/rangeshifter/geometry/setZLength         200 mm         
 /gate/rangeshifter/placement/setRotationAxis         0 0 1
 /gate/rangeshifter/placement/setRotationAngle        0 deg
 /gate/rangeshifter/placement/setTranslation         0 0 0 mm   
