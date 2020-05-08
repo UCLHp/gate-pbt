@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu May  7 16:25:22 2020
-
-Methods related to positioning of rangeshifter
-
 @author: SCOURT01
+
+
+Methods related to positioning of rangeshifter.
+
+Gate simulates the beam from the nozzle exit. Hence if a rangeshifter is
+in place we must first position this correctly wrt the patient and then
+offset the beam so that it passes through the rangeshifter. (The number to
+offset is the nozzle to exit distance in the source description file).
+
 """
 
-from math import sin, cos, degrees, radians
+from math import sin, cos, radians
+
 
 ######### TODO
 #
@@ -18,11 +25,16 @@ from math import sin, cos, degrees, radians
 # 5. Need  offset RS offset from nozzle exit
 # 6.  field.RangeShifterSettingsSequence[0].RangeShifterWaterEquivalentThickness or field.RangeShifterSequence??
 #        field.NumberOfRangeShifters
-#############
+#
+#########
 
 
 
-NOZZLE_OFFSET = 0  # mm
+# dist (mm) between rangeshifter distal face and nozzle exit
+RS_OFFSET = 18  
+# dictionary of rangeshifter thicknesses in use
+#RS_THICKNESS = {}
+
 
 
 class Rangeshifter:
@@ -33,6 +45,7 @@ class Rangeshifter:
         if translation is None: 
             translation = [0,0,0]
         self.translation = translation
+        self.offset = RS_OFFSET
 
 
 
@@ -40,7 +53,7 @@ def get_translation( field, thick, gantryangle ):
     
     #Distance (mm) from isocentre to downstream side of snout
     snout = field.IonControlPointSequence[0].SnoutPosition  
-    shift = snout + 0.5*thick + NOZZLE_OFFSET
+    shift = snout + 0.5*thick + RS_OFFSET
     
     d_x = shift * sin( radians(gantryangle) )
     d_y = -1.0 * shift * cos( radians(gantryangle) )
@@ -51,8 +64,8 @@ def get_translation( field, thick, gantryangle ):
 
 
 def get_props( field ):
-    """Return RangeShifter object with all properties for field
-    (i.e. IonBeamSequence[i])
+    """Return RangeShifter object with all relevant properties
+    
     """
     
     has_RS = hasattr( field.IonControlPointSequence[0], "RangeShifterSettingsSequence" )

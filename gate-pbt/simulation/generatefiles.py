@@ -323,6 +323,20 @@ def write_mac_file(template, output, planDescription, sourceDescription,
 
 
 
+def field_has_rangeshifter( field ):
+    """Return tru if field has rangeshifter"""
+    return hasattr(field.IonControlPointSequence[0],"RangeShifterSettingsSequence")
+
+
+def get_source_offset(field, rs):
+    """Offset source to allow rangeshifter"""
+    source_offset = 0
+    if field_has_rangeshifter(field):
+        # offset source by thickness, rangeshifter offset from nozzle exit
+        # and some arbitrary distance so source is not in rangeshifter
+        source_offset = rs.thickness + rs.offset + 5  
+    return source_offset
+
 
 
 def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_mhd, sim_dir):
@@ -336,10 +350,18 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
     dcmPlan = pydicom.dcmread( plan_file )
 
         
-    for field in dcmPlan.IonBeamSequence:       
+    for field in dcmPlan.IonBeamSequence:   
+        
         beamname = str(field.BeamName).replace(" ","")
         
-        ## Make field-specific PlanDescriptionFile
+        # Rangeshifter object
+        rs = rangeshifter.get_props( field )  
+        
+        # Offset to source positon (snout position) to allow rangeshifter
+        source_offset = get_source_offset(field, rs)
+        
+        
+        ##### Make field-specific PlanDescriptionFile
         fld_dsc = gfdf.get_field_description(field)
         plan_dsc = gfdf.get_plan_description(dcmPlan, field)   
         pdf_filename = "PlanDescFile_"+beamname+".txt"
@@ -348,21 +370,20 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                                     )
         
         
-        ## Make field-specific SourceDescriptionFile
-        snout_pos = field.IonControlPointSequence[0].SnoutPosition
+        ##### Make field-specific SourceDescriptionFile
+        snout_pos = field.IonControlPointSequence[0].SnoutPosition + source_offset 
         sdf_filename = "SourceDescFile_"+beamname+".txt"
         gfdf.make_source_description(TEMPLATE_SOURCE, 
                                      os.path.join(sim_dir,"data",sdf_filename), snout_pos
                                      )
         
         
-        ## Make field-specific .mac Gate file for simulation    
+        ##### Make field-specific .mac Gate file for simulation    
         rotation_matrix = get_rotation_matrix(ct_files, field)
         axis = get_rotation_axis(rotation_matrix)
         angle = get_rotation_angle(rotation_matrix)
         translation_vector = get_translation_vector( ct_files, field, rotation_matrix )
         #print( translation_vector )
-        rs = rangeshifter.get_props( field )    
         mac_filename = os.path.join(sim_dir,"mac",beamname+".mac")
         write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename, sdf_filename,
                        # setRotationAngle=-field.IonControlPointSequence[0].PatientSupportAngle,
