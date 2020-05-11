@@ -23,7 +23,7 @@ HU_AIR = -1000
 ########################
 
 
-def get_external_name( structure_file ):          ## TODO: MAKE THIS MORE ROBUST; WHAT WILL OUR NAMING CONVENTION BE?
+'''def get_external_name( structure_file ):          ## TODO: MAKE THIS MORE ROBUST; WHAT WILL OUR NAMING CONVENTION BE?
     """Get contour name (BODY or EXTERNAL) """
     contour = ""
     ds = pydicom.dcmread( structure_file )
@@ -37,6 +37,24 @@ def get_external_name( structure_file ):          ## TODO: MAKE THIS MORE ROBUST
     elif "BODY" in rois:
         contour = "BODY"
     
+    return contour'''
+
+
+
+def get_external_name( structure_file ):
+    """Get contour name of external patient contour"""
+    contour = ""
+    contains_bolus = False
+    ss = pydicom.dcmread( structure_file )    
+    for struct in ss.RTROIObservationsSequence:
+        if struct.RTROIInterpretedType.lower() == "external":
+            contour = struct.ROIObservationLabel
+            print("Found external: {}".format(contour))
+        elif struct.RTROIInterpretedType.lower() == "bolus":
+            print("\n\nWARNING: Bolus found. It will be overriden with air.\n")
+    if contour=="":
+        raise Exception("No external structure found. Exiting.")
+        sys.exit(1)
     return contour
 
 
