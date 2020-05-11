@@ -18,10 +18,7 @@ other clinics as well).
 Authors: David Boersma and Pierre Granger
 """
 
-#from .bounding_box import *
-
 from boundingbox import *
-
 
 
 #from bounding_import bounding_box

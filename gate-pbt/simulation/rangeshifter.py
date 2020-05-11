@@ -19,19 +19,10 @@ from math import sin, cos, radians
 ######### TODO
 #
 # 1. Keep 0mm thickness RS in for all plans? Need to move it out of beam?
-# 2. Map WET from dicom to physical thickness
-# 3. Need exact RS dimensions
-# 4. Need RS material composition
-# 5. Need  offset RS offset from nozzle exit
-# 6.  field.RangeShifterSettingsSequence[0].RangeShifterWaterEquivalentThickness or field.RangeShifterSequence??
-#        field.NumberOfRangeShifters
+# 2. Need exact RS dimensions
 #
 #########
 
-
-
-# dist (mm) between rangeshifter distal face and nozzle exit
-##RS_OFFSET = 18  # just use IsocentreToRangeShifterDistance tag!
 
 # dictionary of rangeshifter WET to physical thicknesses in use (since
 # dicom file will only contain WET)
@@ -47,21 +38,6 @@ class Rangeshifter:
         if translation is None: 
             translation = [0,0,0]
         self.translation = translation
-        ##self.offset = RS_OFFSET
-
-
-
-'''def get_translation( field, thick, gantryangle ):
-    
-    #Distance (mm) from isocentre to downstream side of snout
-    snout = field.IonControlPointSequence[0].SnoutPosition  
-    shift = snout + 0.5*thick + RS_OFFSET
-    
-    d_x = shift * sin( radians(gantryangle) )
-    d_y = -1.0 * shift * cos( radians(gantryangle) )
-    
-    translation = [d_x, d_y, 0]
-    return translation'''
     
 
     
@@ -80,27 +56,20 @@ def get_translation( iso_to_rs, thick, gantryangle ):
 
 def get_props( field ):
     """Return RangeShifter object with all relevant properties
-    
     """
     
     has_RS = hasattr( field.IonControlPointSequence[0], "RangeShifterSettingsSequence" )
-    ##has_RS_2 = hasattr( field, "RangeShifterSequence" )
     
     # Default zero rangeshifter
     rs = Rangeshifter()
     
-    ##if has_RS or has_RS_2:       
     if has_RS:
-
         rsss =  field.IonControlPointSequence[0].RangeShifterSettingsSequence[0]    
         thick = RS_THICKNESS[ rsss.RangeShifterWaterEquivalentThickness ]
         gantryangle = field.IonControlPointSequence[0].GantryAngle       
         iso_to_rs = rsss.IsocenterToRangeShifterDistance
-        trans = get_translation(iso_to_rs, thick, gantryangle)
-        ####trans = get_translation(field, thick, gantryangle)
-        
-        print("RS props: {},{},{}".format(gantryangle, trans, thick)   )
-        
+        trans = get_translation(iso_to_rs, thick, gantryangle) 
+        ##print("RS props: {},{},{}".format(gantryangle, trans, thick)   )
         rs = Rangeshifter(rotation=gantryangle, translation=trans, thickness=thick)
         
     return rs

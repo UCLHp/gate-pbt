@@ -23,23 +23,7 @@ HU_AIR = -1000
 ########################
 
 
-'''def get_external_name( structure_file ):          ## TODO: MAKE THIS MORE ROBUST; WHAT WILL OUR NAMING CONVENTION BE?
-    """Get contour name (BODY or EXTERNAL) """
-    contour = ""
-    ds = pydicom.dcmread( structure_file )
-    rois = rt.list_roinames( ds )
-    if "EXTERNAL" not in rois and "EXT" not in rois and "BODY" not in rois:
-        print( "\n ERROR: Structure set does not contain EXTERNAL, EXT or BODY\n")
-    elif "EXTERNAL" in rois:
-        contour = "EXTERNAL"
-    elif "EXT" in rois:
-        contour = "EXT"
-    elif "BODY" in rois:
-        contour = "BODY"
     
-    return contour'''
-
-
 
 def get_external_name( structure_file ):
     """Get contour name of external patient contour"""

@@ -137,7 +137,7 @@ def main():
         sys.exit(0)
         
     DICOM_DIR = easygui.diropenbox()
-    #CT_DIR = os.path.join(DICOM_DIR,"ct")
+    CT_DIR = os.path.join(DICOM_DIR,"ct")
     TEMPLATE_MAC = os.path.join(path_to_templates,"TEMPLATE_simulateField.txt")
     TEMPLATE_SOURCE = os.path.join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
@@ -161,7 +161,7 @@ def main():
 
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
-    imageconversion.dcm2mhd(os.path.join(DICOM_DIR,"ct"), ct_unmod)
+    imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
     
