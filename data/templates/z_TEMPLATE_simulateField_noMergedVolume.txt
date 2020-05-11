@@ -17,87 +17,37 @@
 
 /gate/geometry/setMaterialDatabase data/GateMaterials.db
 
-
-### World
+# World
 /gate/world/geometry/setXLength 2 m
 /gate/world/geometry/setYLength 2 m
 /gate/world/geometry/setZLength 2 m
 /gate/world/setMaterial Air
 
 
-
-### Container volume for MergedVolumeActor for inclusion of rangeshifters
-/gate/world/daughters/name GlobalVol
-/gate/world/daughters/insert box
-/gate/GlobalVol/geometry/setXLength 1.5 m
-/gate/GlobalVol/geometry/setYLength 1.5 m
-/gate/GlobalVol/geometry/setZLength 1.5 m
-/gate/GlobalVol/placement/setTranslation 0.0 0.0 0.0 mm
-/gate/GlobalVol/placement/setRotationAxis 1 0 0
-/gate/GlobalVol/placement/setRotationAngle 0 deg
-/gate/GlobalVol/setMaterial Air
-/gate/GlobalVol/vis/setColor cyan
-/gate/GlobalVol/describe
-
-
-
-### Voxelized phantom added to the GlobalVol container
-
 # Generate materials from Hounsfield units
 /gate/HounsfieldMaterialGenerator/SetMaterialTable data/UCLH2019MaterialsTable_v1.txt
 /gate/HounsfieldMaterialGenerator/SetDensityTable  data/UCLH2019DensitiesTable_v1.txt
+
 /gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
 /gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename data/patient-HUmaterials.db
 /gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       data/patient-HU2mat.txt
 /gate/HounsfieldMaterialGenerator/Generate
 
+#########################################################
 # Create parameterized phantom object
-/gate/GlobalVol/daughters/name                      patient
-/gate/GlobalVol/daughters/insert                    ImageNestedParametrisedVolume
+/gate/world/daughters/name                      patient
+/gate/world/daughters/insert                    ImageNestedParametrisedVolume
 /gate/geometry/setMaterialDatabase              data/patient-HUmaterials.db
 /gate/patient/geometry/setHUToMaterialFile      data/patient-HU2mat.txt
 
-# Position patient 
+
 /gate/patient/geometry/setImage                data/XXXX
+
+
+# PATIENT SUPPORT ANGLE NOT WORKING!?
 /gate/patient/placement/setRotationAxis         0 1 0
 /gate/patient/placement/setRotationAngle        XX deg
 /gate/patient/placement/setTranslation XX XX XX mm  
-
-
-
-
-
-### Rangeshifter added GlobalVol also
-/gate/GlobalVol/daughters/name                     rangeshifter
-/gate/GlobalVol/daughters/insert                   box
-
-/gate/rangeshifter/geometry/setXLength         200 mm        
-/gate/rangeshifter/geometry/setYLength         0 mm       
-/gate/rangeshifter/geometry/setZLength         200 mm         
-/gate/rangeshifter/placement/setRotationAxis         0 0 1
-/gate/rangeshifter/placement/setRotationAngle        0 deg
-/gate/rangeshifter/placement/setTranslation         0 0 0 mm   
-/gate/rangeshifter/setMaterial                 LexanPolycarbonate
-/gate/rangeshifter/vis/setVisible              1
-/gate/rangeshifter/vis/setColor                blue
-
-
-
-
-
-### MergedVolumeActor must be the FIRST actor declared
-/gate/actor/addActor MergedVolumeActor mergedVol
-/gate/actor/mergedVol/attachTo GlobalVol
-/gate/actor/mergedVol/volumeToMerge rangeshifter
-
-
-
-
-
-
-
-
-
 
 #=====================================================
 # PHYSICS

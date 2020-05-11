@@ -15,6 +15,7 @@ import numpy as np
 from math import radians, degrees, sqrt, isclose
 
 import descriptionfiles as gfdf
+import rangeshifter
 
 
 def rnd( num ):
@@ -262,7 +263,10 @@ def get_dose_voxel_dims( dcm_dose ):
 def write_mac_file(template, output, planDescription, sourceDescription, 
                    setRotationAngle=None, setRotationAxis=None,
                    setTranslation=None,
-                   setVoxelSize=None, setImage=None
+                   setVoxelSize=None, setImage=None,
+                   rangeshift_rot=None,
+                   rangeshift_trans=None,
+                   rangeshift_thick=None
                    ):
     """Write the main .mac file to be run in Gate
     Takes a template file and modifies appropriate lines"""
@@ -271,15 +275,15 @@ def write_mac_file(template, output, planDescription, sourceDescription,
     with open(output,'w') as out:
         for line in open( template, "r" ):
             
-            if "setRotationAngle" in line and setRotationAngle is not None:
+            if "/patient/placement/setRotationAngle" in line and setRotationAngle is not None:
                 out.write( "/gate/patient/placement/setRotationAngle    {} deg\n".format( setRotationAngle  ) )
                 
-            elif "setRotationAxis" in line and setRotationAxis is not None:
+            elif "patient/placement/setRotationAxis" in line and setRotationAxis is not None:
                 out.write( "/gate/patient/placement/setRotationAxis    {} {} {}\n".format(
                     setRotationAxis[0],setRotationAxis[1],setRotationAxis[2]) 
                     )
             
-            elif "setTranslation" in line and setTranslation is not None:
+            elif "/patient/placement/setTranslation" in line and setTranslation is not None:
                 out.write( "/gate/patient/placement/setTranslation    {} {} {} mm\n".format(
                         setTranslation[0],setTranslation[1],setTranslation[2] )
                          )
@@ -300,12 +304,43 @@ def write_mac_file(template, output, planDescription, sourceDescription,
                     setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
                     )                
             
-            elif "setImage" in line and setImage is not None:
-                out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )                
+            elif "patient/geometry/setImage" in line and setImage is not None:
+                out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )    
+                
+            elif  "rangeshifter/placement/setRotationAngle" in line and rangeshift_rot is not None:
+                out.write( "/gate/rangeshifter/placement/setRotationAngle    {} deg\n".format(rangeshift_rot) )
+                
+            elif "rangeshifter/placement/setTranslation" in line and rangeshift_trans is not None:
+                out.write( "/gate/rangeshifter/placement/setTranslation    {} {} {} mm\n".format(
+                    rangeshift_trans[0],rangeshift_trans[1],rangeshift_trans[2]) 
+                    )
+            elif "rangeshifter/geometry/setYLength" in line and rangeshift_thick is not None:
+                out.write("/gate/rangeshifter/geometry/setYLength    {} mm\n".format(rangeshift_thick) )
+                
+                
             else:
                 out.write(line)
 
 
+
+def field_has_rangeshifter( field ):
+    """Return true if field has rangeshifter"""
+    return hasattr(field.IonControlPointSequence[0],"RangeShifterSettingsSequence")
+
+
+def get_source_offset(field, rs):
+    """Offset source to allow rangeshifter in beam path"""
+    source_offset = 0
+    if field_has_rangeshifter(field):
+        # offset source by thickness, rangeshifter offset from nozzle exit
+        # and some arbitrary distance so source is not in rangeshifter
+        #####source_offset = rs.thickness + rs.offset + 5  
+        rsss = field.IonControlPointSequence[0].RangeShifterSettingsSequence[0]
+        snout_pos = field.IonControlPointSequence[0].SnoutPosition
+        rs_inset = rsss.IsocenterToRangeShifterDistance - snout_pos
+        source_offset = rs_inset + rs.thickness + 5
+        print("source_offset = {}".format(source_offset))
+    return source_offset
 
 
 
@@ -320,10 +355,18 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
     dcmPlan = pydicom.dcmread( plan_file )
 
         
-    for field in dcmPlan.IonBeamSequence:       
+    for field in dcmPlan.IonBeamSequence:   
+        
         beamname = str(field.BeamName).replace(" ","")
         
-        ## Make field-specific PlanDescriptionFile
+        # Rangeshifter object
+        rs = rangeshifter.get_props( field )  
+        
+        # Offset to source positon (snout position) needed to allow rangeshifter
+        source_offset = get_source_offset(field, rs)
+        
+        
+        ##### Make field-specific PlanDescriptionFile
         fld_dsc = gfdf.get_field_description(field)
         plan_dsc = gfdf.get_plan_description(dcmPlan, field)   
         pdf_filename = "PlanDescFile_"+beamname+".txt"
@@ -331,14 +374,16 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                                     plan_dsc, fld_dsc 
                                     )
         
-        ## Make field-specific SourceDescriptionFile
-        snout_pos = field.IonControlPointSequence[0].SnoutPosition
+        
+        ##### Make field-specific SourceDescriptionFile
+        snout_pos = field.IonControlPointSequence[0].SnoutPosition + source_offset 
         sdf_filename = "SourceDescFile_"+beamname+".txt"
         gfdf.make_source_description(TEMPLATE_SOURCE, 
                                      os.path.join(sim_dir,"data",sdf_filename), snout_pos
                                      )
         
-        ## Make field-specific .mac Gate file for simulation    
+        
+        ##### Make field-specific .mac Gate file for simulation    
         rotation_matrix = get_rotation_matrix(ct_files, field)
         axis = get_rotation_axis(rotation_matrix)
         angle = get_rotation_angle(rotation_matrix)
@@ -351,7 +396,10 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                        setRotationAxis=axis,
                        setTranslation=translation_vector,
                        setVoxelSize=dose_vox_dims,
-                       setImage=ct_mhd
+                       setImage=ct_mhd,
+                       rangeshift_rot=rs.rotation,
+                       rangeshift_trans=rs.translation,
+                       rangeshift_thick=rs.thickness
                       )
  
     

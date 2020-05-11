@@ -137,7 +137,7 @@ def main():
         sys.exit(0)
         
     DICOM_DIR = easygui.diropenbox()
-    #CT_DIR = os.path.join(DICOM_DIR,"ct")
+    CT_DIR = os.path.join(DICOM_DIR,"ct")
     TEMPLATE_MAC = os.path.join(path_to_templates,"TEMPLATE_simulateField.txt")
     TEMPLATE_SOURCE = os.path.join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
@@ -153,14 +153,15 @@ def main():
  
 
 
-    ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")    
-    ct_air = os.path.join(sim_dir,"data","ct_air.mhd")
+    ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")  ##path or name?
+    ct_for_simulation = "ct_air.mhd"
+    ct_air = os.path.join(sim_dir,"data",ct_for_simulation)
 
     
 
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
-    imageconversion.dcm2mhd(os.path.join(DICOM_DIR,"ct"), ct_unmod)
+    imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
     
@@ -179,7 +180,7 @@ def main():
     
     # Generate all files required for simulation
     print("Generating simulation files")
-    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_air, sim_dir)
+    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_for_simulation, sim_dir)
     
     
     

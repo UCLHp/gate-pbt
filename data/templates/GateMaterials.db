@@ -48,6 +48,11 @@ Bismuth:    S= Bi  ; Z= 83. ; A= 208.98  g/mole
 Uranium:    S= U   ; Z= 92. ; A= 238.03  g/mole
 
 [Materials]
+LexanPolycarbonate: d=1.21 g/cm3; n=3; state=solid
+        +el: name=Hydrogen;   n=14
+        +el: name=Carbon;     n=16
+        +el: name=Oxygen;     n=3
+
 Vacuum: d=0.000001 mg/cm3 ; n=1 
 	+el: name=Hydrogen ; n=1
 
