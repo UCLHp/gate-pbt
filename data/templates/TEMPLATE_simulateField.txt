@@ -77,7 +77,7 @@
 /gate/rangeshifter/placement/setRotationAxis         0 0 1
 /gate/rangeshifter/placement/setRotationAngle        0 deg
 /gate/rangeshifter/placement/setTranslation         0 0 0 mm   
-/gate/rangeshifter/setMaterial                 Water
+/gate/rangeshifter/setMaterial                 LexanPolycarbonate
 /gate/rangeshifter/vis/setVisible              1
 /gate/rangeshifter/vis/setColor                blue
 

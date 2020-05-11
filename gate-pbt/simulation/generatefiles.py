@@ -324,17 +324,22 @@ def write_mac_file(template, output, planDescription, sourceDescription,
 
 
 def field_has_rangeshifter( field ):
-    """Return tru if field has rangeshifter"""
+    """Return true if field has rangeshifter"""
     return hasattr(field.IonControlPointSequence[0],"RangeShifterSettingsSequence")
 
 
 def get_source_offset(field, rs):
-    """Offset source to allow rangeshifter"""
+    """Offset source to allow rangeshifter in beam path"""
     source_offset = 0
     if field_has_rangeshifter(field):
         # offset source by thickness, rangeshifter offset from nozzle exit
         # and some arbitrary distance so source is not in rangeshifter
-        source_offset = rs.thickness + rs.offset + 5  
+        #####source_offset = rs.thickness + rs.offset + 5  
+        rsss = field.IonControlPointSequence[0].RangeShifterSettingsSequence[0]
+        snout_pos = field.IonControlPointSequence[0].SnoutPosition
+        rs_inset = rsss.IsocenterToRangeShifterDistance - snout_pos
+        source_offset = rs_inset + rs.thickness + 5
+        print("source_offset = {}".format(source_offset))
     return source_offset
 
 
@@ -357,7 +362,7 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         # Rangeshifter object
         rs = rangeshifter.get_props( field )  
         
-        # Offset to source positon (snout position) to allow rangeshifter
+        # Offset to source positon (snout position) needed to allow rangeshifter
         source_offset = get_source_offset(field, rs)
         
         
