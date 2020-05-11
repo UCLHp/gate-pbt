@@ -13,13 +13,13 @@ This includes the Geant4 10.03.p03 install along with various other useful softw
 ## Usage
 
 ### File preparation
-First export the relevant dicom files from the TPS to new folder.
+First export the relevant dicom files from the TPS to an empty folder.
 You will need the plan file, the structure set, the plan dose and all CT images. 
 All CT files must be placed in a subdirectory called "ct".
 
 In the simulation directory, ```python run.py``` will prompt for the directory containing
 your exported dicom files and generate a new directory containing all files required for 
-a Gate simulation. Individual mac files will be generated separately for each field in
+a Gate simulation (found in data/simulationfiles). Individual mac files will be generated separately for each field in
 the plan.
 
 If running on a cluster you can split a simulation: ```jobsplitter.split_by_primaries(field.mac, N)``` 
@@ -49,8 +49,10 @@ into the TPS for comparison.
 ## Limitations / known bugs
 Many. I only recommend that you use the code to generate the Gate simulation files.
 
+All testing has been done using pencil beam scanning proton plans created in the Eclipse treatment planning system (versions 13.7 and 15.5).
+
 The header information in the mhd output from Gate will not match that of the CT image (due to
-the rotations we applied in gate in setting up the patient). You must manually correct this by changing
+any rotations applied in Gate when setting up the patient). You must manually correct this by changing
 the TransformMatrix field to match that of the CT.
 
 When simulating certain patient positions (HFP for example) Gate will also produce the wrong Origin in the
