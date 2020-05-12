@@ -29,9 +29,9 @@
 ### Container volume for MergedVolumeActor for inclusion of rangeshifters
 /gate/world/daughters/name GlobalVol
 /gate/world/daughters/insert box
-/gate/GlobalVol/geometry/setXLength 1.5 m
-/gate/GlobalVol/geometry/setYLength 1.5 m
-/gate/GlobalVol/geometry/setZLength 1.5 m
+/gate/GlobalVol/geometry/setXLength 1.98 m
+/gate/GlobalVol/geometry/setYLength 1.98 m
+/gate/GlobalVol/geometry/setZLength 1.98 m
 /gate/GlobalVol/placement/setTranslation 0.0 0.0 0.0 mm
 /gate/GlobalVol/placement/setRotationAxis 1 0 0
 /gate/GlobalVol/placement/setRotationAngle 0 deg

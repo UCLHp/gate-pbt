@@ -11,6 +11,9 @@ in place we must first position this correctly wrt the patient and then
 offset the beam so that it passes through the rangeshifter. (The number to
 offset is the nozzle to exit distance in the source description file).
 
+So as to only have 1 mac template file, any field without a rangeshifter
+will technically contain a 0.001 mm thick rangeshitfer positioned so as 
+to be out of the beam.
 """
 
 from math import sin, cos, radians
@@ -18,8 +21,8 @@ from math import sin, cos, radians
 
 ######### TODO
 #
-# 1. Keep 0mm thickness RS in for all plans? Need to move it out of beam?
-# 2. Need exact RS dimensions
+# 1. Need exact RS dimensions / chemical composition
+# 2. Add all rangeshifters to RS_THICKNESS
 #
 #########
 
@@ -32,11 +35,15 @@ RS_THICKNESS = { 57.0:50 }
 
 class Rangeshifter:
     
-    def __init__(self, rotation=0, translation=None, thickness=0 ):
+    # Default Rangeshifter is 0mm thick and translated 1.45 m to edge of
+    # the MergedVolume, out of beam path.
+    
+    def __init__(self, rotation=0, translation=None, thickness=0.001 ):
         self.rotation = rotation
         self.thickness = thickness 
         if translation is None: 
-            translation = [0,0,0]
+            # Must ensure this remains within the MergedVolume
+            translation = [0,950,0]         
         self.translation = translation
     
 
