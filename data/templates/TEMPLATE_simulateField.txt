@@ -172,7 +172,7 @@
 /gate/source/PBS/setSigmaEnergyInMeVFlag true
 /gate/source/PBS/setSortedSpotGenerationFlag false
 /gate/source/PBS/setFlatGenerationFlag false
-/gate/source/PBS/setBeamConvergence false
+/gate/source/PBS/setBeamConvergence true
 /gate/source/PBS/setSourceDescriptionFile data/XXXXX.txt
 
 #=====================================================
