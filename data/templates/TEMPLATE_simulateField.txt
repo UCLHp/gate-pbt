@@ -17,6 +17,10 @@
 
 /gate/geometry/setMaterialDatabase data/GateMaterials.db
 
+# Ionisation potential assumed in CT calibration was 78 eV
+/gate/geometry/setIonisationPotential    Water    78 eV
+
+
 
 ### World
 /gate/world/geometry/setXLength 2 m
