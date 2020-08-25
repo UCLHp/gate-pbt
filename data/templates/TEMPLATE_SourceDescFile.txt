@@ -13,6 +13,7 @@ NOZZLE_EXIT_DIST
 1.5803
 # energy spread
 # polynomial order
+MeV
 2
 # polynomial parameters (highest to lowest)
 -0.00007
