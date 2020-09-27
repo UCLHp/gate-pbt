@@ -177,6 +177,7 @@ def main():
     
     # Check for density overrides and apply
     # TODO
+    #overrides.override_hu( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air), "BODY", -43 )
     
     # Generate all files required for simulation
     print("Generating simulation files")

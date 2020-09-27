@@ -187,6 +187,8 @@ def get_img_properties( ct_files ):
     properties["PixelSpacing_x"] = ds.PixelSpacing[0]
     properties["PixelSpacing_y"] = ds.PixelSpacing[1]
     properties["SliceThickness"] = ds.SliceThickness
+    ##properties["SliceThickness"] = 1.0
+
         
     properties["ImageOrientationPatient"] = ds.ImageOrientationPatient
     
@@ -215,7 +217,9 @@ def corner_voxel_centres( ct_files, imageorientationpatient ):
         
         ds = pydicom.dcmread( f )
         
-        z = ds.SliceLocation
+        #z = ds.SliceLocation
+        z = ds.ImagePositionPatient[2]
+        
         if z<zmin:
             zmin = z
         if z>zmax:
