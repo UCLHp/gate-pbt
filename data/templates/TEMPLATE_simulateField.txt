@@ -97,18 +97,12 @@
 
 
 
-
-
-
-
-
-
 #=====================================================
 # PHYSICS
 #=====================================================
 # (2 recommended lists for Gate RTIon)
-#/gate/physics/addPhysicsList QGSP_BIC_EMZ
-/gate/physics/addPhysicsList QBBC_EMZ
+/gate/physics/addPhysicsList QGSP_BIC_EMZ
+##/gate/physics/addPhysicsList QBBC_EMZ
 
 /gate/physics/Gamma/SetCutInRegion      world 10 mm
 /gate/physics/Electron/SetCutInRegion   world 10 mm
@@ -134,13 +128,15 @@
 /gate/actor/dose3d/saveEveryNSeconds     600
 /gate/actor/dose3d/enableEdep            false
 /gate/actor/dose3d/enableUncertaintyEdep false
-/gate/actor/dose3d/enableDose            false
+/gate/actor/dose3d/enableDose            true
+/gate/actor/dose3d/enableSquaredDose     true
 /gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
-/gate/actor/dose3d/normaliseDoseToMax    false
-/gate/actor/dose3d/enableDoseToWater     true
-/gate/actor/dose3d/enableUncertaintyDoseToWater true
-/gate/actor/dose3d/normaliseDoseToWaterToMax  false
+#/gate/actor/dose3d/normaliseDoseToMax   false
+/gate/actor/dose3d/enableDoseToWater     false
+/gate/actor/dose3d/enableSquaredDoseToWater      false
+#/gate/actor/dose3d/enableUncertaintyDoseToWater true
+#/gate/actor/dose3d/normaliseDoseToWaterToMax    false
 
 /gate/actor/addActor                 LETActor  let3d
 /gate/actor/let3d/save               output/letActor.mhd
