@@ -94,13 +94,53 @@ def get_time_per_particle( e_vs_pps_file ):
     # correct coefficients
     pnormal = p.convert(domain=(-1, 1))
     print("time per particle polynomial params = {}".format(pnormal))
+    
+    
+    
+    
+def get_n_per_mu( e_vs_nmu_file ):
+    """Return polynomial fit of E vs N/MU curve"""
+    
+    energies, nmu = [], []
+    for line in open(e_vs_nmu_file, "r"):
+        values = [float(s) for s in line.strip().split()]
+        energies.append( values[0] )
+        nmu.append( values[1] )
+
+    plt.scatter(energies, nmu)
+
+    p = Polynomial.fit(energies, nmu, 5)
+    plt.plot(*p.linspace())
+    
+    ################# checking polynomial fit ##################
+    nmu_fit = []
+    for en in energies:
+    #    n = 3.528489E+7 + (2.975837E+6)*en - (5.143418E+3)*en**2 + 5.362886*en**3
+    #    n = 2.35643E+7 + (3.3294727E+6)*en - (8.8892359E+3)*en**2 + (2.199734E+1)*en**3 - (2.634455E-2)*en**4       
+        n = 7.96835276E+7 + (1.19619046E+6)*en + (2.19278161E+4)*en**2 - (1.9025047E+2)*en**3 + (6.73796045E-1)*en**4 - (8.89071546E-4)*en**5
+    
+        nmu_fit.append(n)
+    
+    plt.scatter(energies,nmu_fit, s=15)
+    ############################################################
+            
+    plt.ylabel("N/MU Christie")
+    plt.xlabel("Energy")
+    #plt.ylim((0,0.005))
+    
+    ###print(p)
+    # correct coefficients
+    pnormal = p.convert(domain=(-1, 1))
+    print("N/MU vs E polynomial params = {}".format(pnormal))
+    
+    
+
+get_n_per_mu("Christie__NominalEnergy_ProtonsPerMU.dat")
 
 
-
-
-plot_energy_pps("E_vs_PPS.dat")
-get_time_per_particle("E_vs_PPS.dat")
-plot_energy_nmu()
+#plot_energy_pps("E_vs_PPS.dat")
+#get_time_per_particle("E_vs_PPS.dat")
+#plot_energy_nmu()
 
 
 
