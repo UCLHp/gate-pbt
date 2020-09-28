@@ -18,13 +18,17 @@ def particles_per_MU( energy ):
     """
     E = energy
     
-    # Calibration taken from skandion
+    # Calibration taken from IBA @ Skandion
     # https://github.com/OpenGATE/GateContrib/blob/master/dosimetry/dosimetry/protontherapy/data/Source-Properties.txt
-    n_mu = 38305849.80777806 - 757267.7950206206*E + 39470.879309031465*E**2 -\
-        692.4982726864837*E**3 + 7.991201233899195*E**4 + \
-        7.991201233899195*E**5 - 0.059977540330568506*E**6 + \
-        0.00027937202589281356*E**7 - 0.0000007598937570035222*E**8 + \
-        0.0000000010784400314569827*E**9 - 0.0000000000005984490922947305*E**10
+    #n_mu = 38305849.80777806 - 757267.7950206206*E + 39470.879309031465*E**2 -\
+    #    692.4982726864837*E**3 + 7.991201233899195*E**4 + \
+    #    7.991201233899195*E**5 - 0.059977540330568506*E**6 + \
+    #    0.00027937202589281356*E**7 - 0.0000007598937570035222*E**8 + \
+    #    0.0000000010784400314569827*E**9 - 0.0000000000005984490922947305*E**10
+        
+    # From Christie
+    n_mu = 7.96835276E+7 + (1.19619046E+6)*E + (2.19278161E+4)*E**2 - \
+        (1.9025047E+2)*E**3 + (6.73796045E-1)*E**4 - (8.89071546E-4)*E**5    
         
     return n_mu
 
@@ -112,8 +116,14 @@ def plot_field_stats(field):
     for i,cp in enumerate(cps):
         if i%2 == 0:
             energies.append( cp.NominalBeamEnergy )
-            tot_mus.append( sum(cp.ScanSpotMetersetWeights) )
-            tot_spots.append( len(cp.ScanSpotMetersetWeights) )
+            # Count spots and MUs
+            if isinstance(cp.ScanSpotMetersetWeights, float):
+                tot_mus.append( cp.ScanSpotMetersetWeights )
+                tot_spots.append( 1 )
+            else:
+                tot_mus.append( sum(cp.ScanSpotMetersetWeights) )
+                tot_spots.append( len(cp.ScanSpotMetersetWeights) )
+
             
     print()        
     print("----- Field {} -----".format(fieldname))
@@ -131,8 +141,8 @@ def plot_field_stats(field):
 
 def main():
     
-    DICOM_PLAN = "dcmplan_BaseSkull01.dcm"
-    #DICOM_PLAN = "dcmplan_SOBP_water.dcm"
+    #DICOM_PLAN = "dcmplan_BaseSkull01.dcm"
+    DICOM_PLAN = "zzzProtonPlanning17.dcm"
 
 
     plan = pydicom.dcmread(DICOM_PLAN)    
