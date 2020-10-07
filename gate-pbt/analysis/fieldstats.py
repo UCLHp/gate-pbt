@@ -142,7 +142,10 @@ def plot_field_stats(field):
 def main():
     
     #DICOM_PLAN = "dcmplan_BaseSkull01.dcm"
-    DICOM_PLAN = "zzzProtonPlanning17.dcm"
+    #DICOM_PLAN = "zzzProtonPlanning17.dcm"
+    #DICOM_PLAN = "sarcoma.dcm"
+    DICOM_PLAN = "sarcoma_huge_target.dcm"
+
 
 
     plan = pydicom.dcmread(DICOM_PLAN)    
