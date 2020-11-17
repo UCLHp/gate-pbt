@@ -33,6 +33,8 @@ def particles_per_MU( energy ):
     return n_mu
 
 
+    
+
 def time_per_primary( energy ):
     """Return time per primary as simulated in water
 
@@ -98,38 +100,70 @@ def plot_spots(fieldname, energies, tot_spots):
     plt.title(fieldname)
     plt.show()
     
+    
+
+def get_beam_meterset(plan, beamnum):
+    """Return dcm BeamMeterset value for given beam number"""
+    
+    beam_meterset = -1
+    
+    for rbs in plan.FractionGroupSequence[0].ReferencedBeamSequence:
+        if rbs.ReferencedBeamNumber == beamnum:
+            beam_meterset = rbs.BeamMeterset
+
+    if beam_meterset < 0:
+        print("ERROR: no beam meterset weight found")
+        exit(2)
+    
+    return beam_meterset
 
 
-def plot_field_stats(field):
+
+def plot_field_stats(plan, field):
     """Plot MUs, #spots and estimated simulation time for each CP"""    
 
     fieldname = field.BeamName
+    beamnumber = field.BeamNumber
+    
+    ##############################
+    # Plan DICOM contains scan spot meterset weights, NOT MUs.
+    # Varian IMS converts via:
+    # MU = scanspotweight * (beam meterset / finalcummetersetweight)
+    ##############################
+    
+    finalcummeterset = field.FinalCumulativeMetersetWeight
+    beammeterset = get_beam_meterset( plan, beamnumber )
     
     cps = field.IonControlPointSequence
-    n_cps = len(cps)/2
     
-
     energies = []
     tot_mus = []
     tot_spots = []
     
     for i,cp in enumerate(cps):
-        if i%2 == 0:
+        if i%2 == 0:   # Skip empty CPs
             energies.append( cp.NominalBeamEnergy )
             # Count spots and MUs
             if isinstance(cp.ScanSpotMetersetWeights, float):
-                tot_mus.append( cp.ScanSpotMetersetWeights )
+                spotweights = cp.ScanSpotMetersetWeights    ## THESE ARE NOT MU VALUES?!
+                mus = spotweights * (beammeterset/finalcummeterset)
+                tot_mus.append( mus )
                 tot_spots.append( 1 )
             else:
-                tot_mus.append( sum(cp.ScanSpotMetersetWeights) )
+                spotweights = sum(cp.ScanSpotMetersetWeights)
+                mus = spotweights * (beammeterset/finalcummeterset)
+                tot_mus.append( mus )
                 tot_spots.append( len(cp.ScanSpotMetersetWeights) )
 
             
     print()        
     print("----- Field {} -----".format(fieldname))
+    print("FINAL CUM = ", finalcummeterset)
+    print("BEAM METERSET = ", beammeterset)
+    print("RATIO = ", beammeterset/finalcummeterset)
     print("  Energy layers: {}, {}->{} MeV".format(len(energies),energies[-1],energies[0]))
     print("  Total spots: {}".format(sum(tot_spots)))
-    print("  Total field MU {}".format(sum(tot_mus)))
+    print("  Total field ScanSpotMetersetWeight {}".format(sum(tot_mus)))
 
 
     plot_mus(fieldname, energies, tot_mus)
@@ -139,12 +173,16 @@ def plot_field_stats(field):
 
 
 
+
+
 def main():
     
     #DICOM_PLAN = "dcmplan_BaseSkull01.dcm"
     #DICOM_PLAN = "zzzProtonPlanning17.dcm"
     #DICOM_PLAN = "sarcoma.dcm"
-    DICOM_PLAN = "sarcoma_huge_target.dcm"
+    #DICOM_PLAN = "sarcoma_huge_target.dcm"
+    DICOM_PLAN = r"M:/vGATE-GEANT4/DoseToWater/MC_chest_wall/RN.1.2.246.352.221.461617125122614828210562692546382058883.dcm"
+
 
 
 
@@ -152,7 +190,7 @@ def main():
     fields = plan.IonBeamSequence
     
     for field in fields:
-        plot_field_stats( field )
+        plot_field_stats( plan, field )
 
 
 if __name__=="__main__":
