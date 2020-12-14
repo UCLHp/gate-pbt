@@ -27,8 +27,13 @@ def particles_per_MU( energy ):
     #    0.0000000010784400314569827*E**9 - 0.0000000000005984490922947305*E**10
         
     # From Christie
-    n_mu = 7.96835276E+7 + (1.19619046E+6)*E + (2.19278161E+4)*E**2 - \
-        (1.9025047E+2)*E**3 + (6.73796045E-1)*E**4 - (8.89071546E-4)*E**5    
+    #n_mu = 7.96835276E+7 + (1.19619046E+6)*E + (2.19278161E+4)*E**2 - \
+    #    (1.9025047E+2)*E**3 + (6.73796045E-1)*E**4 - (8.89071546E-4)*E**5   
+        
+        
+   
+    #From Daniela
+    n_mu = (4.29113258740004e-05)*E**4 + (0.0672373781511538)*E**3 - (71.3256258226481)*E**2 + (38204.2849176103)*E + 410632.1756716
         
     return n_mu
 
@@ -181,8 +186,10 @@ def main():
     #DICOM_PLAN = "zzzProtonPlanning17.dcm"
     #DICOM_PLAN = "sarcoma.dcm"
     #DICOM_PLAN = "sarcoma_huge_target.dcm"
-    DICOM_PLAN = r"M:/vGATE-GEANT4/DoseToWater/MC_chest_wall/RN.1.2.246.352.221.461617125122614828210562692546382058883.dcm"
-
+    #DICOM_PLAN = r"M:/vGATE-GEANT4/DoseToWater/MC_chest_wall/RN.1.2.246.352.221.461617125122614828210562692546382058883.dcm"
+    
+    #DICOM_PLAN = "RN.ZZ_Proton_COP.SingleSpot.dcm"
+    DICOM_PLAN = "RN.ZZ_Proton_COP.Layer.dcm"
 
 
 

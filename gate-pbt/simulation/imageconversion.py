@@ -228,7 +228,7 @@ def dose_mhd2dcm_scale(mhdFile, dcmFile, dosescaling=None):
     # Scale the plan's dose to prescription so that it's in the right ball-park
     if dosescaling==None:
         print(" NO DOSE SCALING SPECIFIED")
-        dosescaling = 1.5E8
+        dosescaling = 1
     
     dcm = pydicom.dcmread(dcmFile)
     mhd = itk.imread(mhdFile)

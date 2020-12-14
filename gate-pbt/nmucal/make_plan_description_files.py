@@ -117,9 +117,9 @@ def make_plan_description_file(filename, plan_dsc, field_dsc, spot_dsc):
 
 def main():
     
-    FIELD_SIZE = 200       ## Square field, mm
-    SPOT_SPACING = 5    ## Spot centre to centre distance, mm
-    SPOT_MU = 10          ## Equally weighted spots
+    FIELD_SIZE = 100      ## Square field, mm
+    SPOT_SPACING = 2.5    ## Spot centre to centre distance, mm
+    SPOT_MU = 1          ## Equally weighted spots
     ENERGIES = list( range(70,241,10) ) + [244]
     
     nspots_per_row = FIELD_SIZE/SPOT_SPACING + 1
