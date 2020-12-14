@@ -160,6 +160,7 @@ def merge_results( directory ):
     allfiles = [join(directory,f) for f in listdir(directory) if isfile(join(directory,f))]
 
     dosefiles = [f for f in allfiles if "pat-Dose.mhd" in f ]
+    dosetowaterfiles = [f for f in allfiles if "pat-Dose.mhd" in f ]
     letfiles = [f for f in allfiles if "-doseAveraged.mhd" in f]
     dosesquaredfiles = [f for f in allfiles if "-Dose-Squared.mhd" in f]
     statfiles = [f for f in allfiles if "stat-pat.txt" in f ]
@@ -167,7 +168,8 @@ def merge_results( directory ):
     #Need to check files are as expected (size etc)
     
     sum_dose(dosefiles, join(directory,"merged-Dose.mhd"))
-    combine_let( dosefiles, letfiles, join(directory,"merged-LET.mhd"))
+    #sum_dose(dosetowaterfiles, join(directory,"merged-DoseToWater.mhd"))
+    #combine_let( dosefiles, letfiles, join(directory,"merged-LET.mhd"))
     combine_uncertainty(dosefiles, dosesquaredfiles, statfiles, join(directory,"merged-Uncertainty.mhd"))
 
     

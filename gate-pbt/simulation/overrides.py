@@ -38,7 +38,8 @@ def get_external_name( structure_file ):
             print("\n\nWARNING: Bolus found. It will be overriden with air.\n")
     if contour=="":
         raise Exception("No external structure found. Exiting.")
-        sys.exit(1)
+        exit(1)
+    #####contour="Body"
     return contour
 
 

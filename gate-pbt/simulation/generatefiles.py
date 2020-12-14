@@ -187,6 +187,8 @@ def get_img_properties( ct_files ):
     properties["PixelSpacing_x"] = ds.PixelSpacing[0]
     properties["PixelSpacing_y"] = ds.PixelSpacing[1]
     properties["SliceThickness"] = ds.SliceThickness
+    ##properties["SliceThickness"] = 1.0
+
         
     properties["ImageOrientationPatient"] = ds.ImageOrientationPatient
     
@@ -215,7 +217,9 @@ def corner_voxel_centres( ct_files, imageorientationpatient ):
         
         ds = pydicom.dcmread( f )
         
-        z = ds.SliceLocation
+        #z = ds.SliceLocation
+        z = ds.ImagePositionPatient[2]
+        
         if z<zmin:
             zmin = z
         if z>zmax:
@@ -289,10 +293,10 @@ def write_mac_file(template, output, planDescription, sourceDescription,
                          )
             
             elif "setPlan" in line and planDescription is not None:
-                out.write( "/gate/source/PBS/setPlan    data/{}\n".format(planDescription) )
+                out.write( "/gate/source/PBS/setPlan    {{path}}/data/{}\n".format(planDescription) )
             
             elif "setSourceDescriptionFile" in line and sourceDescription is not None:
-                out.write( "/gate/source/PBS/setSourceDescriptionFile    data/{}\n".format(sourceDescription) )
+                out.write( "/gate/source/PBS/setSourceDescriptionFile    {{path}}/data/{}\n".format(sourceDescription) )
             
             elif "dose3d/setVoxelSize" in line and setVoxelSize is not None:
                 out.write( "/gate/actor/dose3d/setVoxelSize    {} {} {} mm\n".format(
@@ -305,7 +309,7 @@ def write_mac_file(template, output, planDescription, sourceDescription,
                     )                
             
             elif "patient/geometry/setImage" in line and setImage is not None:
-                out.write( "/gate/patient/geometry/setImage    data/{}\n".format(setImage) )    
+                out.write( "/gate/patient/geometry/setImage    {{path}}/data/{}\n".format(setImage) )    
                 
             elif  "rangeshifter/placement/setRotationAngle" in line and rangeshift_rot is not None:
                 out.write( "/gate/rangeshifter/placement/setRotationAngle    {} deg\n".format(rangeshift_rot) )

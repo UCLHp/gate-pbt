@@ -3,19 +3,19 @@
 # VERBOSITY
 #=====================================================
 
-/control/execute mac/verbose.mac
+/control/execute {path}/mac/verbose.mac
 
 #=====================================================
 # VISUALISATION
 #=====================================================
 
-#/control/execute mac/visu.mac
+#/control/execute {path}/mac/visu.mac
 
 #=====================================================
 # GEOMETRY
 #=====================================================
 
-/gate/geometry/setMaterialDatabase data/GateMaterials.db
+/gate/geometry/setMaterialDatabase {path}/data/GateMaterials.db
 
 # Ionisation potential assumed in CT calibration was 78 eV
 /gate/geometry/setIonisationPotential    Water    78 eV
@@ -48,21 +48,21 @@
 ### Voxelized phantom added to the GlobalVol container
 
 # Generate materials from Hounsfield units
-/gate/HounsfieldMaterialGenerator/SetMaterialTable data/UCLH2019MaterialsTable_v1.txt
-/gate/HounsfieldMaterialGenerator/SetDensityTable  data/UCLH2019DensitiesTable_v1.txt
+/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
+/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
 /gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
-/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename data/patient-HUmaterials.db
-/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       data/patient-HU2mat.txt
+/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
+/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
 /gate/HounsfieldMaterialGenerator/Generate
 
 # Create parameterized phantom object
 /gate/GlobalVol/daughters/name                      patient
 /gate/GlobalVol/daughters/insert                    ImageNestedParametrisedVolume
-/gate/geometry/setMaterialDatabase              data/patient-HUmaterials.db
-/gate/patient/geometry/setHUToMaterialFile      data/patient-HU2mat.txt
+/gate/geometry/setMaterialDatabase              {path}/data/patient-HUmaterials.db
+/gate/patient/geometry/setHUToMaterialFile      {path}/data/patient-HU2mat.txt
 
 # Position patient 
-/gate/patient/geometry/setImage                data/XXXX
+/gate/patient/geometry/setImage                {path}/data/XXXX
 /gate/patient/placement/setRotationAxis         0 1 0
 /gate/patient/placement/setRotationAngle        XX deg
 /gate/patient/placement/setTranslation XX XX XX mm  
@@ -75,9 +75,9 @@
 /gate/GlobalVol/daughters/name                     rangeshifter
 /gate/GlobalVol/daughters/insert                   box
 
-/gate/rangeshifter/geometry/setXLength         200 mm        
+/gate/rangeshifter/geometry/setXLength         310 mm        
 /gate/rangeshifter/geometry/setYLength         0 mm       
-/gate/rangeshifter/geometry/setZLength         200 mm         
+/gate/rangeshifter/geometry/setZLength         410 mm         
 /gate/rangeshifter/placement/setRotationAxis         0 0 1
 /gate/rangeshifter/placement/setRotationAngle        0 deg
 /gate/rangeshifter/placement/setTranslation         0 0 0 mm   
@@ -97,27 +97,23 @@
 
 
 
-
-
-
-
-
-
 #=====================================================
 # PHYSICS
 #=====================================================
 # (2 recommended lists for Gate RTIon)
-#/gate/physics/addPhysicsList QGSP_BIC_EMZ
-/gate/physics/addPhysicsList QBBC_EMZ
+/gate/physics/addPhysicsList QGSP_BIC_EMZ
 
 /gate/physics/Gamma/SetCutInRegion      world 10 mm
 /gate/physics/Electron/SetCutInRegion   world 10 mm
 /gate/physics/Positron/SetCutInRegion   world 10 mm
 
-###   Recommended cut value = 0.001 mm??
 /gate/physics/Gamma/SetCutInRegion      patient 0.1 mm 
 /gate/physics/Electron/SetCutInRegion   patient 0.1 mm
 /gate/physics/Positron/SetCutInRegion   patient 0.1 mm
+
+/gate/physics/Gamma/SetCutInRegion      rangeshifter 1 mm 
+/gate/physics/Electron/SetCutInRegion   rangeshifter 1 mm
+/gate/physics/Positron/SetCutInRegion   rangeshifter 1 mm
 
 /gate/physics/displayCuts
 
@@ -127,30 +123,34 @@
 #=====================================================
 
 /gate/actor/addActor                     DoseActor  dose3d
-/gate/actor/dose3d/save                  output/3d-pat.mhd
+/gate/actor/dose3d/save                  {path}/output/3d-pat.mhd
 /gate/actor/dose3d/attachTo    	         patient
 /gate/actor/dose3d/stepHitType           random
 /gate/actor/dose3d/setVoxelSize          XX XX XX mm
-/gate/actor/dose3d/saveEveryNSeconds     600
+/gate/actor/dose3d/saveEveryNSeconds     6000
 /gate/actor/dose3d/enableEdep            false
 /gate/actor/dose3d/enableUncertaintyEdep false
 /gate/actor/dose3d/enableDose            true
-###/gate/actor/dose3d/enableSquaredDose     true
-/gate/actor/dose3d/enableUncertaintyDose true
+/gate/actor/dose3d/enableSquaredDose     true
+/gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
-/gate/actor/dose3d/normaliseDoseToMax    false
+#/gate/actor/dose3d/normaliseDoseToMax   false
+/gate/actor/dose3d/enableDoseToWater     false
+/gate/actor/dose3d/enableSquaredDoseToWater      false
+#/gate/actor/dose3d/enableUncertaintyDoseToWater false
+#/gate/actor/dose3d/normaliseDoseToWaterToMax    false
 
 /gate/actor/addActor                 LETActor  let3d
-/gate/actor/let3d/save               output/letActor.mhd
+/gate/actor/let3d/save               {path}/output/letActor.mhd
 /gate/actor/let3d/attachTo           patient
-/gate/actor/let3d/saveEveryNSeconds     600
+/gate/actor/let3d/saveEveryNSeconds     6000
 /gate/actor/let3d/setVoxelSize       XX XX XX mm
 /gate/actor/let3d/setType            DoseAveraged
 /gate/actor/let3d/addFilter                    particleFilter
 /gate/actor/let3d/particleFilter/addParticle   proton
 
 /gate/actor/addActor               SimulationStatisticActor stat
-/gate/actor/stat/save              output/stat-pat.txt
+/gate/actor/stat/save              {path}/output/stat-pat.txt
 /gate/actor/stat/saveEveryNSeconds 600
 
 
@@ -166,14 +166,14 @@
 #=====================================================
 /gate/source/addSource PBS TPSPencilBeam
 /gate/source/PBS/setParticleType proton
-/gate/source/PBS/setPlan data/XXXXX.txt
+/gate/source/PBS/setPlan {path}/data/XXXXX.txt
 /gate/source/PBS/setSpotIntensityAsNbIons false
 
 /gate/source/PBS/setSigmaEnergyInMeVFlag true
 /gate/source/PBS/setSortedSpotGenerationFlag false
 /gate/source/PBS/setFlatGenerationFlag false
-/gate/source/PBS/setBeamConvergence true
-/gate/source/PBS/setSourceDescriptionFile data/XXXXX.txt
+/gate/source/PBS/setBeamConvergence false
+/gate/source/PBS/setSourceDescriptionFile {path}/data/XXXXX.txt
 
 #=====================================================
 # START BEAMS

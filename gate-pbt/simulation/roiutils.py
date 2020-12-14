@@ -539,7 +539,8 @@ class region_of_interest(object):
         # directions +/- 1 for each axis       
         directions = list( roimask.GetDirection()*(1,1,1) )
 
-        #print("directions = {}".format(directions))  
+
+        print("directions = {}".format(directions))  
 
         # Find minimum corner (voxel centre)
         # This assumes image (x,y) is centred close to zero
@@ -550,9 +551,9 @@ class region_of_interest(object):
             else:
                 orig_min_corner.append(o-(dim-1)*s)
         
-        #print( "dims = {}".format(dims) )
-        #print( "im_size = {}".format(im_size) )
-        #print( "orig_min_corner = {}".format(orig_min_corner) )        
+        print( "dims = {}".format(dims) )
+        #####print( "im_size = {}".format(im_size) )
+        print( "orig_min_corner = {}".format(orig_min_corner) )        
     
         # --------------------------------------------------------
         
@@ -614,6 +615,9 @@ class region_of_interest(object):
         # EDITED ----------------------------------------------------------------------
         xpoints=np.linspace(orig[0],orig[0]+directions[0]*space[0]*dims[0],dims[0],False)
         ypoints=np.linspace(orig[1],orig[1]+directions[1]*space[1]*dims[1],dims[1],False)
+        
+        #xpoints=np.linspace(orig[1],orig[1]+directions[1]*space[1]*dims[1],dims[1],False)
+        #ypoints=np.linspace(orig[0],orig[0]+directions[0]*space[0]*dims[0],dims[0],False)
         # ------------------------------------------------------------------------------
         xymesh = np.meshgrid(xpoints,ypoints)
         xyflat = np.array([(x,y) for x,y in zip(xymesh[0].flat,xymesh[1].flat)])
@@ -625,7 +629,10 @@ class region_of_interest(object):
         #logger.debug("z0={}".format(z0))
         #logger.debug("going to loop over z planes in image")
         for iz in range(dims[2]):
-            z = orig[2]+space[2]*iz # z coordinate in image/mask
+            #z = orig[2]+space[2]*iz # z coordinate in image/mask
+            ###### STEVE: NEED TO ACCOUNT FOR DIRECTIONALITY OF Z TOO
+            z = orig[2]+directions[2]*space[2]*iz # z coordinate in image/mask       
+            ################################################
             if z<zrange[0] or z>zrange[1]:
                 continue
             icz = int(np.round((z-z0)/self.dz)) # layer index

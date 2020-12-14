@@ -1,0 +1,187 @@
+
+#=====================================================
+# VERBOSITY
+#=====================================================
+
+/control/execute {path}/mac/verbose.mac
+
+#=====================================================
+# VISUALISATION
+#=====================================================
+
+#/control/execute {path}/mac/visu.mac
+
+#=====================================================
+# GEOMETRY
+#=====================================================
+
+/gate/geometry/setMaterialDatabase {path}/data/GateMaterials.db
+
+# Ionisation potential assumed in CT calibration was 78 eV
+/gate/geometry/setIonisationPotential    Water    78 eV
+
+
+
+### World
+/gate/world/geometry/setXLength 2 m
+/gate/world/geometry/setYLength 2 m
+/gate/world/geometry/setZLength 2 m
+/gate/world/setMaterial Air
+
+
+### Voxelized phantom added to the GlobalVol container
+# Generate materials from Hounsfield units
+#/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
+#/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
+#/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
+#/gate/HounsfieldMaterialGenerator/Generate
+
+
+### Rangeshifter
+/gate/world/daughters/name                     rangeshifter
+/gate/world/daughters/insert                   box
+/gate/rangeshifter/geometry/setXLength         310 mm        
+/gate/rangeshifter/geometry/setYLength         50 mm
+/gate/rangeshifter/geometry/setZLength         410 mm         
+/gate/rangeshifter/placement/setRotationAxis         0 0 1
+/gate/rangeshifter/placement/setRotationAngle    0 deg
+/gate/rangeshifter/placement/setTranslation    0 -880 0 mm
+/gate/rangeshifter/setMaterial                 LexanPolycarbonate
+/gate/rangeshifter/vis/setVisible              1
+/gate/rangeshifter/vis/setColor                green
+
+
+
+### Water
+/gate/world/daughters/name                     waterbox
+/gate/world/daughters/insert                   box
+/gate/waterbox/geometry/setXLength         900 mm        
+/gate/waterbox/geometry/setYLength         900 mm
+/gate/waterbox/geometry/setZLength         900 mm         
+/gate/waterbox/placement/setRotationAxis         0 0 1
+/gate/waterbox/placement/setRotationAngle    0 deg
+/gate/waterbox/placement/setTranslation    0 450 0 mm      #SURFACE AT ISOCENTRE
+/gate/waterbox/setMaterial                 Water
+/gate/waterbox/vis/setVisible              1
+/gate/waterbox/vis/setColor                blue
+
+
+
+### Roos chamber volume
+/gate/waterbox/daughters/name             roos
+/gate/waterbox/daughters/insert           cylinder
+/gate/roos/geometry/setRmax               7.5 mm 
+##/gate/roos/geometry/setRmin             0 mm 
+/gate/roos/geometry/setHeight             2 mm 
+/gate/roos/placement/setRotationAxis      1 0 0
+/gate/roos/placement/setRotationAngle     90 deg
+/gate/roos/placement/setTranslation       0 -430 0 mm   # (450 - depth of measurement)
+/gate/roos/setMaterial                    Water 
+/gate/roos/vis/setVisible                 1
+/gate/roos/vis/setColor                   red
+
+
+
+
+
+
+
+
+#=====================================================
+# PHYSICS
+#=====================================================
+# (2 recommended lists for Gate RTIon)
+/gate/physics/addPhysicsList QGSP_BIC_EMZ
+
+/gate/physics/Gamma/SetCutInRegion      world 5 mm
+/gate/physics/Electron/SetCutInRegion   world 5 mm
+/gate/physics/Positron/SetCutInRegion   world 5 mm
+
+/gate/physics/Gamma/SetCutInRegion      waterbox 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   waterbox 0.1 mm
+/gate/physics/Positron/SetCutInRegion   waterbox 0.1 mm
+
+/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   rangeshifter 0.1 mm
+/gate/physics/Positron/SetCutInRegion   rangeshifter 0.1 mm
+
+/gate/physics/Gamma/SetCutInRegion      roos 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   roos 0.1 mm
+/gate/physics/Positron/SetCutInRegion   roos 0.1 mm
+
+/gate/physics/displayCuts
+
+
+#=====================================================
+# DETECTORS
+#=====================================================
+
+#/gate/actor/addActor                     DoseActor  dose3d
+#/gate/actor/dose3d/save                  {path}/output/waterbox.mhd
+#/gate/actor/dose3d/attachTo    	      waterbox
+#/gate/actor/dose3d/stepHitType           random
+#/gate/actor/dose3d/setVoxelSize          1 1 1 mm
+#/gate/actor/dose3d/saveEveryNSeconds     60
+#/gate/actor/dose3d/enableEdep            false
+#/gate/actor/dose3d/enableUncertaintyEdep false
+#/gate/actor/dose3d/enableDose            true
+#/gate/actor/dose3d/enableSquaredDose     true
+#/gate/actor/dose3d/enableUncertaintyDose false
+#/gate/actor/dose3d/enableNumberOfHits    false
+#/gate/actor/dose3d/normaliseDoseToMax    false
+#/gate/actor/dose3d/enableDoseToWater     false
+#/gate/actor/dose3d/enableSquaredDoseToWater      false
+#/gate/actor/dose3d/enableUncertaintyDoseToWater false
+
+
+
+/gate/actor/addActor                       DoseActor  doseroos
+/gate/actor/doseroos/save                  {path}/output/roos_{energy}MeV.txt
+/gate/actor/doseroos/attachTo    	       roos
+/gate/actor/doseroos/stepHitType           random
+/gate/actor/doseroos/setResolution          1 1 1
+/gate/actor/doseroos/saveEveryNSeconds     600
+/gate/actor/doseroos/enableDose            true
+/gate/actor/doseroos/enableSquaredDose     true
+/gate/actor/doseroos/enableUncertaintyDose false
+/gate/actor/doseroos/enableDoseToWater     false
+
+
+
+/gate/actor/addActor               SimulationStatisticActor stat
+/gate/actor/stat/save              {path}/output/stat_{energy}MeV.txt
+/gate/actor/stat/saveEveryNSeconds 600
+
+
+#=====================================================
+# INITIALISATION
+#=====================================================
+
+/gate/run/initialize
+
+
+#=====================================================
+# SOURCE
+#=====================================================
+/gate/source/addSource PBS TPSPencilBeam
+/gate/source/PBS/setParticleType proton
+/gate/source/PBS/setPlan    {path}/data/Sq200mm_Spacing5mm_10MU_{energy}MeV.txt
+/gate/source/PBS/setSpotIntensityAsNbIons false
+
+/gate/source/PBS/setSigmaEnergyInMeVFlag true
+/gate/source/PBS/setSortedSpotGenerationFlag false
+/gate/source/PBS/setFlatGenerationFlag false
+/gate/source/PBS/setBeamConvergence true
+/gate/source/PBS/setSourceDescriptionFile    {path}/data/SourceDescFile.txt
+
+#=====================================================
+# START BEAMS
+#=====================================================
+
+/gate/random/setEngineName MersenneTwister
+/gate/random/setEngineSeed auto
+
+/gate/application/setTotalNumberOfPrimaries 1000000
+/gate/application/start
