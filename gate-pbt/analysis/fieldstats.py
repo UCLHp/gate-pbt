@@ -33,8 +33,11 @@ def particles_per_MU( energy ):
         
    
     #From Daniela
-    n_mu = (4.29113258740004e-05)*E**4 + (0.0672373781511538)*E**3 - (71.3256258226481)*E**2 + (38204.2849176103)*E + 410632.1756716
-        
+    #n_mu = (4.29113258740004e-05)*E**4 + (0.0672373781511538)*E**3 - (71.3256258226481)*E**2 + (38204.2849176103)*E + 410632.1756716
+    ##   
+    n_mu = (3.063861502761413e-05)*E**4 + (0.048007375737805)*E**3 - (50.926377749348596)*E**2 + (2.727779564382193e+04)*E + 2.931906878221635e+05
+    
+    
     return n_mu
 
 
@@ -189,7 +192,10 @@ def main():
     #DICOM_PLAN = r"M:/vGATE-GEANT4/DoseToWater/MC_chest_wall/RN.1.2.246.352.221.461617125122614828210562692546382058883.dcm"
     
     #DICOM_PLAN = "RN.ZZ_Proton_COP.SingleSpot.dcm"
-    DICOM_PLAN = "RN.ZZ_Proton_COP.Layer.dcm"
+    #DICOM_PLAN = "RN.ZZ_Proton_COP.Layer.dcm"
+    
+    
+    DICOM_PLAN = r"M:\vGATE-GEANT4\_dcm_data\DCM_zzzBaseSkull05\RN.1.2.246.352.71.5.179454110911.38673.20201217164318.dcm"
 
 
 

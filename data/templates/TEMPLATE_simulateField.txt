@@ -111,9 +111,9 @@
 /gate/physics/Electron/SetCutInRegion   patient 0.1 mm
 /gate/physics/Positron/SetCutInRegion   patient 0.1 mm
 
-/gate/physics/Gamma/SetCutInRegion      rangeshifter 1 mm 
-/gate/physics/Electron/SetCutInRegion   rangeshifter 1 mm
-/gate/physics/Positron/SetCutInRegion   rangeshifter 1 mm
+/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.5 mm 
+/gate/physics/Electron/SetCutInRegion   rangeshifter 0.5 mm
+/gate/physics/Positron/SetCutInRegion   rangeshifter 0.5 mm
 
 /gate/physics/displayCuts
 
@@ -135,23 +135,20 @@
 /gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
 #/gate/actor/dose3d/normaliseDoseToMax   false
-/gate/actor/dose3d/enableDoseToWater     false
-/gate/actor/dose3d/enableSquaredDoseToWater      false
-#/gate/actor/dose3d/enableUncertaintyDoseToWater false
-#/gate/actor/dose3d/normaliseDoseToWaterToMax    false
+/gate/actor/dose3d/enableDoseToWater     true
 
-/gate/actor/addActor                 LETActor  let3d
-/gate/actor/let3d/save               {path}/output/letActor.mhd
-/gate/actor/let3d/attachTo           patient
-/gate/actor/let3d/saveEveryNSeconds     6000
-/gate/actor/let3d/setVoxelSize       XX XX XX mm
-/gate/actor/let3d/setType            DoseAveraged
-/gate/actor/let3d/addFilter                    particleFilter
-/gate/actor/let3d/particleFilter/addParticle   proton
+#/gate/actor/addActor                 LETActor  let3d
+#/gate/actor/let3d/save               {path}/output/letActor.mhd
+#/gate/actor/let3d/attachTo           patient
+#/gate/actor/let3d/saveEveryNSeconds     6000
+#/gate/actor/let3d/setVoxelSize       XX XX XX mm
+#/gate/actor/let3d/setType            DoseAveraged
+#/gate/actor/let3d/addFilter                    particleFilter
+#/gate/actor/let3d/particleFilter/addParticle   proton
 
 /gate/actor/addActor               SimulationStatisticActor stat
 /gate/actor/stat/save              {path}/output/stat-pat.txt
-/gate/actor/stat/saveEveryNSeconds 600
+/gate/actor/stat/saveEveryNSeconds 6000
 
 
 #=====================================================
