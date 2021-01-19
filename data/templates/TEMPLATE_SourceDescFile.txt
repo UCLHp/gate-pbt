@@ -1,5 +1,5 @@
 # Nozzle exit to Isocenter distance
-NOZZLE_EXIT_DIST
+421
 # SMX to Isocenter distance
 2000
 # SMY to Isocenter distance
