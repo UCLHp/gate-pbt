@@ -16,6 +16,8 @@ from math import radians, degrees, sqrt, isclose
 
 import descriptionfiles as gfdf
 import rangeshifter
+import fieldstats
+import jobsplitter
 
 
 def rnd( num ):
@@ -357,6 +359,10 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
 
     #dcmPlan = pydicom.dcmread(  os.path.join(dcm_data_dir,plan_file)  )
     dcmPlan = pydicom.dcmread( plan_file )
+    
+    # Dictionary of field name and number of primaries required
+    req_prims = fieldstats.get_required_primaries( dcmPlan )
+    print("Required primaries = ",  req_prims )
 
         
     for field in dcmPlan.IonBeamSequence:   
@@ -407,7 +413,11 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                       )
  
     
-
+        ##### Potentially split field mac file here ####
+        # TODO
+        # Simulate Nreq/1000 for reasonable stats
+        nprotons = int( req_prims[field.BeamName]/1000 )  # will be split into separate sims
+        jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=10)
 
 
 

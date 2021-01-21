@@ -18,6 +18,7 @@ import easygui
 import imageconversion
 import overrides
 import generatefiles
+import jobsplitter
 
 
 
@@ -179,13 +180,13 @@ def main():
     # TODO
     #overrides.override_hu( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air), "BODY", -43 )
     
-    # Generate all files required for simulation
+    
+    # Generate all files required for simulation; SPLIT JOBS IN HERE
     print("Generating simulation files")
     generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_for_simulation, sim_dir)
     
     
-    
-    
+
     
     
     
