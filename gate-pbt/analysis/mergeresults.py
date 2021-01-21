@@ -168,7 +168,7 @@ def merge_results( directory ):
     #Need to check files are as expected (size etc)
     
     sum_dose(dosefiles, join(directory,"merged-Dose.mhd"))
-    #sum_dose(dosetowaterfiles, join(directory,"merged-DoseToWater.mhd"))
+    sum_dose(dosetowaterfiles, join(directory,"merged-DoseToWater.mhd"))
     #combine_let( dosefiles, letfiles, join(directory,"merged-LET.mhd"))
     combine_uncertainty(dosefiles, dosesquaredfiles, statfiles, join(directory,"merged-Uncertainty.mhd"))
 
