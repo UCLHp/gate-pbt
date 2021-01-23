@@ -3,9 +3,13 @@
 Created on Fri Jun 19 16:18:58 2020
 @author: SCOURT01
 
-Investigating field statistics, such as energy levels used,
-total number of CPs, spots and MUs binned by energy.
+Method to calculate number of primaries required for each field to yield the
+absolute dose.
 
+Plan DICOM contains scan spot meterset weights, NOT MUs.
+Varian IMS converts via: MU = scanspotweight * (beam meterset / finalcummetersetweight)
+
+See N/MU calibration for details on how this was produced
 """
 
 
@@ -81,7 +85,7 @@ def calc_field_primaries(plan, field):
 
 
 def get_required_primaries( dcmplan ):
-    """Return absolute number of primaries required per field"""
+    """Return dictionary of field names and numbers of primaries required"""
     
     fields = dcmplan.IonBeamSequence
     

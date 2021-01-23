@@ -12,6 +12,7 @@ Currently no cropping and no rangeshifter implemented
 import os
 import pydicom
 import numpy as np
+import configparser
 from math import radians, degrees, sqrt, isclose
 
 import descriptionfiles as gfdf
@@ -349,8 +350,22 @@ def get_source_offset(field, rs):
     return source_offset
 
 
+def add_prims_to_config( configfile, req_prims ):
+    """Update simconfig.ini with required primaries for each field
+    strip spaces from field names to match Gate output
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    for field in req_prims:
+        name = field.replace(" ","")
+        prims = round(req_prims[field])
+        config[name]  =  {"required_primaries": prims }    
+    with open(configfile, "w") as q:
+        config.write( q )
 
-def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_mhd, sim_dir):
+
+
+def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
     """Method to generate all description and mac files"""
     
     # TODO: assumes all dose files are same plan; write check
@@ -363,6 +378,8 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
     # Dictionary of field name and number of primaries required
     req_prims = fieldstats.get_required_primaries( dcmPlan )
     print("Required primaries = ",  req_prims )
+    # Update simconfig.ini file
+    add_prims_to_config( CONFIG, req_prims )
 
         
     for field in dcmPlan.IonBeamSequence:   
@@ -418,6 +435,11 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         # Simulate Nreq/1000 for reasonable stats
         nprotons = int( req_prims[field.BeamName]/1000 )  # will be split into separate sims
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=10)
+
+
+
+
+
 
 
 

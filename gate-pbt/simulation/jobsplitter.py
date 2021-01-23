@@ -12,7 +12,7 @@ import os
 def split_by_primaries( macfilepath, primaries=None, splits=1 ):
     """
     Splits a mac file intoseparate simulations with equal number of primaries
-    If primaries not specified, value in mac file will be taken
+    If primaries not specified, value in template mac file will be taken
     """    
     
     #Take fieldname from macfile and add to output files

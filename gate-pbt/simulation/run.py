@@ -18,7 +18,6 @@ import easygui
 import imageconversion
 import overrides
 import generatefiles
-import jobsplitter
 
 
 
@@ -31,11 +30,12 @@ def make_gate_dirs(dir_name, path_to_templates):
         os.mkdir( os.path.join(dir_name,"mac") )
         os.mkdir( os.path.join(dir_name,"output") )    
     # Copy over data files
-    fs = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt","UCLH2019MaterialsTable_v1.txt"]
+    fs = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt","UCLH2019MaterialsTable_v1.txt", "simconfig.ini"]
     for f in fs:
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"data",f)
         shutil.copyfile(source,destination)
+    # Copy over mac files
     ffs = ["verbose.mac","visu.mac"]
     for f in ffs:
         source = os.path.join(path_to_templates,f)  
@@ -149,8 +149,12 @@ def main():
     print("Making directories")
     plandcm = pydicom.dcmread(plan_file)
     identifier = plandcm.PatientID+"--"+plandcm.RTPlanLabel
-    sim_dir = os.path.join(path_to_simfiles,identifier)
+    sim_dir = os.path.join(path_to_simfiles, identifier)
     make_gate_dirs(sim_dir, path_to_templates)   
+    
+    # Define simconfig.ini configuration file
+    CONFIG = os.path.join(sim_dir, "data", "simconfig.ini")
+    print("XXXXXXXX", CONFIG)
  
 
 
@@ -174,7 +178,7 @@ def main():
     
     # Set all external HUs to air
     print("Overriding all external structures to air")
-    overrides.set_air_external( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air) )
+    #overrides.set_air_external( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air) )
     
     # Check for density overrides and apply
     # TODO
@@ -183,7 +187,7 @@ def main():
     
     # Generate all files required for simulation; SPLIT JOBS IN HERE
     print("Generating simulation files")
-    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_for_simulation, sim_dir)
+    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)
     
     
 
