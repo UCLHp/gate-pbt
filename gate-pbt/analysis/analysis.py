@@ -17,49 +17,117 @@ Automated analysis of Gate simulation output:
 
 """
 import sys
+import os
+
 import easygui
+import itk
 
 import mergeresults
 import dosetowater
+import config
 
 
 
 def check_integrity( outputdir ):
     """
     """
-
-
-def get_field_names( outputdir ):
     pass
 
 
+def get_field_names( outputdir ):
+    """Return fieldnames contained in directory
+    Corresponds to first part of filename_xx_xx.mhd
+    """
+    fieldnames = []    
+    filelist = os.listdir(outputdir)
+    for entry in filelist:
+        name = entry.split("_")[0]
+        if name not in fieldnames:
+            fieldnames.append(name)                
+    return fieldnames
+    
+
+def count_prims_simulated( outputdir, field ):
+    """Count primaries actually simulated from stat files"""
+    filelist = os.listdir(outputdir)
+    tot = 0
+    for f in filelist:
+        if "stat-pat.txt" in f:
+            if field in f:
+                file = os.path.join(outputdir,f)
+                lines = open(file).readlines()
+                for line in lines:
+                    if "NumberOfEvents" in line:
+                        prims = int(line.split("=")[1].strip())
+                        tot += prims
+    if tot<=0:
+        print("  ERROR; no simulated primaries in ", field, outputdir)
+        exit(3)
+    return tot
+    
 
 
-def analyze_all( outputdir ):
+def write_scaled_dose( mhdfile, output, scalefactor):
+    """Scale provided dose image and save to output"""
+    img = itk.imread(mhdfile)
+    dose = itk.array_from_image( img )
+    dosescaled = dose * scalefactor
+    newimg = itk.image_view_from_array( dosescaled )
+    newimg.CopyInformation(img)
+    itk.imwrite(newimg,output)
+    
+    
+
+
+
+
+
+
+
+def full_analysis( outputdir ):
     """Automated analysis of all Gate output in specified directory
     """ 
+    print("\nData directory: ",outputdir)
+
+    ##check_integrity( outputdir )
     
-    check_integrity( outputdir )
     fieldnames = get_field_names( outputdir )
+    print("Fields found: ", fieldnames)
     
     for field in fieldnames:
         
-        print("Analyzing field: ".format(field))
+        print("Analyzing field: ", field)
 
+        # Merge all results and return list of files produced
         mergedfiles = mergeresults.merge_results( outputdir, field )
-        
-        
-        
+        print("  Merging results...")
+        print("  Merged files: ", [os.path.basename(f) for f in mergedfiles])
+                
         nsim = count_prims_simulated( outputdir, field )
-        nreq = get_prims_required( field )
-        dose_scale = nreq / nsim
+        nreq = config.get_req_prims( outputdir, field )
+        dosescale = nreq / nsim
         
+        print("  Primaries simulated: ",nsim)
+        print("  Primaries required: ",nreq)
+        print("  Dose scale: ",dosescale)
         
-        scale_dose( mergedfiles, dose_scale )
+        dose = field+"_merged-Dose.mhd"
+        if dose in [os.path.basename(f) for f in mergedfiles]:
+            doseimg = os.path.join(outputdir, dose)
+            outname = os.path.join(outputdir, field+"_AbsoluteDose.mhd")
+            write_scaled_dose( doseimg, outname, dosescale )
+            
+        dose2water = field+"_merged-DoseToWater.mhd"
+        if dose2water in [os.path.basename(f) for f in mergedfiles]:
+            doseimg = os.path.join(outputdir, dose2water)
+            outname = os.path.join(outputdir, field+"_AbsoluteDoseToWater.mhd")
+            write_scaled_dose( doseimg, outname, dosescale )
+
+        #print("Converting dose2material to dose2water")        
+        #dosetowater.convert_dose_to_water( ctimg, dosemhd )
         
-        dosetowater.convert_dose_to_water( ctimg, dosemhd )
-        
-        makedcmdose.mhd2dcm( mhdfile, dcmtemplate )
+        #print("Converting mhd dose to dicom")
+        #makedcmdose.mhd2dcm( mhdfile, dcmtemplate )
         
         
         
@@ -80,7 +148,7 @@ if __name__=="__main__":
         sys.exit(0)
     
     outputdir = easygui.diropenbox()
-    analyze_all( outputdir )
+    full_analysis( outputdir )
     
     
     
