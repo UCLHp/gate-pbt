@@ -11,6 +11,7 @@ import sys
 import os
 import shutil
 from pathlib import Path
+import configparser
 
 import pydicom
 import easygui
@@ -120,6 +121,25 @@ def search_dcm_dir( input_dir ):
 
 
 
+def add_ct_to_config( configfile, ct_name ):
+    """Update simconfig.ini with name of ct used in simulation
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section("Image"):
+        config["Image"]["ct_name"] = ct_name
+    else:
+        config["Image"]  =  {"ct_name": ct_name } 
+    with open(configfile, "w") as q:
+        config.write( q )
+
+
+
+
+
+
+
+
 
 def main():
     
@@ -154,13 +174,16 @@ def main():
     
     # Define simconfig.ini configuration file
     CONFIG = os.path.join(sim_dir, "data", "simconfig.ini")
-    print("XXXXXXXX", CONFIG)
+    ##print("XXXXXXXX", CONFIG)
  
 
 
     ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")  ##path or name?
     ct_for_simulation = "ct_air.mhd"
     ct_air = os.path.join(sim_dir,"data",ct_for_simulation)
+    
+    # Add ct image being used in sim to simconfig.ini
+    add_ct_to_config( CONFIG, ct_for_simulation )
 
     
 

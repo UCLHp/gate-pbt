@@ -105,26 +105,33 @@ def full_analysis( outputdir ):
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
-        dosescale = nreq / nsim
+        scalefactor = nreq / nsim
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
-        print("  Dose scale: ",dosescale)
+        print("  Dose scaling: ",scalefactor)
         
         dose = field+"_merged-Dose.mhd"
         if dose in [os.path.basename(f) for f in mergedfiles]:
+            print("  Scaling merged-Dose.mhd")
             doseimg = os.path.join(outputdir, dose)
-            outname = os.path.join(outputdir, field+"_AbsoluteDose.mhd")
-            write_scaled_dose( doseimg, outname, dosescale )
+            scaledimg = os.path.join(outputdir, field+"_AbsoluteDose.mhd")
+            write_scaled_dose( doseimg, scaledimg, scalefactor )
+            
+            print("  Converting dose2material to dose2water")
+            ctpath = config.get_ct_path( outputdir )
+            ##ctpath = os.path.join( outputdir, ctname )
+            d2wimg = os.path.join(outputdir, field+"_AbsoluteDoseToWater.mhd")
+            dosetowater.convert_dose_to_water( ctpath, scaledimg, output=d2wimg )
             
         dose2water = field+"_merged-DoseToWater.mhd"
         if dose2water in [os.path.basename(f) for f in mergedfiles]:
+            print("  Scaling merged-DoseToWater.mhd")
             doseimg = os.path.join(outputdir, dose2water)
-            outname = os.path.join(outputdir, field+"_AbsoluteDoseToWater.mhd")
-            write_scaled_dose( doseimg, outname, dosescale )
+            outname = os.path.join(outputdir, field+"_Gate_DoseToWater.mhd")
+            write_scaled_dose( doseimg, outname, scalefactor )
 
-        #print("Converting dose2material to dose2water")        
-        #dosetowater.convert_dose_to_water( ctimg, dosemhd )
+
         
         #print("Converting mhd dose to dicom")
         #makedcmdose.mhd2dcm( mhdfile, dcmtemplate )

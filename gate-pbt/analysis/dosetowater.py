@@ -63,13 +63,19 @@ def get_density(hu):
 
 
 
-def convert_dose_to_water(ctimg, doseimg):
+def convert_dose_to_water(ctpath, dosepath, output=None):
     """Convert a doseimg (to material) to dose-to-water
-       Divide dose-to-tissue by RSP; see Paganetti2019"""
+       Divide dose-to-tissue by RSP; see Paganetti2019
+       
+    Input: paths to ct image and doseToMaterial image   
+    """
+       
+    ctimg = itk.imread( ctpath )
+    doseimg = itk.imread( dosepath )
     
     # Resample CT image to match voxel resolution of dose image
     resamp = applyTransformation(input=ctimg, like=doseimg, force_resample=True)
-    itk.imwrite(resamp, "resampled_ct.mhd")
+    #itk.imwrite(resamp, "resampled_ct.mhd")
     
     hus = itk.array_from_image( resamp )
     doses = itk.array_from_image( doseimg )
@@ -100,6 +106,10 @@ def convert_dose_to_water(ctimg, doseimg):
         
         dosetowater = itk.image_view_from_array( d2water_arr )
         dosetowater.CopyInformation(doseimg)
+        
+        if output is not None:
+            itk.imwrite(dosetowater, output)
+        
         return dosetowater
     
     
@@ -107,12 +117,18 @@ def convert_dose_to_water(ctimg, doseimg):
 
 
 def main():
-    ctimg = itk.imread("ct_air.mhd")
-    doseimg = itk.imread("merged-Dose.mhd")
+    
+    ctimg = "ct_air.mhd"
+    doseimg = "merged-Dose.mhd"
+    
+    ###ctimg = itk.imread("ct_air.mhd")
+    ###doseimg = itk.imread("merged-Dose.mhd")
 
     dosetowaterimg = convert_dose_to_water(ctimg, doseimg)
 
     itk.imwrite(dosetowaterimg, "dose2water.mhd")
+    
+    
     
 if __name__=="__main__":
     main()

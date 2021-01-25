@@ -23,3 +23,16 @@ def get_req_prims( outputdir, field ):
     primaries = config.getint(field, "required_primaries")
     return primaries
 
+
+def get_ct_path( outputdir ):
+    """Return required primaries for field"""
+    ########## ASSUME CONFIG FILE IN /../data
+    parent = os.path.dirname(outputdir)
+    configfile = os.path.join(parent,"data","simconfig.ini")
+    ########################################
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    ctname = config.get("Image", "ct_name")
+    ctpath = os.path.join(parent,"data", ctname)
+    return ctpath
