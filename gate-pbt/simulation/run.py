@@ -135,6 +135,24 @@ def add_ct_to_config( configfile, ct_name ):
 
 
 
+def add_transformmatrix_to_config( configfile, ctmhd ):
+    """Store original TransformMatrix of ct image"""
+    
+    transform = ""
+    lines = open(ctmhd, "r").readlines()
+    for line in lines:
+        if "TransformMatrix" in line:
+            transform = line.split("=")[1].strip()    
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section("Image"):
+        config["Image"]["transform_matrix"] = transform
+    else:
+        config["Image"]  =  {"transform_matrix": transform } 
+    with open(configfile, "w") as q:
+        config.write( q )    
+
 
 
 
@@ -176,21 +194,19 @@ def main():
     CONFIG = os.path.join(sim_dir, "data", "simconfig.ini")
     ##print("XXXXXXXX", CONFIG)
  
-
-
     ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")  ##path or name?
     ct_for_simulation = "ct_air.mhd"
     ct_air = os.path.join(sim_dir,"data",ct_for_simulation)
     
-    # Add ct image being used in sim to simconfig.ini
-    add_ct_to_config( CONFIG, ct_for_simulation )
-
-    
-
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
     imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
+    
+    # Add ct name being used in sim to simconfig.ini
+    add_ct_to_config( CONFIG, ct_for_simulation )
+    # Add ct transform matrix to simconfig.ini
+    add_transformmatrix_to_config( CONFIG, ct_unmod )
     
     
     # roi_utils does not like image properties of HFP set-up
@@ -201,7 +217,7 @@ def main():
     
     # Set all external HUs to air
     print("Overriding all external structures to air")
-    #overrides.set_air_external( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air) )
+    overrides.set_air_external( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air) )
     
     # Check for density overrides and apply
     # TODO

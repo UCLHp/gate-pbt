@@ -76,8 +76,27 @@ def write_scaled_dose( mhdfile, output, scalefactor):
     newimg.CopyInformation(img)
     itk.imwrite(newimg,output)
     
-    
 
+
+def correct_transform_matrix( mergedfiles ):
+    """Set mhd TransformMatrix to 100010001
+    
+    Have to do this since Gate will write couch kicks here
+    """
+    
+    transform = config.get_transform_matrix( outputdir )
+    
+    for mf in mergedfiles:
+        file = open(mf, "r")
+        lines = file.readlines()
+        file.close()
+        with open(mf,"w") as out:
+            for line in lines:
+                if "TransformMatrix" in line:
+                    out.write("TransformMatrix = {}\n".format(transform))
+                else:
+                    out.write(line)
+        
 
 
 
@@ -102,6 +121,9 @@ def full_analysis( outputdir ):
         mergedfiles = mergeresults.merge_results( outputdir, field )
         print("  Merging results...")
         print("  Merged files: ", [os.path.basename(f) for f in mergedfiles])
+        
+        print("  Correcting mhd TransformMatrix in merged files")
+        correct_transform_matrix(mergedfiles)
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
@@ -130,7 +152,6 @@ def full_analysis( outputdir ):
             doseimg = os.path.join(outputdir, dose2water)
             outname = os.path.join(outputdir, field+"_Gate_DoseToWater.mhd")
             write_scaled_dose( doseimg, outname, scalefactor )
-
 
         
         #print("Converting mhd dose to dicom")

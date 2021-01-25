@@ -25,7 +25,7 @@ def get_req_prims( outputdir, field ):
 
 
 def get_ct_path( outputdir ):
-    """Return required primaries for field"""
+    """Return path to ct image used in simulation"""
     ########## ASSUME CONFIG FILE IN /../data
     parent = os.path.dirname(outputdir)
     configfile = os.path.join(parent,"data","simconfig.ini")
@@ -36,3 +36,16 @@ def get_ct_path( outputdir ):
     ctname = config.get("Image", "ct_name")
     ctpath = os.path.join(parent,"data", ctname)
     return ctpath
+
+
+def get_transform_matrix( outputdir ):
+    """Return transofrm matrix of original ct"""
+    ########## ASSUME CONFIG FILE IN /../data
+    parent = os.path.dirname(outputdir)
+    configfile = os.path.join(parent,"data","simconfig.ini")
+    ########################################
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    transform = config.get("Image", "transform_matrix")
+    return transform
