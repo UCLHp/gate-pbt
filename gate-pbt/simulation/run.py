@@ -11,7 +11,6 @@ import sys
 import os
 import shutil
 from pathlib import Path
-import configparser
 
 import pydicom
 import easygui
@@ -19,6 +18,7 @@ import easygui
 import imageconversion
 import overrides
 import generatefiles
+import config
 
 
 
@@ -121,38 +121,6 @@ def search_dcm_dir( input_dir ):
 
 
 
-def add_ct_to_config( configfile, ct_name ):
-    """Update simconfig.ini with name of ct used in simulation
-    """
-    config = configparser.ConfigParser()
-    config.read(configfile)
-    if config.has_section("Image"):
-        config["Image"]["ct_name"] = ct_name
-    else:
-        config["Image"]  =  {"ct_name": ct_name } 
-    with open(configfile, "w") as q:
-        config.write( q )
-
-
-
-def add_transformmatrix_to_config( configfile, ctmhd ):
-    """Store original TransformMatrix of ct image"""
-    
-    transform = ""
-    lines = open(ctmhd, "r").readlines()
-    for line in lines:
-        if "TransformMatrix" in line:
-            transform = line.split("=")[1].strip()    
-    
-    config = configparser.ConfigParser()
-    config.read(configfile)
-    if config.has_section("Image"):
-        config["Image"]["transform_matrix"] = transform
-    else:
-        config["Image"]  =  {"transform_matrix": transform } 
-    with open(configfile, "w") as q:
-        config.write( q )    
-
 
 
 
@@ -204,9 +172,9 @@ def main():
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
     # Add ct name being used in sim to simconfig.ini
-    add_ct_to_config( CONFIG, ct_for_simulation )
+    config.add_ct_to_config( CONFIG, ct_for_simulation )
     # Add ct transform matrix to simconfig.ini
-    add_transformmatrix_to_config( CONFIG, ct_unmod )
+    config.add_transformmatrix_to_config( CONFIG, ct_unmod )
     
     
     # roi_utils does not like image properties of HFP set-up
