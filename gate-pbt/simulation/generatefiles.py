@@ -307,10 +307,15 @@ def write_mac_file(template, output, planDescription, sourceDescription,
                     setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
                     )
             
-            elif "let3d/setVoxelSize" in line and setVoxelSize is not None:
-                out.write( "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
-                    setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
-                    )                
+            elif "let3d/setVoxelSize" in line and setVoxelSize is not None:    
+                toprint = "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
+                          setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] 
+                          )
+                if line[0]=="#":
+                    out.write( "#"+toprint)
+                else:
+                    out.write(toprint)
+                
             
             elif "patient/geometry/setImage" in line and setImage is not None:
                 out.write( "/gate/patient/geometry/setImage    {{path}}/data/{}\n".format(setImage) )    
@@ -376,6 +381,10 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
     for field in dcmPlan.IonBeamSequence:   
         
         beamname = str(field.BeamName).replace(" ","")
+        
+        # Add beam ref number to config file
+        beam_ref_no = field.BeamNumber
+        config.add_beam_ref_no( CONFIG, beamname, beam_ref_no )
         
         # Rangeshifter object
         rs = rangeshifter.get_props( field )  

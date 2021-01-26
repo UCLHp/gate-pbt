@@ -22,14 +22,16 @@ import os
 import easygui
 import itk
 
+import config
 import mergeresults
 import dosetowater
-import config
+import dosetodicom
 
 
 
 def check_integrity( outputdir ):
     """
+    TODO
     """
     pass
 
@@ -79,7 +81,7 @@ def write_scaled_dose( mhdfile, output, scalefactor):
 
 
 def correct_transform_matrix( mergedfiles ):
-    """Set mhd TransformMatrix to 100010001
+    """Set mhd TransformMatrix to that of original CT
     
     Have to do this since Gate will write couch kicks here
     """
@@ -108,7 +110,7 @@ def full_analysis( outputdir ):
     """ 
     print("\nData directory: ",outputdir)
 
-    ##check_integrity( outputdir )
+    ## check_integrity( outputdir )  #TODO
     
     fieldnames = get_field_names( outputdir )
     print("Fields found: ", fieldnames)
@@ -124,6 +126,11 @@ def full_analysis( outputdir ):
         
         print("  Correcting mhd TransformMatrix in merged files")
         correct_transform_matrix(mergedfiles)
+        
+        # TODO #### Perhaps only necessary if using the mhd?
+        #   Could ignore if we just deal with dicom doses (gamma analysis)?
+        # print("  Correcting mhd Offset in merged files")
+        # correct_offwet(mergedfiles)
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
@@ -146,6 +153,15 @@ def full_analysis( outputdir ):
             d2wimg = os.path.join(outputdir, field+"_AbsoluteDoseToWater.mhd")
             dosetowater.convert_dose_to_water( ctpath, scaledimg, output=d2wimg )
             
+            print("  Converting mhd dose to dicom")
+            beamref = config.get_beam_ref_no( outputdir, field )
+            print("    beam_ref_no = ",beamref)
+            path_to_dcmdose = dosetodicom.get_dcm_file_path( outputdir, beamref )
+            ##print("XXX ", path_to_dcmdose)
+            dcm_out = os.path.join(outputdir, field+"_AbsoluteDoseToWater.dcm")
+            dosetodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
+            
+            
         dose2water = field+"_merged-DoseToWater.mhd"
         if dose2water in [os.path.basename(f) for f in mergedfiles]:
             print("  Scaling merged-DoseToWater.mhd")
@@ -154,8 +170,7 @@ def full_analysis( outputdir ):
             write_scaled_dose( doseimg, outname, scalefactor )
 
         
-        #print("Converting mhd dose to dicom")
-        #makedcmdose.mhd2dcm( mhdfile, dcmtemplate )
+
         
         
         

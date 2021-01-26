@@ -62,4 +62,19 @@ def add_prims_to_config( configfile, req_prims ):
         config.write( q )
 
 
+def add_beam_ref_no( configfile, field, beamno ):
+    """Update simconfig.ini with beam ref number
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    
+    name = field.replace(" ","")
+    if config.has_section(name):
+        config[name]["beam_ref_no"] = str(beamno)
+    else:
+        config[name]  =  {"beam_ref_no": str(beamno) }    
+        
+    with open(configfile, "w") as q:
+        config.write( q )
+
 

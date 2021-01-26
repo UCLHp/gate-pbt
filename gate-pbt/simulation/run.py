@@ -42,6 +42,16 @@ def make_gate_dirs(dir_name, path_to_templates):
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"mac",f)  
         shutil.copyfile(source,destination)
+        
+
+
+def copy_dcm_doses( dcmfiles, destinationdir ):
+    """Copy dcm dose files to simdir/data; needed later for analaysis"""
+ 
+    for dcmfile in dcmfiles:
+        fname = os.path.basename(dcmfile)
+        dest = os.path.join(destinationdir, fname)
+        shutil.copyfile( dcmfile, dest)
 
 
 
@@ -160,7 +170,6 @@ def main():
     
     # Define simconfig.ini configuration file
     CONFIG = os.path.join(sim_dir, "data", "simconfig.ini")
-    ##print("XXXXXXXX", CONFIG)
  
     ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")  ##path or name?
     ct_for_simulation = "ct_air.mhd"
@@ -175,6 +184,11 @@ def main():
     config.add_ct_to_config( CONFIG, ct_for_simulation )
     # Add ct transform matrix to simconfig.ini
     config.add_transformmatrix_to_config( CONFIG, ct_unmod )
+    
+    
+    # Copy over dicom dose files to /data
+    print("Copying dcm dose files over")
+    copy_dcm_doses( dose_files, os.path.join(sim_dir,"data") )   
     
     
     # roi_utils does not like image properties of HFP set-up

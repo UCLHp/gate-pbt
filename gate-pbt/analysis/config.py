@@ -24,6 +24,19 @@ def get_req_prims( outputdir, field ):
     return primaries
 
 
+def get_beam_ref_no( outputdir, field ):
+    """Return beam reference number (used in dcm)"""
+    ########## ASSUME CONFIG FILE IN /../data
+    parent = os.path.dirname(outputdir)
+    configfile = os.path.join(parent,"data","simconfig.ini")
+    ########################################
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    beamref = config.getint(field, "beam_ref_no")
+    return beamref
+
+
 def get_ct_path( outputdir ):
     """Return path to ct image used in simulation"""
     ########## ASSUME CONFIG FILE IN /../data
