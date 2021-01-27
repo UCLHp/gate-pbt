@@ -17,86 +17,42 @@ import numpy as np
 
 
 
-def sum_dose( filelist, outname  ):
+def sum_dose( filelist, imgoutput=None  ):
     """
-    Sum mhd/raw absolute doses and generate image
+    Sum mhd/raw absolute doses; generate image if output specified or
+    return array of values otherwise
     """
+    total = None
     
-    # BE CAREFUL USING THIS IF YOU ARE SUMMING BEAMS (THEY SHOULD BE WEIGHTED 
-    # APPROPRIATELY) OR IF SIMULATIONS HAD DIFFERENT NUMBERS OF PRIMARIES
-    
-    dosearrays=[]
     if len(filelist)==0:
         print("No files given to sum_dose")
+    elif len(filelist)==1:
+        total = itk.array_from_image(itk.imread(filelist[0]))
     else:
-        for f in filelist:
-            imgarr = itk.array_from_image(itk.imread(f))
-            dosearrays.append( imgarr )
-
-    sumdose = sum(dosearrays)
+        # Take first
+        ff = filelist[0]
+        total = itk.array_from_image(itk.imread(ff))
+        # Loop through rest
+        for n in range(1,len(filelist)):
+            file = filelist[n]
+            total += itk.array_from_image(itk.imread(file))
     
-    sumimg = itk.image_from_array(sumdose)
-    sumimg.CopyInformation( itk.imread(filelist[0]) ) #CHECK ALL ARE SAME?
-    itk.imwrite(sumimg, outname)
-
-  
-    
-    
-def combine_let( dosefiles, letfiles, outname):
-    """
-    Combine LET distributions from multiple simulations in a
-    dose-weighted fashion
-    
-    NOTE: The order of dosefiles and letfiles must match,
-    i.e the index corresponds to a specific simulation!
-    """
-    #Store FLATTENED image arrays
-    dosearrays=[]
-    letarrays=[]
-    
-    # Get shape and image info
-    img1 = itk.imread(dosefiles[0])
-    shape = itk.array_from_image( img1 ).shape
-    
-    if len(dosefiles)!=len(letfiles):
-        print("Unequal number of dose and LET files") 
-    if len(dosefiles)==0:
-        print("No files given to combine_let method")
-    else:
-        for f in dosefiles:
-            dosearrays.append( itk.array_from_image(itk.imread(f)).flatten() )
-        for f in letfiles:
-            letarrays.append( itk.array_from_image(itk.imread(f)).flatten()  )
-    
-    sumdose = sum(dosearrays)
-      
-    #itk.imread(dosefiles[0])
-    totlet = np.zeros( len(letarrays[0]) )
-    for i in range(len(totlet)):
-        tot = 0
-        for j in range(len(dosearrays)):
-            if sumdose[i]!=0:            #TODO this ok for floats?
-                tot = tot + letarrays[j][i]*(dosearrays[j][i]/sumdose[i])
-        totlet[i] = tot    
+    if imgoutput==None:
+        return total
+    else:    
+        sumimg = itk.image_from_array(total)
+        # Take properties from any; TODO: should check they're all the same?
+        sumimg.CopyInformation( itk.imread(filelist[0]) ) 
+        itk.imwrite(sumimg, imgoutput)
 
     
-    combinedlet = totlet.reshape( shape )
-    letimg = itk.image_from_array( combinedlet.astype(np.float32)  )   ## ITK CANNOT WRITE DOUBLES, MUST CAST TO FLOAT
-    letimg.CopyInformation( img1 )
     
-    itk.imwrite( letimg, outname )
-    
-
-
-
 
 def combine_uncertainty(dosefiles, dosesquaredfiles, statfiles, output):
     """
-    How to combine dose uncertainties from simulations?
+    Calculate dose uncertainty as in Chetty2006
     """
-    dosearrays=[]
-    dosesq=[]
-    
+
     #Gate uncertainty calculation uses NUMBER OF PRIMARIES in simulation, 
     #not the numberOfHits per voxel
     N = get_tot_primaries(statfiles)
@@ -104,21 +60,25 @@ def combine_uncertainty(dosefiles, dosesquaredfiles, statfiles, output):
     # Get shape and image info
     img1 = itk.imread(dosefiles[0])
     shape = itk.array_from_image( img1 ).shape
-
+    nvoxels = shape[0]*shape[1]*shape[2]
+    
+    sumdose = None
+    sumdosesq = None
+    
     if len(dosefiles)!=len(dosesquaredfiles):
-        print("Unequal number of dose and dosesquared files") 
+        print("Uncertainty not combined; unequal number of dose and dosesquared files") 
+        exit(3)
     if len(dosefiles)==0:
         print("No files given to sum_uncertainty method")
+        exit(3)
     else:
-        for f in dosefiles:
-            dosearrays.append( itk.array_from_image(itk.imread(f)).flatten() )
-        for f in dosesquaredfiles:
-            dosesq.append( itk.array_from_image(itk.imread(f)).flatten()  )
+        sumdose = sum_dose( dosefiles )
+        sumdosesq = sum_dose( dosesquaredfiles )
+
+    sumdose = sumdose.flatten()
+    sumdosesq = sumdosesq.flatten()
+    uncertainty = np.ones( nvoxels )
     
-    sumdose = sum(dosearrays)
-    sumdosesq = sum(dosesq)  
-    
-    uncertainty = np.ones( len(dosearrays[0]) )
     for i in range(len(uncertainty)):
         #Using Eq(2) from Chetty2006, "Reporting and analyzing statistical uncertainties in MC-based 
         #treatment planning" and dividing by dose/N for relative uncertainty...
@@ -130,6 +90,98 @@ def combine_uncertainty(dosefiles, dosesquaredfiles, statfiles, output):
     uncertimg.CopyInformation( img1 )
     
     itk.imwrite( uncertimg, output )
+
+
+
+
+
+def combine_let( dosefiles, letfiles, outname):
+    """
+    Combine LET distributions from multiple simulations in a
+    dose-weighted fashion
+    
+    NOTE: The order of dosefiles and letfiles must match,
+    i.e the index corresponds to a specific simulation! TODO: CHECK THIS
+    """
+    
+    # Get shape and image info
+    img1 = itk.imread(dosefiles[0])
+    shape = itk.array_from_image( img1 ).shape
+    nvoxels = shape[0]*shape[1]*shape[2]
+    
+    sumdose = sum_dose( dosefiles )
+    sumdose = sumdose.flatten()
+    
+    if len(dosefiles)!=len(letfiles):
+        print("Unequal number of dose and LET files") 
+    if len(dosefiles)==0:
+        print("No files given to combine_let method")
+    else:  
+        totlet = np.zeros( nvoxels )      
+        # File lists must be in same order - TODO: CHECK
+        for fdose,flet in zip(dosefiles, letfiles):
+            dose = itk.array_from_image(itk.imread(fdose).flatten() )
+            let = itk.array_from_image(itk.imread(flet).flatten() )               
+            for i in range(len(totlet)):
+                if sumdose[i]!=0:
+                    totlet[i] += let[i]*(dose[i]/sumdose[i])
+
+    combinedlet = totlet.reshape( shape )
+    ## ITK cannot write doubles, must cast to float
+    letimg = itk.image_from_array( combinedlet.astype(np.float32)  )   
+    letimg.CopyInformation( img1 )
+    
+    itk.imwrite( letimg, outname )
+
+
+
+    
+#def z_combine_let( dosefiles, letfiles, outname):
+#    """
+#    Combine LET distributions from multiple simulations in a
+#    dose-weighted fashion
+#    
+#    NOTE: The order of dosefiles and letfiles must match,
+#    i.e the index corresponds to a specific simulation!
+#    """
+#    
+#    #Store FLATTENED image arrays
+#    dosearrays=[]
+#    letarrays=[]
+#    
+#    # Get shape and image info
+#    img1 = itk.imread(dosefiles[0])
+#    shape = itk.array_from_image( img1 ).shape
+#    
+#    if len(dosefiles)!=len(letfiles):
+#        print("Unequal number of dose and LET files") 
+#    if len(dosefiles)==0:
+#        print("No files given to combine_let method")
+#    else:
+#        for f in dosefiles:
+#            dosearrays.append( itk.array_from_image(itk.imread(f)).flatten() )
+#        for f in letfiles:
+#            letarrays.append( itk.array_from_image(itk.imread(f)).flatten()  )
+#    
+#    sumdose = sum(dosearrays)
+#      
+#    #itk.imread(dosefiles[0])
+#    totlet = np.zeros( len(letarrays[0]) )
+#    for i in range(len(totlet)):
+#        tot = 0
+#        for j in range(len(dosearrays)):
+#            if sumdose[i]!=0:            #TODO this ok for floats?
+#                tot = tot + letarrays[j][i]*(dosearrays[j][i]/sumdose[i])
+#        totlet[i] = tot    
+#
+#    
+#    combinedlet = totlet.reshape( shape )
+#    letimg = itk.image_from_array( combinedlet.astype(np.float32)  )   ## ITK CANNOT WRITE DOUBLES, MUST CAST TO FLOAT
+#    letimg.CopyInformation( img1 )
+#    
+#    itk.imwrite( letimg, outname )
+    
+
 
 
   
