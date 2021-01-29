@@ -18,6 +18,7 @@ import easygui
 import imageconversion
 import overrides
 import generatefiles
+import config
 
 
 
@@ -30,16 +31,27 @@ def make_gate_dirs(dir_name, path_to_templates):
         os.mkdir( os.path.join(dir_name,"mac") )
         os.mkdir( os.path.join(dir_name,"output") )    
     # Copy over data files
-    fs = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt","UCLH2019MaterialsTable_v1.txt"]
+    fs = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt","UCLH2019MaterialsTable_v1.txt", "simconfig.ini"]
     for f in fs:
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"data",f)
         shutil.copyfile(source,destination)
+    # Copy over mac files
     ffs = ["verbose.mac","visu.mac"]
     for f in ffs:
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"mac",f)  
         shutil.copyfile(source,destination)
+        
+
+
+def copy_dcm_doses( dcmfiles, destinationdir ):
+    """Copy dcm dose files to simdir/data; needed later for analaysis"""
+ 
+    for dcmfile in dcmfiles:
+        fname = os.path.basename(dcmfile)
+        dest = os.path.join(destinationdir, fname)
+        shutil.copyfile( dcmfile, dest)
 
 
 
@@ -120,6 +132,11 @@ def search_dcm_dir( input_dir ):
 
 
 
+
+
+
+
+
 def main():
     
     # Get absolute path to template files and destination of simulation files
@@ -148,21 +165,30 @@ def main():
     print("Making directories")
     plandcm = pydicom.dcmread(plan_file)
     identifier = plandcm.PatientID+"--"+plandcm.RTPlanLabel
-    sim_dir = os.path.join(path_to_simfiles,identifier)
+    sim_dir = os.path.join(path_to_simfiles, identifier)
     make_gate_dirs(sim_dir, path_to_templates)   
+    
+    # Define simconfig.ini configuration file
+    CONFIG = os.path.join(sim_dir, "data", "simconfig.ini")
  
-
-
     ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")  ##path or name?
     ct_for_simulation = "ct_air.mhd"
     ct_air = os.path.join(sim_dir,"data",ct_for_simulation)
-
     
-
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
     imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
+    
+    # Add ct name being used in sim to simconfig.ini
+    config.add_ct_to_config( CONFIG, ct_for_simulation )
+    # Add ct transform matrix to simconfig.ini
+    config.add_transformmatrix_to_config( CONFIG, ct_unmod )
+    
+    
+    # Copy over dicom dose files to /data
+    print("Copying dcm dose files over")
+    copy_dcm_doses( dose_files, os.path.join(sim_dir,"data") )   
     
     
     # roi_utils does not like image properties of HFP set-up
@@ -179,13 +205,13 @@ def main():
     # TODO
     #overrides.override_hu( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air), "BODY", -43 )
     
-    # Generate all files required for simulation
+    
+    # Generate all files required for simulation; SPLIT JOBS IN HERE
     print("Generating simulation files")
-    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_for_simulation, sim_dir)
+    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)
     
     
-    
-    
+
     
     
     

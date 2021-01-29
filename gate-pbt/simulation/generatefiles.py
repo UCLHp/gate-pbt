@@ -16,6 +16,10 @@ from math import radians, degrees, sqrt, isclose
 
 import descriptionfiles as gfdf
 import rangeshifter
+import fieldstats
+import jobsplitter
+import config
+import slurm
 
 
 def rnd( num ):
@@ -303,10 +307,15 @@ def write_mac_file(template, output, planDescription, sourceDescription,
                     setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
                     )
             
-            elif "let3d/setVoxelSize" in line and setVoxelSize is not None:
-                out.write( "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
-                    setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
-                    )                
+            elif "let3d/setVoxelSize" in line and setVoxelSize is not None:    
+                toprint = "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
+                          setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] 
+                          )
+                if line[0]=="#":
+                    out.write( "#"+toprint)
+                else:
+                    out.write(toprint)
+                
             
             elif "patient/geometry/setImage" in line and setImage is not None:
                 out.write( "/gate/patient/geometry/setImage    {{path}}/data/{}\n".format(setImage) )    
@@ -348,7 +357,10 @@ def get_source_offset(field, rs):
 
 
 
-def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, ct_mhd, sim_dir):
+
+
+
+def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
     """Method to generate all description and mac files"""
     
     # TODO: assumes all dose files are same plan; write check
@@ -357,11 +369,22 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
 
     #dcmPlan = pydicom.dcmread(  os.path.join(dcm_data_dir,plan_file)  )
     dcmPlan = pydicom.dcmread( plan_file )
+    
+    # Dictionary of field name and number of primaries required
+    req_prims = fieldstats.get_required_primaries( dcmPlan )
+    print("Required primaries = ",  req_prims )
+    
+    # Update simconfig.ini file
+    config.add_prims_to_config( CONFIG, req_prims )
 
         
     for field in dcmPlan.IonBeamSequence:   
         
         beamname = str(field.BeamName).replace(" ","")
+        
+        # Add beam ref number to config file
+        beam_ref_no = field.BeamNumber
+        config.add_beam_ref_no( CONFIG, beamname, beam_ref_no )
         
         # Rangeshifter object
         rs = rangeshifter.get_props( field )  
@@ -407,6 +430,22 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                       )
  
     
+        ##### Potentially split field mac file here ####
+        # TODO
+        # Simulate Nreq/1000 for reasonable stats
+        splits = 10  ## TODO automate this for efficiency
+        nprotons = int( req_prims[field.BeamName]/1000 )  # will be split into separate sims
+        jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
+        
+        
+        # Make SLURM job script
+        scriptname = "submit_"+beamname+".sh"
+        scriptpath = os.path.join(sim_dir, scriptname )
+        slurm.make_script(sim_dir, beamname, splits, scriptpath)
+
+
+
+
 
 
 
