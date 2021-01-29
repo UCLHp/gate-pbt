@@ -81,7 +81,7 @@ def write_scaled_dose( mhdfile, output, scalefactor):
 
 
 def correct_transform_matrix( mergedfiles ):
-    """Set mhd TransformMatrix to that of original CT
+    """Set mhd TransformMatrix to that of original CT for all files in list
     
     Have to do this since Gate will write couch kicks here
     """

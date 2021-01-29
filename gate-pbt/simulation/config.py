@@ -9,6 +9,22 @@ Methods for creating / modifying simulation config file
 import configparser
 
 
+def update_config( configfile, section, key, value ):
+    """Update simconfig.ini section and key with value
+    
+    Value must be written/read as string
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section(section):
+        config[section][key] = value
+    else:
+        config[section]  =  {key: value } 
+    with open(configfile, "w") as q:
+        config.write( q )
+
+
+
 def add_ct_to_config( configfile, ct_name ):
     """Update simconfig.ini with name of ct used in simulation
     """

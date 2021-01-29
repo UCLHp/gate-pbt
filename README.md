@@ -1,23 +1,23 @@
 # gate-pbt
 ![Current Version](https://img.shields.io/badge/version-0.1.0-green.svg)
 
-Simulating proton therapy treatments using Gate/GateTools/Geant4
+Monte Carlo simulations of proton therapy treatments using [Gate](https://gate.uca.fr/#/admin)/[GateTools](https://github.com/OpenGATE/GateTools)/[Geant4](https://geant4.web.cern.ch/).
 
 ## Prerequisites
 Python dependencies are listed in requirements.txt.  
 
 To run the simulations you'll need Gate and Geant4 installed. 
-See the Gate documentation [here](http://www.opengatecollaboration.org/UsersGuide) for more info
+See the Gate documentation [here](https://gate.uca.fr/documentation#/admin) for more info
 and examples. This work has been performed using 
-the virtual machines, version 8.1 and 8.2, available [here](http://www.opengatecollaboration.org/). 
+the virtual machines, version 8.1 and 8.2, available [here](https://gate.uca.fr/download/vgate#/admin). 
 These are Linux VMs that include a Geant4 install along with various other useful software.
-If you wish to align with the Gate-RTIon recommendations, a VM with gate 8.1 and Geant4 10.3.3
+If you wish to align with the Gate-RTion recommendations, a VM with gate 8.1 and Geant4 10.3.3
 will be available soon.  
 
-Development has been done using pencil beam scanning proton plans created in the Eclipse treatment planning system (versions 13.7, 15.5 and 16.1). If you run into issues using another TPS let me know!
+Development has been done using pencil beam scanning proton plans created in the Eclipse treatment planning system (versions 13.7, 15.5 and 16.1). If you run into issues using another TPS let me know.
 
 The physics list and simulation parameters used in the simulation can be set in the mac 
-template file and are aligned to the [Gate-RTIon recommendations](https://aapm.onlinelibrary.wiley.com/doi/10.1002/mp.14481) as default. 
+template file and are aligned to the [Gate-RTion recommendations](https://aapm.onlinelibrary.wiley.com/doi/10.1002/mp.14481) as default. More information about the Gate-RTion collaboration can be found [here](https://gate.uca.fr/download/gate-rtion#/admin).
 
 
 ## Usage
@@ -42,10 +42,10 @@ On our cluster, submitting the array of jobs corresponding to a given field can 
 
 
 ### Analysis
-The simulations will generate, for each mac file submitted, mhd and raw files for dose and dose-squared by default. Options for dose-to-water, LET and uncertainty can be set manually in the mac template file.
+The simulations will generate, for each mac file submitted, mhd files for dose and dose-squared by default. Options for dose-to-water, LET and uncertainty can be set manually in the mac template file.
 
-A full analysis of the data generated can be performed from the analysis directory ```python analysis.py```.
-It will prompt for the directory containing the simulation output and
+A full analysis of the data generated can be performed from the analysis directory, ```python analysis.py```.
+It will prompt for the directory containing the simulation output and:
 
 1. Separate the data for individual fields and merge all data present (dose, dose-squared, LET)
 2. Calculate the dose uncertainty following [Chetty2006](https://pubmed.ncbi.nlm.nih.gov/16798417/)
@@ -58,7 +58,7 @@ It will prompt for the directory containing the simulation output and
 
 
 ## Limitations / known bugs
-Likely many - feel free to get in touch if you have any questions/concerns.
+Likely many - feel free to get in touch if you have any questions.
 
 When simulating certain patient positions (HFP for example) Gate will produce the wrong Offset in the
 mhd file. This hasn't been auto-corrected in my script yet.
