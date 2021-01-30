@@ -9,11 +9,8 @@ Methods converting CT and mhd images and dose images
 import os
 import sys
 
-import random
 import itk
-import numpy as np
 
-import pydicom
 from gatetools.image_convert import read_dicom
 
 
@@ -86,54 +83,47 @@ def dcm2mhd( dirName, output ):
        
 
 
-def dose_dcm2mhd_norm(ds):
-    """
-    Method to convert a dcm dose file into mhd+raw image 
-    Dose is normalized to max
-    """            
-    # Must cast to numpy.float32 for ITK to write mhd with ElementType MET_FLOAT
-    px_data = ds.pixel_array.astype(np.float32)   
-    
-    print( "\n***Generating mhd from dose dicom ***")
-    print( "  PixelData shape = {}".format(px_data.shape) )
-
-    # DoseGridScaling * pixel_value gives dose in DoseUnits
-    # Gives total plan dose for field, not fraction dose.
-    scale = ds.DoseGridScaling   
-    units = ds.DoseUnits 
-    print("  DoseUnits: {}".format(units))  
-    print("  DoseGridScale: {}".format(scale))
-    print("  DoseImageDims: {}".format(px_data.shape))
-
-    print("  Scaling dose to {}".format(units) )
-    px_data = px_data * scale     
-    print("  Max scaled dose = {}Gy".format( np.max(px_data) ) )  
-    
-    # TODO: Can I normalize or should we be comparing absolute doses?
-    # Gate DoseActor gives us option to normalize to max so we could compare these?
-    mx = np.max( px_data )
-    px_data = px_data / mx
-        
-    imgpospat = ds.ImagePositionPatient
-    xy_spacing = ds.PixelSpacing
-    ##orientation = ds.ImageOrientationPatient?
-    z_spacing = ds.GridFrameOffsetVector[1]-ds.GridFrameOffsetVector[0]  ##TODO: assumed these are equal but they might not be with our scanner
-    pixelspacing = [xy_spacing[0],xy_spacing[1]] + [z_spacing]
-    
-    # 3D ITK image 
-    doseimg = itk.image_from_array( px_data )
-    doseimg.SetOrigin( imgpospat )
-    doseimg.SetSpacing( pixelspacing )
-    ##doseimg.SetDirection( orientation )
-    
-    itk.imwrite(doseimg, "EclipseDose.mhd")
-
-
-
-
-
-
-
+#def dose_dcm2mhd_norm(ds):
+#    """
+#    Method to convert a dcm dose file into mhd+raw image 
+#    Dose is normalized to max
+#    """            
+#    # Must cast to numpy.float32 for ITK to write mhd with ElementType MET_FLOAT
+#    px_data = ds.pixel_array.astype(np.float32)   
+#    
+#    print( "\n***Generating mhd from dose dicom ***")
+#    print( "  PixelData shape = {}".format(px_data.shape) )
+#
+#    # DoseGridScaling * pixel_value gives dose in DoseUnits
+#    # Gives total plan dose for field, not fraction dose.
+#    scale = ds.DoseGridScaling   
+#    units = ds.DoseUnits 
+#    print("  DoseUnits: {}".format(units))  
+#    print("  DoseGridScale: {}".format(scale))
+#    print("  DoseImageDims: {}".format(px_data.shape))
+#
+#    print("  Scaling dose to {}".format(units) )
+#    px_data = px_data * scale     
+#    print("  Max scaled dose = {}Gy".format( np.max(px_data) ) )  
+#    
+#    # TODO: Can I normalize or should we be comparing absolute doses?
+#    # Gate DoseActor gives us option to normalize to max so we could compare these?
+#    mx = np.max( px_data )
+#    px_data = px_data / mx
+#        
+#    imgpospat = ds.ImagePositionPatient
+#    xy_spacing = ds.PixelSpacing
+#    ##orientation = ds.ImageOrientationPatient?
+#    z_spacing = ds.GridFrameOffsetVector[1]-ds.GridFrameOffsetVector[0]  ##TODO: assumed these are equal but they might not be with our scanner
+#    pixelspacing = [xy_spacing[0],xy_spacing[1]] + [z_spacing]
+#    
+#    # 3D ITK image 
+#    doseimg = itk.image_from_array( px_data )
+#    doseimg.SetOrigin( imgpospat )
+#    doseimg.SetSpacing( pixelspacing )
+#    ##doseimg.SetDirection( orientation )
+#    
+#    itk.imwrite(doseimg, "EclipseDose.mhd")
 
 
 #

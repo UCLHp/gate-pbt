@@ -24,6 +24,18 @@ def update_config( configfile, section, key, value ):
         config.write( q )
 
 
+def add_fractions( configfile, nfractions ):
+    """Update simconfig.ini with number fractions 
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section("Plan"):
+        config["Plan"]["fractions"] = nfractions
+    else:
+        config["Plan"]  =  {"fractions": nfractions } 
+    with open(configfile, "w") as q:
+        config.write( q )
+
 
 def add_ct_to_config( configfile, ct_name ):
     """Update simconfig.ini with name of ct used in simulation

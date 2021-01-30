@@ -18,6 +18,7 @@ Automated analysis of Gate simulation output:
 """
 import sys
 import os
+from os.path import join, basename
 
 import easygui
 import itk
@@ -26,6 +27,8 @@ import config
 import mergeresults
 import dosetowater
 import dosetodicom
+import dosetomhd
+import gamma
 
 
 
@@ -56,7 +59,7 @@ def count_prims_simulated( outputdir, field ):
     for f in filelist:
         if "stat-pat.txt" in f:
             if field in f:
-                file = os.path.join(outputdir,f)
+                file = join(outputdir,f)
                 lines = open(file).readlines()
                 for line in lines:
                     if "NumberOfEvents" in line:
@@ -122,7 +125,7 @@ def full_analysis( outputdir ):
         # Merge all results and return list of files produced
         mergedfiles = mergeresults.merge_results( outputdir, field )
         print("  Merging results...")
-        print("  Merged files: ", [os.path.basename(f) for f in mergedfiles])
+        print("  Merged files: ", [basename(f) for f in mergedfiles])
         
         print("  Correcting mhd TransformMatrix in merged files")
         correct_transform_matrix(mergedfiles)
@@ -134,23 +137,25 @@ def full_analysis( outputdir ):
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
-        scalefactor = nreq / nsim
+        nfractions = config.get_fractions( outputdir )
+        scalefactor = (nreq / nsim) * nfractions
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
-        print("  Dose scaling: ",scalefactor)
+        print("  Fractions planned: ",nfractions)
+        #print("  Dose scaling: ",scalefactor)
         
         dose = field+"_merged-Dose.mhd"
-        if dose in [os.path.basename(f) for f in mergedfiles]:
+        if dose in [basename(f) for f in mergedfiles]:
             print("  Scaling merged-Dose.mhd")
-            doseimg = os.path.join(outputdir, dose)
-            scaledimg = os.path.join(outputdir, field+"_AbsoluteDose.mhd")
+            doseimg = join(outputdir, dose)
+            scaledimg = join(outputdir, field+"_AbsoluteDose.mhd")
             write_scaled_dose( doseimg, scaledimg, scalefactor )
             
             print("  Converting dose2material to dose2water")
             ctpath = config.get_ct_path( outputdir )
             ##ctpath = os.path.join( outputdir, ctname )
-            d2wimg = os.path.join(outputdir, field+"_AbsoluteDoseToWater.mhd")
+            d2wimg = join(outputdir, field+"_AbsoluteDoseToWater.mhd")
             dosetowater.convert_dose_to_water( ctpath, scaledimg, output=d2wimg )
             
             print("  Converting mhd dose to dicom")
@@ -158,15 +163,30 @@ def full_analysis( outputdir ):
             print("    beam_ref_no = ",beamref)
             path_to_dcmdose = dosetodicom.get_dcm_file_path( outputdir, beamref )
             ##print("XXX ", path_to_dcmdose)
-            dcm_out = os.path.join(outputdir, field+"_AbsoluteDoseToWater.dcm")
+            dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
             dosetodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
             
             
+            print("  Performing gamma analysis")
+            tps_dose = dosetomhd.dcm2mhd( path_to_dcmdose )
+            gamma_img = gamma.gamma_image( tps_dose, d2wimg )
+            itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
+            pass_rate = gamma.get_pass_rate( gamma_img )
+            print("    gamma pass rate = {}%".format(pass_rate)  )
+            #####
+            #print( "gamma img type = ", type(gamma_img))
+            # MAKE DCM OF GAMMA IMAGE
+            print("  Converting gamma image to dicom")
+            gamma_dcm = join(outputdir, field+"_Gamma.dcm")
+            gamma.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
+
+            
+            
         dose2water = field+"_merged-DoseToWater.mhd"
-        if dose2water in [os.path.basename(f) for f in mergedfiles]:
+        if dose2water in [basename(f) for f in mergedfiles]:
             print("  Scaling merged-DoseToWater.mhd")
-            doseimg = os.path.join(outputdir, dose2water)
-            outname = os.path.join(outputdir, field+"_Gate_DoseToWater.mhd")
+            doseimg = join(outputdir, dose2water)
+            outname = join(outputdir, field+"_Gate_DoseToWater.mhd")
             write_scaled_dose( doseimg, outname, scalefactor )
 
         

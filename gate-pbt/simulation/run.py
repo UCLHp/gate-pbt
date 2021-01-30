@@ -180,6 +180,9 @@ def main():
     imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
+    # Add number fractions to config
+    nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
+    config.add_fractions( CONFIG, nfractions )
     # Add ct name being used in sim to simconfig.ini
     config.add_ct_to_config( CONFIG, ct_for_simulation )
     # Add ct transform matrix to simconfig.ini

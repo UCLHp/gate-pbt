@@ -73,7 +73,12 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
         dosescaling = 1
     
     dcm = pydicom.dcmread(dcmFile)
-    mhd = itk.imread(mhdFile)
+    mhd=None
+    if type(mhdFile)==str:
+        mhd = itk.imread(mhdFile)
+    else:
+        #Assume image
+        mhd = mhdFile  ##TODO: TIDY THIS
     
     ###### Alter UID tags  -- TODO: what exactly needs changed?
     digits_to_modify = 4

@@ -11,6 +11,19 @@ import configparser
 
 
 
+def get_fractions( outputdir ):
+    """Return required primaries for field"""
+    ########## ASSUME CONFIG FILE IN /../data
+    parent = os.path.dirname(outputdir)
+    configfile = os.path.join(parent,"data","simconfig.ini")
+    ########################################
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    fractions = config.getint("Plan", "fractions")
+    return fractions
+
+
 def get_req_prims( outputdir, field ):
     """Return required primaries for field"""
     ########## ASSUME CONFIG FILE IN /../data

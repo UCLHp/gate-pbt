@@ -11,7 +11,7 @@ See the Gate documentation [here](https://gate.uca.fr/documentation#/admin) for 
 and examples. This work has been performed using 
 the virtual machines, version 8.1 and 8.2, available [here](https://gate.uca.fr/download/vgate#/admin). 
 These are Linux VMs that include a Geant4 install along with various other useful software.
-If you wish to align with the Gate-RTion recommendations, a VM with gate 8.1 and Geant4 10.3.3
+If you wish to align with the Gate-RTion recommendations, a VM with Gate 8.1 and Geant4 10.3.3
 will be available soon.  
 
 Development has been done using pencil beam scanning proton plans created in the Eclipse treatment planning system (versions 13.7, 15.5 and 16.1). If you run into issues using another TPS let me know.
