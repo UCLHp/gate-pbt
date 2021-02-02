@@ -32,15 +32,19 @@ def get_dcm_file_path( outputdir, beamref ):
     datadir = join(parent,"data")
     
     filepaths = [join(datadir,f) for f in listdir(datadir) if isfile(join(datadir,f))]
-    dcmpaths = [f for f in filepaths if f[-4:]==".dcm" ]
+    dcmpaths = [f for f in filepaths if f[-4:]==".dcm" ]  #TODO: WHAT IF THERE ARE OTHER DCM FILES? FROM PREV ANALYSES?
 
     dcmfile = None
     for dcm in dcmpaths:
         dcmdose = pydicom.dcmread(dcm)
         
         if dcmdose.Modality=="RTDOSE":
-            if dcmdose.ReferencedRTPlanSequence[0].ReferencedFractionGroupSequence[0].ReferencedBeamSequence[0].ReferencedBeamNumber == beamref:
-                dcmfile = dcm
+            if hasattr( dcmdose.ReferencedRTPlanSequence[0], "ReferencedFractionGroupSequence" ):
+                if dcmdose.ReferencedRTPlanSequence[0].ReferencedFractionGroupSequence[0].ReferencedBeamSequence[0].ReferencedBeamNumber == beamref:
+                    dcmfile = dcm
+            else:
+                print(" -- possible plan dose found rather than field?  {}".format(dcm)  )  ##TODO - WHY IS THIS MISSING?
+                #dcmfile = dcm
 
     if dcmfile is None:
         print(" !! Corresponding dicom dose file not found !!")
@@ -95,19 +99,19 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     #####################################################
     
     # NOT NECESSARY; USING ORIGINAL FIELD DICOM DOSE
-    #dcm.PixelSpacing = list( mhd.GetSpacing() )[0:2]
-    #dcm.ImagePositionPatient =  list( mhd.GetOrigin() )
+    dcm.PixelSpacing = list( mhd.GetSpacing() )[0:2]
+    dcm.ImagePositionPatient =  list( mhd.GetOrigin() )
 
     mhdpix = itk.array_from_image(mhd)
     
     # NOT NECESSARY TO CHANGE THESE IF USING CORRECT DCM DOSE FILE
-    #dcm.NumberOfFrames = mhdpix.shape[0]
-    #dcm.Rows = mhdpix.shape[1]            # ARE THESE CORRECT WAY ROUND?
-    #dcm.Columns = mhdpix.shape[2]
+    dcm.NumberOfFrames = mhdpix.shape[0]
+    dcm.Rows = mhdpix.shape[1]            # ARE THESE CORRECT WAY ROUND?
+    dcm.Columns = mhdpix.shape[2]
     
     #Is GridFrameOffsetVector always in "relative interpretations"?
     # TODO: check this is safe
-    #dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
+    dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
          
     dose_abs = mhdpix * dosescaling
     

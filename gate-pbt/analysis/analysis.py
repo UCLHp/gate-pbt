@@ -138,6 +138,7 @@ def full_analysis( outputdir ):
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
+        
         scalefactor = (nreq / nsim) * nfractions
         
         print("  Primaries simulated: ",nsim)

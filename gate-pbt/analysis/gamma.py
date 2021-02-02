@@ -20,7 +20,8 @@ import gatetools as gt
 
 DTA = 3                 # mm
 DD = 3                  # %
-##DOSE_THRESHOLD = 2    # Absolute dose; TODO: change to % prescription)
+
+DOSE_THRESHOLD = 0.1    # Absolute dose; TODO: change to % prescription)
 
 
 
@@ -47,7 +48,7 @@ def gamma_image( ref_dose, target_dose ):
         
         
     max_tps_dose = np.max( tps )
-    gamma_threshold = max_tps_dose * 0.25  ## TODOD: SENSIBLE THRESHOLD??
+    gamma_threshold = max_tps_dose * DOSE_THRESHOLD  ## TODOD: SENSIBLE THRESHOLD??
     
       
     # Gamma img will have dimensions of MC img
@@ -74,11 +75,6 @@ def get_pass_rate( gamma_img ):
 
 
 
-
-
-
-
-
 #########################################################################
 #TODO; THIS WILL ONLY WORK IF MHD DOSE IS SAME DIMENSIONS ETC AS DCMFILE
 #########################################################################
@@ -91,7 +87,7 @@ def rand_digits_str( digits_to_modify ):
     """
     limit = 10**digits_to_modify - 1
     return str( int(random.random()*limit) ).zfill(digits_to_modify)
-    
+
 
 def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     """
@@ -126,22 +122,37 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     seriesinstanceuid = dcm.SeriesInstanceUID 
     dcm.SeriesInstanceUID = seriesinstanceuid[:-digits_to_modify] + digits
     #####################################################
+    
+    # NOT NECESSARY; USING ORIGINAL FIELD DICOM DOSE
+    dcm.PixelSpacing = list( mhd.GetSpacing() )[0:2]
+    dcm.ImagePositionPatient =  list( mhd.GetOrigin() )
 
     mhdpix = itk.array_from_image(mhd)
+    
     
     # REPLACE THE -1 DEFAULT GAMMA VALUES  TODO: more robust
     mhdpix[ mhdpix<0 ] = 0
     
+    
+    # NOT NECESSARY TO CHANGE THESE IF USING CORRECT DCM DOSE FILE
+    dcm.NumberOfFrames = mhdpix.shape[0]
+    dcm.Rows = mhdpix.shape[1]            # ARE THESE CORRECT WAY ROUND?
+    dcm.Columns = mhdpix.shape[2]
+    
+    #Is GridFrameOffsetVector always in "relative interpretations"?
+    # TODO: check this is safe
+    dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
+         
     dose_abs = mhdpix * dosescaling
     
-    scale_to_int = 1E4  
+    scale_to_int = 1E4   
     mhd_scaled = dose_abs * scale_to_int
     mhd_scaled = mhd_scaled.astype(int)       
     dcm.PixelData = mhd_scaled.tobytes()
     
     dcm_scaling = 1.0/scale_to_int
-    dcm.DoseGridScaling = dcm_scaling
-    
+    dcm.DoseGridScaling = dcm_scaling  
+   
     dcm.save_as( output )
 
 
