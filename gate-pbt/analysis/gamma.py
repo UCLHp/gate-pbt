@@ -48,11 +48,14 @@ def gamma_image( ref_dose, target_dose ):
         
         
     max_tps_dose = np.max( tps )
+    ##print("    max tps dose = ", max_tps_dose)
     gamma_threshold = max_tps_dose * DOSE_THRESHOLD  ## TODOD: SENSIBLE THRESHOLD??
     
       
     # Gamma img will have dimensions of MC img
     gamma = gt.get_gamma_index( tps, mc, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)
+    #gamma = gt.get_gamma_index( mc, tps, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)
+
     
     return gamma
 

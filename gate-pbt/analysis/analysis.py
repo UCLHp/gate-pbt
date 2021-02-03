@@ -101,6 +101,27 @@ def correct_transform_matrix( mergedfiles ):
                     out.write("TransformMatrix = {}\n".format(transform))
                 else:
                     out.write(line)
+                    
+                    
+                    
+def correct_offset( mergedfiles, field ):
+    """Set correct mhd Offset param for Gate output
+    
+    Gate calculates this wrong for non-HFS orientations
+    """
+    
+    offset = config.get_offset( outputdir, field )
+    
+    for mf in mergedfiles:
+        file = open(mf, "r")
+        lines = file.readlines()
+        file.close()
+        with open(mf,"w") as out:
+            for line in lines:
+                if "Offset" in line:
+                    out.write("Offset = {}\n".format(offset))
+                else:
+                    out.write(line)
         
 
 
@@ -130,6 +151,9 @@ def full_analysis( outputdir ):
         print("  Correcting mhd TransformMatrix in merged files")
         correct_transform_matrix(mergedfiles)
         
+        print("  Correcting dose mhd Offset in merged files")
+        correct_offset( mergedfiles, field )
+        
         # TODO #### Perhaps only necessary if using the mhd?
         #   Could ignore if we just deal with dicom doses (gamma analysis)?
         # print("  Correcting mhd Offset in merged files")
@@ -139,7 +163,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions
+        scalefactor = (nreq / nsim) * nfractions  * 1.051
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)

@@ -14,6 +14,8 @@ import pydicom
 import numpy as np
 from math import radians, degrees, sqrt, isclose
 
+import itk
+
 import descriptionfiles as gfdf
 import rangeshifter
 import fieldstats
@@ -357,9 +359,33 @@ def get_source_offset(field, rs):
 
 
 
+def calc_dose_offset( mhdimgpath, dcmdose ):
+    """ Calculate correct mhd Offset (ITK Origin) for Gate's dose output
+    
+    A bug in Gate means that this can be wrong for certain non-HFS 
+    patirn positions so we must correct it manually in the ouput files
+    """
+    dose_vox_dims = np.array(  get_dose_voxel_dims( dcmdose )  )
+    
+    mhdimg = itk.imread( mhdimgpath )
+    ctorigin = np.array(  mhdimg.GetOrigin()  )
+    img_vox_dims = np.array(  mhdimg.GetSpacing()  )
+    direction = np.array(  mhdimg.GetDirection()*[1,1,1]  )
+    
+    doseorigin = ctorigin - 0.5*direction*img_vox_dims + 0.5*direction*dose_vox_dims
+    
+    return doseorigin
+    
+    
+    
+    
 
 
 
+
+## TODO: THIS METHOD SHOULD BE FIELD SPECIFIC AS IN FUTURE WE MIGHT HAVE DIFFERENT IMAGES
+##    FOR EACH FIELD, CROPPED FOR MINIMUM MEMORY USAGE
+    
 def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
     """Method to generate all description and mac files"""
     
@@ -373,7 +399,6 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
     # Dictionary of field name and number of primaries required
     req_prims = fieldstats.get_required_primaries( dcmPlan )
     print("Required primaries = ",  req_prims )
-    
     # Update simconfig.ini file
     config.add_prims_to_config( CONFIG, req_prims )
 
@@ -385,6 +410,12 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         # Add beam ref number to config file
         beam_ref_no = field.BeamNumber
         config.add_beam_ref_no( CONFIG, beamname, beam_ref_no )
+        
+        # Calculate correct origin for dose output
+        # TODO: THIS MAY BE FIELD SPECIFIC IF WE DO ANYTHING CLEVER WITH
+        #   IMAGE CROPPING.
+        dose_origin = calc_dose_offset( os.path.join(sim_dir,"data",ct_mhd), dose_files[0] )
+        config.add_correct_dose_offset(CONFIG, beamname, dose_origin)
         
         # Rangeshifter object
         rs = rangeshifter.get_props( field )  
