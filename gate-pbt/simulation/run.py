@@ -22,6 +22,13 @@ import config
 
 
 
+DATA_TO_COPY = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt",
+                 "UCLH2019MaterialsTable_v1.txt", "patient-HU2mat_UCLHv1.txt",
+                 "patient-HUmaterials_UCLHv1.db", "simconfig.ini"]
+MAC_TO_COPY =  ["verbose.mac","visu.mac"]
+
+
+
 def make_gate_dirs(dir_name, path_to_templates):
     """Make dir structure for gate files and copy fixed files"""
     # Make directory tree
@@ -31,14 +38,12 @@ def make_gate_dirs(dir_name, path_to_templates):
         os.mkdir( os.path.join(dir_name,"mac") )
         os.mkdir( os.path.join(dir_name,"output") )    
     # Copy over data files
-    fs = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt","UCLH2019MaterialsTable_v1.txt", "simconfig.ini"]
-    for f in fs:
+    for f in DATA_TO_COPY:
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"data",f)
         shutil.copyfile(source,destination)
     # Copy over mac files
-    ffs = ["verbose.mac","visu.mac"]
-    for f in ffs:
+    for f in MAC_TO_COPY:
         source = os.path.join(path_to_templates,f)  
         destination = os.path.join(dir_name,"mac",f)  
         shutil.copyfile(source,destination)
@@ -47,7 +52,6 @@ def make_gate_dirs(dir_name, path_to_templates):
 
 def copy_dcm_doses( dcmfiles, destinationdir ):
     """Copy dcm dose files to simdir/data; needed later for analaysis"""
- 
     for dcmfile in dcmfiles:
         fname = os.path.basename(dcmfile)
         dest = os.path.join(destinationdir, fname)

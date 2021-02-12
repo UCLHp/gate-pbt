@@ -48,12 +48,12 @@
 ### Voxelized phantom added to the GlobalVol container
 
 # Generate materials from Hounsfield units
-/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
-/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
-/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
-/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
-/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
-/gate/HounsfieldMaterialGenerator/Generate
+#/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
+#/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
+#/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
+#/gate/HounsfieldMaterialGenerator/Generate
 
 # Create parameterized phantom object
 /gate/GlobalVol/daughters/name                      patient
@@ -131,11 +131,11 @@
 /gate/actor/dose3d/enableEdep            false
 /gate/actor/dose3d/enableUncertaintyEdep false
 /gate/actor/dose3d/enableDose            true
-/gate/actor/dose3d/enableSquaredDose     true
+/gate/actor/dose3d/enableSquaredDose     false
 /gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
 #/gate/actor/dose3d/normaliseDoseToMax   false
-/gate/actor/dose3d/enableDoseToWater     true
+/gate/actor/dose3d/enableDoseToWater     false
 
 #/gate/actor/addActor                 LETActor  let3d
 #/gate/actor/let3d/save               {path}/output/letActor.mhd

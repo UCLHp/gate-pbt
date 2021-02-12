@@ -25,8 +25,10 @@ def make_script(sim_dir_path, fieldname, splits, outpath):
         out.write("#!/bin/bash\n")
         job = simdirname + "_" + fieldname
         out.write("#SBATCH --job-name={}\n".format(job))
-        out.write("#SBATCH --output={}\n".format(job+".txt"))
-        out.write("#SBATCH --error={}\n".format(job+"_errors.txt"))
+        out.write("#SBATCH --output=/mnt/clustshare/{}_%A_%a.out\n".format(job))
+        out.write("#SBATCH --error=/mnt/clustshare/{}_%A_%a.err\n".format(job))
+        #out.write("#SBATCH --output=/mnt/clustshare/{}\n".format(job+".txt"))
+        #out.write("#SBATCH --error=/mnt/clustshare/{}\n".format(job+"_errors.txt"))
         out.write("#SBATCH --array=1-{}\n".format(splits))
         out.write("#SBATCH --requeue\n")
         out.write("\n")
@@ -37,5 +39,3 @@ def make_script(sim_dir_path, fieldname, splits, outpath):
         
         out.write( cmd )
     out.close()
-                  
-                  

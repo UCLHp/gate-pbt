@@ -67,7 +67,7 @@ def get_pass_rate( gamma_img ):
     """
 
     gamma_vals = itk.GetArrayViewFromImage(gamma_img)
-    #print( "  Max gamma = {}".format( np.max(gamma_vals) ) )
+    print( "  Max gamma = {}".format( np.max(gamma_vals) ) )
     # Only look at valid gammas (i.e. > 0) for % fail count
     pass_rate = 100.0 - 100*gamma_vals[gamma_vals>1].size / gamma_vals[gamma_vals>0].size
     #print( "  Gamma < 1 = {}%".format( pass_rate )  )  

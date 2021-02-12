@@ -24,15 +24,15 @@ import pydicom
 
 
 def get_dcm_file_path( outputdir, beamref ):
-    """ Return path to correct dicom dose file
+    """ Return path to beam's corresponding dicom dose file
     
-    dcm files in /data directory, 1 back from outputdir
+    Eclipse dose dcm files in /data directory, one back from outputdir
     """
     parent = dirname(outputdir)
     datadir = join(parent,"data")
     
     filepaths = [join(datadir,f) for f in listdir(datadir) if isfile(join(datadir,f))]
-    dcmpaths = [f for f in filepaths if f[-4:]==".dcm" ]  #TODO: WHAT IF THERE ARE OTHER DCM FILES? FROM PREV ANALYSES?
+    dcmpaths = [f for f in filepaths if f[-4:]==".dcm" ]
 
     dcmfile = None
     for dcm in dcmpaths:
@@ -43,7 +43,8 @@ def get_dcm_file_path( outputdir, beamref ):
                 if dcmdose.ReferencedRTPlanSequence[0].ReferencedFractionGroupSequence[0].ReferencedBeamSequence[0].ReferencedBeamNumber == beamref:
                     dcmfile = dcm
             else:
-                print(" -- possible plan dose found rather than field?  {}".format(dcm)  )  ##TODO - WHY IS THIS MISSING?
+                print(" -- possible plan dose found rather than field?  {}".format(dcm)  ) 
+                ##TODO - WHY IS THIS MISSING? BECAUSE IT WAS A PLAN DOSE AND NOT FIELD DOSE?
                 #dcmfile = dcm
 
     if dcmfile is None:
