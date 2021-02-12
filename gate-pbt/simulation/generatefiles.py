@@ -468,7 +468,7 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         splits = 10  ## TODO automate this for efficiency
         nprotons = int( req_prims[field.BeamName]/1000 )  # will be split into separate sims
         #splits = 80
-        #nprotons = 800000
+        #nprotons = 80000
         
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         

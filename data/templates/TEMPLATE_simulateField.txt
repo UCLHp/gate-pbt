@@ -58,8 +58,8 @@
 # Create parameterized phantom object
 /gate/GlobalVol/daughters/name                      patient
 /gate/GlobalVol/daughters/insert                    ImageNestedParametrisedVolume
-/gate/geometry/setMaterialDatabase              {path}/data/patient-HUmaterials.db
-/gate/patient/geometry/setHUToMaterialFile      {path}/data/patient-HU2mat.txt
+/gate/geometry/setMaterialDatabase              {path}/data/patient-HUmaterials_UCLHv1.db
+/gate/patient/geometry/setHUToMaterialFile      {path}/data/patient-HU2mat_UCLHv1.txt
 
 # Position patient 
 /gate/patient/geometry/setImage                {path}/data/XXXX

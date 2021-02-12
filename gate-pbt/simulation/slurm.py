@@ -14,6 +14,17 @@ import os
 CLUSTER_LOCATION = "/mnt/clustshare"
 
 
+
+def dos2unix( filein, fileout ):
+    """Convert Windows file endings to unix"""   
+    with open( filein, 'rb') as infile:    
+      content = infile.read()
+    with open( fileout, 'wb') as output:
+      for line in content.splitlines():
+        output.write(line + b'\n')
+
+
+
 def make_script(sim_dir_path, fieldname, splits, outpath):
     """Slurm job submission script for field"""
     
@@ -25,10 +36,8 @@ def make_script(sim_dir_path, fieldname, splits, outpath):
         out.write("#!/bin/bash\n")
         job = simdirname + "_" + fieldname
         out.write("#SBATCH --job-name={}\n".format(job))
-        out.write("#SBATCH --output=/mnt/clustshare/{}_%A_%a.out\n".format(job))
-        out.write("#SBATCH --error=/mnt/clustshare/{}_%A_%a.err\n".format(job))
-        #out.write("#SBATCH --output=/mnt/clustshare/{}\n".format(job+".txt"))
-        #out.write("#SBATCH --error=/mnt/clustshare/{}\n".format(job+"_errors.txt"))
+        out.write("#SBATCH --output={}/{}_%A_%a.out\n".format(simdirclustpath,job))
+        out.write("#SBATCH --error={}/{}_%A_%a.err\n".format(simdirclustpath,job))
         out.write("#SBATCH --array=1-{}\n".format(splits))
         out.write("#SBATCH --requeue\n")
         out.write("\n")
@@ -39,3 +48,11 @@ def make_script(sim_dir_path, fieldname, splits, outpath):
         
         out.write( cmd )
     out.close()
+    
+    #Convert from Windows line endings to unix
+    dos2unix( outpath, outpath )
+
+
+
+
+
