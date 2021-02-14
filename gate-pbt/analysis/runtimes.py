@@ -42,7 +42,7 @@ def get_runtime( file ):
 
 if __name__=="__main__":
     
-    outputdir = "path"
+    outputdir = r"C:\Users\SCOURT01.UCLH\Desktop\45sims_a"
     
     times = []
     pps = []
@@ -73,6 +73,7 @@ if __name__=="__main__":
     print("PPS MAX = ", pps.max())
     print("PPS MIN = ", pps.min())
     print("PPS MEAN = ", pps.mean())
+    print("PPS STDEV = ", pps.std() )
     
     
     for f,p in zip(statfiles,pps):

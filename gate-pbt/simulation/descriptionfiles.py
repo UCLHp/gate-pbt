@@ -13,19 +13,6 @@ the "Nozzle exit to Isocenter distance" field (i.e. "Snout Position" in Eclipse
 from math import isclose
 
 
-def make_source_description( template_file, filename, snout_pos ):
-    """Method to generate a field-specific source description file
-    by reading in our template and changing the "Nozzle exit to
-    Isocentre Position value (Snout Position in Eclipse)."""
-    output = open(filename, "w")
-    for line in open( template_file, "r" ):
-        if "NOZZLE_EXIT_DIST" in line:
-            line = str(snout_pos)+"\n"
-        if len(line.strip())>0:
-            output.write(line)
-    output.close()
-    
-
 
 
 def get_plan_description(plan, field):

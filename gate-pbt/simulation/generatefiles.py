@@ -269,8 +269,8 @@ def get_dose_voxel_dims( dcm_dose ):
 
 
 
-
-def write_mac_file(template, output, planDescription, sourceDescription, 
+ 
+def write_mac_file(template, output, planDescription,                 
                    setRotationAngle=None, setRotationAxis=None,
                    setTranslation=None,
                    setVoxelSize=None, setImage=None,
@@ -300,9 +300,6 @@ def write_mac_file(template, output, planDescription, sourceDescription,
             
             elif "setPlan" in line and planDescription is not None:
                 out.write( "/gate/source/PBS/setPlan    {{path}}/data/{}\n".format(planDescription) )
-            
-            elif "setSourceDescriptionFile" in line and sourceDescription is not None:
-                out.write( "/gate/source/PBS/setSourceDescriptionFile    {{path}}/data/{}\n".format(sourceDescription) )
             
             elif "dose3d/setVoxelSize" in line and setVoxelSize is not None:
                 out.write( "/gate/actor/dose3d/setVoxelSize    {} {} {} mm\n".format(
@@ -342,20 +339,6 @@ def field_has_rangeshifter( field ):
     """Return true if field has rangeshifter"""
     return hasattr(field.IonControlPointSequence[0],"RangeShifterSettingsSequence")
 
-
-def get_source_offset(field, rs):
-    """Offset source to allow rangeshifter in beam path"""
-    source_offset = 0
-    if field_has_rangeshifter(field):
-        # offset source by thickness, rangeshifter offset from nozzle exit
-        # and some arbitrary distance so source is not in rangeshifter
-        #####source_offset = rs.thickness + rs.offset + 5  
-        rsss = field.IonControlPointSequence[0].RangeShifterSettingsSequence[0]
-        snout_pos = field.IonControlPointSequence[0].SnoutPosition
-        rs_inset = rsss.IsocenterToRangeShifterDistance - snout_pos
-        source_offset = rs_inset + rs.thickness + 5
-        print("source_offset = {}".format(source_offset))
-    return source_offset
 
 
 
@@ -420,9 +403,6 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         # Rangeshifter object
         rs = rangeshifter.get_props( field )  
         
-        # Offset to source positon (snout position) needed to allow rangeshifter
-        source_offset = get_source_offset(field, rs)
-        
         
         ##### Make field-specific PlanDescriptionFile
         fld_dsc = gfdf.get_field_description(field)
@@ -433,14 +413,6 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                                     )
         
         
-        ##### Make field-specific SourceDescriptionFile
-        snout_pos = field.IonControlPointSequence[0].SnoutPosition + source_offset 
-        sdf_filename = "SourceDescFile_"+beamname+".txt"
-        gfdf.make_source_description(TEMPLATE_SOURCE, 
-                                     os.path.join(sim_dir,"data",sdf_filename), snout_pos
-                                     )
-        
-        
         ##### Make field-specific .mac Gate file for simulation    
         rotation_matrix = get_rotation_matrix(ct_files, field)
         axis = get_rotation_axis(rotation_matrix)
@@ -448,8 +420,7 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         translation_vector = get_translation_vector( ct_files, field, rotation_matrix )
         #print( translation_vector )
         mac_filename = os.path.join(sim_dir,"mac",beamname+".mac")
-        write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename, sdf_filename,
-                       # setRotationAngle=-field.IonControlPointSequence[0].PatientSupportAngle,
+        write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename,
                        setRotationAngle=angle,
                        setRotationAxis=axis,
                        setTranslation=translation_vector,
@@ -461,18 +432,16 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
                       )
  
     
-        ##### Potentially split field mac file here ####
-        # TODO
+        ##### Split field mac file here ####
         # Simulate Nreq/1000 for reasonable stats
-
         splits = 10  ## TODO automate this for efficiency
         nprotons = int( req_prims[field.BeamName]/1000 )  # will be split into separate sims
         #splits = 80
-        #nprotons = 80000
-        
+        #nprotons = 4000000       
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
-        
+ 
+       
         # Make SLURM job script
         scriptname = "submit_"+beamname+".sh"
         scriptpath = os.path.join(sim_dir, scriptname )

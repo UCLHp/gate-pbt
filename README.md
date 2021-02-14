@@ -51,7 +51,8 @@ It will prompt for the directory containing the simulation output and:
 2. Calculate the dose uncertainty following [Chetty2006](https://pubmed.ncbi.nlm.nih.gov/16798417/)
 3. Scale the simulation to absolute dose using the N/MU curve provided
 4. Convert dose-to-material to dose-to-water following [Paganetti2009](https://iopscience.iop.org/article/10.1088/0031-9155/54/14/004/pdf), using the HU-density and HU-RSP curves provided
-5. Convert the absolute dose-to-water mhd files from each field into dicom files for import into the treatment planning system (using the original dicom files as templates)
+5. Convert each field's dicom dose into an mhd image and perform a 3D gamma analysis using gatetools
+6. Convert the dose-to-water plus gamma mhd images from each field into dicom files for import into the treatment planning system
 
 
 

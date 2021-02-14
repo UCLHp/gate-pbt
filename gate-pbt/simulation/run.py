@@ -24,7 +24,8 @@ import config
 
 DATA_TO_COPY = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt",
                  "UCLH2019MaterialsTable_v1.txt", "patient-HU2mat_UCLHv1.txt",
-                 "patient-HUmaterials_UCLHv1.db", "simconfig.ini"]
+                 "patient-HUmaterials_UCLHv1.db", "simconfig.ini",
+                 "SourceDescriptionFile.txt"]
 MAC_TO_COPY =  ["verbose.mac","visu.mac"]
 
 
