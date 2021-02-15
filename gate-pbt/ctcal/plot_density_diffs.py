@@ -12,19 +12,19 @@ from bokeh.plotting import figure, output_file, show, ColumnDataSource
 from bokeh.models import HoverTool
 
 
-output_file("bokeh.html")
+output_file("DensityDifferences.html")
 
-df = pd.read_csv("z_density_differences.csv")
+df = pd.read_csv("calibrated_densities.csv")
 
-print("Mean diff = {}%".format( round(df["Difference"].mean(),2) ) )
-print("Median diff = {}%".format( round(df["Difference"].median(),2) ) )
-print("Min = {}%".format( round(df["Difference"].min(),2) ) )
-print("Max diff = {}%".format( round(df["Difference"].max(),2) ) )
+print("Mean diff = {}%".format( round(df["Density diff (%)"].mean(),2) ) )
+print("Median diff = {}%".format( round(df["Density diff (%)"].median(),2) ) )
+print("Min = {}%".format( round(df["Density diff (%)"].min(),2) ) )
+print("Max diff = {}%".format( round(df["Density diff (%)"].max(),2) ) )
 
 source = ColumnDataSource(data=dict(
         #x=list(df["HU"]),
-        x=range(len(df["Difference"])),
-        y=list(df["Difference"]),
+        x=range(len(df["Density diff (%)"])),
+        y=list(df["Density diff (%)"]),
         desc=list(df["Tissue"])
 ))
 
@@ -40,5 +40,7 @@ p = figure( plot_width=600, plot_height=300,
            y_axis_label="Change (%)",
 )
 p.circle( 'x', 'y', size=5, source=source )
+p.line( [0,70], [0,0] )
+#p.line( [-800,1600], [0,0] )
 
 show(p)
