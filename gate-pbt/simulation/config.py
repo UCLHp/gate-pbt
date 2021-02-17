@@ -24,6 +24,18 @@ def update_config( configfile, section, key, value ):
         config.write( q )
 
 
+def add_fractions( configfile, nfractions ):
+    """Update simconfig.ini with number fractions 
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section("Plan"):
+        config["Plan"]["fractions"] = nfractions
+    else:
+        config["Plan"]  =  {"fractions": nfractions } 
+    with open(configfile, "w") as q:
+        config.write( q )
+
 
 def add_ct_to_config( configfile, ct_name ):
     """Update simconfig.ini with name of ct used in simulation
@@ -37,6 +49,23 @@ def add_ct_to_config( configfile, ct_name ):
     with open(configfile, "w") as q:
         config.write( q )
         
+        
+def add_correct_dose_offset( configfile, beamname, dose_origin):
+    """Add correct dose output mhd Offset (from numpy array)
+    """
+    offset = ""
+    for c in dose_origin:
+        offset += str(c) + " " 
+    offset = offset.strip()
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section(beamname):
+        config[beamname]["dose_offset"] = offset
+    else:
+        config[beamname] = {"dose_offset": offset } 
+    with open(configfile, "w") as q:
+        config.write( q )   
         
 
 def add_transformmatrix_to_config( configfile, ctmhd ):

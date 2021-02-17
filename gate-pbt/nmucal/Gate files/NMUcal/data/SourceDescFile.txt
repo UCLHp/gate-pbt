@@ -1,0 +1,85 @@
+# Nozzle exit to Isocenter distance
+420
+# SMX to Isocenter distance
+2000
+# SMY to Isocenter distance
+2560
+# ENERGY
+# mean energy
+# polynomial order
+1
+# polynomial parameters (highest to lowest)
+0.9716
+1.5803
+# energy spread
+# polynomial order
+MeV
+2
+# polynomial parameters (highest to lowest)
+-0.00007
+0.0176
+0.1884
+# SPOT x y theta phi
+# x
+# polynomial order
+3
+# polynomial parameters
+-3.83578154E-7
+2.42477339E-4
+-0.0509242735
+7.11157004
+# Theta
+# polynomial order
+5
+# polynomial parameters
+-1.94906541E-13
+1.62661642E-10
+-5.38856976E-8
+8.96870811E-6
+-7.82534178E-4
+0.0337141765
+# y
+# polynomial order
+3
+# polynomial parameters
+-3.83578154E-7
+2.42477339E-4
+-0.0509242735
+7.11157004
+# Phi
+# polynomial order
+5
+# polynomial parameters
+-1.94906541E-13
+1.62661642E-10
+-5.38856976E-8
+8.96870811E-6
+-7.82534178E-4
+0.0337141765
+# SPOT emmittances
+# x-theta emmittance
+# polynomial order
+5
+# polynomial parameters
+-9.75590364E-13
+8.34066061E-10
+-2.84914179E-7
+4.92200475E-5
+-4.43718891E-3
+0.185424634
+# y-phi emmittance
+# polynomial order
+5
+# polynomial parameters
+-9.75590364E-13
+8.34066061E-10
+-2.84914179E-7
+4.92200475E-5
+-4.43718891E-3
+0.185424634
+# Beam monitor calibration
+# N/MU
+# polynomial order
+0
+# polynomial parameters
+1

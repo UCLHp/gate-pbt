@@ -1,0 +1,680 @@
+
+#=====================================================
+# VERBOSITY
+#=====================================================
+/control/execute mac/verbose.mac
+#=====================================================
+# VISUALISATION
+#=====================================================
+
+#/control/execute mac/visu.mac
+
+#=====================================================
+# GEOMETRY
+#=====================================================
+
+/gate/geometry/setMaterialDatabase data/GateMaterials.db
+
+# Gate uses I=68.9984 eV by default
+/gate/geometry/setIonisationPotential    Water    78 eV
+
+
+# World
+/gate/world/geometry/setXLength 2 m
+/gate/world/geometry/setYLength 2 m
+/gate/world/geometry/setZLength 2 m
+/gate/world/setMaterial Air
+
+
+# Water Box
+/gate/world/daughters/name              waterbox
+/gate/world/daughters/insert            box
+/gate/waterbox/geometry/setXLength      1 cm
+/gate/waterbox/geometry/setYLength      1 cm
+/gate/waterbox/geometry/setZLength      1 cm
+/gate/waterbox/placement/setTranslation 20 20 20 cm
+/gate/waterbox/setMaterial Water
+/gate/waterbox/vis/setVisible 1
+/gate/waterbox/vis/setColor blue
+
+# ALL WW TISSUES
+/gate/world/daughters/name    lungdeflated_box
+/gate/world/daughters/insert    box
+/gate/lungdeflated_box/geometry/setXLength    1 cm
+/gate/lungdeflated_box/geometry/setYLength    1 cm
+/gate/lungdeflated_box/geometry/setYLength    1 cm
+/gate/lungdeflated_box/placement/setTranslation -50 0 0 cm
+/gate/lungdeflated_box/setMaterial    Lungdeflated
+
+/gate/world/daughters/name    adiposetissue3_box
+/gate/world/daughters/insert    box
+/gate/adiposetissue3_box/geometry/setXLength    1 cm
+/gate/adiposetissue3_box/geometry/setYLength    1 cm
+/gate/adiposetissue3_box/geometry/setYLength    1 cm
+/gate/adiposetissue3_box/placement/setTranslation -49 0 0 cm
+/gate/adiposetissue3_box/setMaterial    Adiposetissue3
+
+/gate/world/daughters/name    adiposetissue2_box
+/gate/world/daughters/insert    box
+/gate/adiposetissue2_box/geometry/setXLength    1 cm
+/gate/adiposetissue2_box/geometry/setYLength    1 cm
+/gate/adiposetissue2_box/geometry/setYLength    1 cm
+/gate/adiposetissue2_box/placement/setTranslation -48 0 0 cm
+/gate/adiposetissue2_box/setMaterial    Adiposetissue2
+
+/gate/world/daughters/name    adiposetissue1_box
+/gate/world/daughters/insert    box
+/gate/adiposetissue1_box/geometry/setXLength    1 cm
+/gate/adiposetissue1_box/geometry/setYLength    1 cm
+/gate/adiposetissue1_box/geometry/setYLength    1 cm
+/gate/adiposetissue1_box/placement/setTranslation -47 0 0 cm
+/gate/adiposetissue1_box/setMaterial    Adiposetissue1
+
+/gate/world/daughters/name    yellowmarrow_box
+/gate/world/daughters/insert    box
+/gate/yellowmarrow_box/geometry/setXLength    1 cm
+/gate/yellowmarrow_box/geometry/setYLength    1 cm
+/gate/yellowmarrow_box/geometry/setYLength    1 cm
+/gate/yellowmarrow_box/placement/setTranslation -46 0 0 cm
+/gate/yellowmarrow_box/setMaterial    Yellowmarrow
+
+/gate/world/daughters/name    mammarygland1_box
+/gate/world/daughters/insert    box
+/gate/mammarygland1_box/geometry/setXLength    1 cm
+/gate/mammarygland1_box/geometry/setYLength    1 cm
+/gate/mammarygland1_box/geometry/setYLength    1 cm
+/gate/mammarygland1_box/placement/setTranslation -45 0 0 cm
+/gate/mammarygland1_box/setMaterial    Mammarygland1
+
+/gate/world/daughters/name    mammarygland2_box
+/gate/world/daughters/insert    box
+/gate/mammarygland2_box/geometry/setXLength    1 cm
+/gate/mammarygland2_box/geometry/setYLength    1 cm
+/gate/mammarygland2_box/geometry/setYLength    1 cm
+/gate/mammarygland2_box/placement/setTranslation -44 0 0 cm
+/gate/mammarygland2_box/setMaterial    Mammarygland2
+
+/gate/world/daughters/name    redmarrow_box
+/gate/world/daughters/insert    box
+/gate/redmarrow_box/geometry/setXLength    1 cm
+/gate/redmarrow_box/geometry/setYLength    1 cm
+/gate/redmarrow_box/geometry/setYLength    1 cm
+/gate/redmarrow_box/placement/setTranslation -43 0 0 cm
+/gate/redmarrow_box/setMaterial    Redmarrow
+
+/gate/world/daughters/name    braincerebrospinalfluid_box
+/gate/world/daughters/insert    box
+/gate/braincerebrospinalfluid_box/geometry/setXLength    1 cm
+/gate/braincerebrospinalfluid_box/geometry/setYLength    1 cm
+/gate/braincerebrospinalfluid_box/geometry/setYLength    1 cm
+/gate/braincerebrospinalfluid_box/placement/setTranslation -42 0 0 cm
+/gate/braincerebrospinalfluid_box/setMaterial    BrainCerebrospinalfluid
+
+/gate/world/daughters/name    adrenalgland_box
+/gate/world/daughters/insert    box
+/gate/adrenalgland_box/geometry/setXLength    1 cm
+/gate/adrenalgland_box/geometry/setYLength    1 cm
+/gate/adrenalgland_box/geometry/setYLength    1 cm
+/gate/adrenalgland_box/placement/setTranslation -41 0 0 cm
+/gate/adrenalgland_box/setMaterial    Adrenalgland
+
+/gate/world/daughters/name    smallintestinewall_box
+/gate/world/daughters/insert    box
+/gate/smallintestinewall_box/geometry/setXLength    1 cm
+/gate/smallintestinewall_box/geometry/setYLength    1 cm
+/gate/smallintestinewall_box/geometry/setYLength    1 cm
+/gate/smallintestinewall_box/placement/setTranslation -40 0 0 cm
+/gate/smallintestinewall_box/setMaterial    Smallintestinewall
+
+/gate/world/daughters/name    urine_box
+/gate/world/daughters/insert    box
+/gate/urine_box/geometry/setXLength    1 cm
+/gate/urine_box/geometry/setYLength    1 cm
+/gate/urine_box/geometry/setYLength    1 cm
+/gate/urine_box/placement/setTranslation -39 0 0 cm
+/gate/urine_box/setMaterial    Urine
+
+/gate/world/daughters/name    gallbladderbile_box
+/gate/world/daughters/insert    box
+/gate/gallbladderbile_box/geometry/setXLength    1 cm
+/gate/gallbladderbile_box/geometry/setYLength    1 cm
+/gate/gallbladderbile_box/geometry/setYLength    1 cm
+/gate/gallbladderbile_box/placement/setTranslation -38 0 0 cm
+/gate/gallbladderbile_box/setMaterial    Gallbladderbile
+
+/gate/world/daughters/name    lymph_box
+/gate/world/daughters/insert    box
+/gate/lymph_box/geometry/setXLength    1 cm
+/gate/lymph_box/geometry/setYLength    1 cm
+/gate/lymph_box/geometry/setYLength    1 cm
+/gate/lymph_box/placement/setTranslation -37 0 0 cm
+/gate/lymph_box/setMaterial    Lymph
+
+/gate/world/daughters/name    pancreas_box
+/gate/world/daughters/insert    box
+/gate/pancreas_box/geometry/setXLength    1 cm
+/gate/pancreas_box/geometry/setYLength    1 cm
+/gate/pancreas_box/geometry/setYLength    1 cm
+/gate/pancreas_box/placement/setTranslation -36 0 0 cm
+/gate/pancreas_box/setMaterial    Pancreas
+
+/gate/world/daughters/name    brainwhitematter_box
+/gate/world/daughters/insert    box
+/gate/brainwhitematter_box/geometry/setXLength    1 cm
+/gate/brainwhitematter_box/geometry/setYLength    1 cm
+/gate/brainwhitematter_box/geometry/setYLength    1 cm
+/gate/brainwhitematter_box/placement/setTranslation -35 0 0 cm
+/gate/brainwhitematter_box/setMaterial    Brainwhitematter
+
+/gate/world/daughters/name    prostate_box
+/gate/world/daughters/insert    box
+/gate/prostate_box/geometry/setXLength    1 cm
+/gate/prostate_box/geometry/setYLength    1 cm
+/gate/prostate_box/geometry/setYLength    1 cm
+/gate/prostate_box/placement/setTranslation -34 0 0 cm
+/gate/prostate_box/setMaterial    Prostate
+
+/gate/world/daughters/name    testis_box
+/gate/world/daughters/insert    box
+/gate/testis_box/geometry/setXLength    1 cm
+/gate/testis_box/geometry/setYLength    1 cm
+/gate/testis_box/geometry/setYLength    1 cm
+/gate/testis_box/placement/setTranslation -33 0 0 cm
+/gate/testis_box/setMaterial    Testis
+
+/gate/world/daughters/name    braingraymatter_box
+/gate/world/daughters/insert    box
+/gate/braingraymatter_box/geometry/setXLength    1 cm
+/gate/braingraymatter_box/geometry/setYLength    1 cm
+/gate/braingraymatter_box/geometry/setYLength    1 cm
+/gate/braingraymatter_box/placement/setTranslation -32 0 0 cm
+/gate/braingraymatter_box/setMaterial    Braingraymatter
+
+/gate/world/daughters/name    muscleskeletal1_box
+/gate/world/daughters/insert    box
+/gate/muscleskeletal1_box/geometry/setXLength    1 cm
+/gate/muscleskeletal1_box/geometry/setYLength    1 cm
+/gate/muscleskeletal1_box/geometry/setYLength    1 cm
+/gate/muscleskeletal1_box/placement/setTranslation -31 0 0 cm
+/gate/muscleskeletal1_box/setMaterial    Muscleskeletal1
+
+/gate/world/daughters/name    heart1_box
+/gate/world/daughters/insert    box
+/gate/heart1_box/geometry/setXLength    1 cm
+/gate/heart1_box/geometry/setYLength    1 cm
+/gate/heart1_box/geometry/setYLength    1 cm
+/gate/heart1_box/placement/setTranslation -30 0 0 cm
+/gate/heart1_box/setMaterial    Heart1
+
+/gate/world/daughters/name    kidney1_box
+/gate/world/daughters/insert    box
+/gate/kidney1_box/geometry/setXLength    1 cm
+/gate/kidney1_box/geometry/setYLength    1 cm
+/gate/kidney1_box/geometry/setYLength    1 cm
+/gate/kidney1_box/placement/setTranslation -29 0 0 cm
+/gate/kidney1_box/setMaterial    Kidney1
+
+/gate/world/daughters/name    stomach_box
+/gate/world/daughters/insert    box
+/gate/stomach_box/geometry/setXLength    1 cm
+/gate/stomach_box/geometry/setYLength    1 cm
+/gate/stomach_box/geometry/setYLength    1 cm
+/gate/stomach_box/placement/setTranslation -28 0 0 cm
+/gate/stomach_box/setMaterial    Stomach
+
+/gate/world/daughters/name    thyroid_box
+/gate/world/daughters/insert    box
+/gate/thyroid_box/geometry/setXLength    1 cm
+/gate/thyroid_box/geometry/setYLength    1 cm
+/gate/thyroid_box/geometry/setYLength    1 cm
+/gate/thyroid_box/placement/setTranslation -27 0 0 cm
+/gate/thyroid_box/setMaterial    Thyroid
+
+/gate/world/daughters/name    muscleskeletal2_box
+/gate/world/daughters/insert    box
+/gate/muscleskeletal2_box/geometry/setXLength    1 cm
+/gate/muscleskeletal2_box/geometry/setYLength    1 cm
+/gate/muscleskeletal2_box/geometry/setYLength    1 cm
+/gate/muscleskeletal2_box/placement/setTranslation -26 0 0 cm
+/gate/muscleskeletal2_box/setMaterial    Muscleskeletal2
+
+/gate/world/daughters/name    liver1_box
+/gate/world/daughters/insert    box
+/gate/liver1_box/geometry/setXLength    1 cm
+/gate/liver1_box/geometry/setYLength    1 cm
+/gate/liver1_box/geometry/setYLength    1 cm
+/gate/liver1_box/placement/setTranslation -25 0 0 cm
+/gate/liver1_box/setMaterial    Liver1
+
+/gate/world/daughters/name    heart2_box
+/gate/world/daughters/insert    box
+/gate/heart2_box/geometry/setXLength    1 cm
+/gate/heart2_box/geometry/setYLength    1 cm
+/gate/heart2_box/geometry/setYLength    1 cm
+/gate/heart2_box/placement/setTranslation -24 0 0 cm
+/gate/heart2_box/setMaterial    Heart2
+
+/gate/world/daughters/name    aorta_box
+/gate/world/daughters/insert    box
+/gate/aorta_box/geometry/setXLength    1 cm
+/gate/aorta_box/geometry/setYLength    1 cm
+/gate/aorta_box/geometry/setYLength    1 cm
+/gate/aorta_box/placement/setTranslation -23 0 0 cm
+/gate/aorta_box/setMaterial    Aorta
+
+/gate/world/daughters/name    kidney2_box
+/gate/world/daughters/insert    box
+/gate/kidney2_box/geometry/setXLength    1 cm
+/gate/kidney2_box/geometry/setYLength    1 cm
+/gate/kidney2_box/geometry/setYLength    1 cm
+/gate/kidney2_box/placement/setTranslation -22 0 0 cm
+/gate/kidney2_box/setMaterial    Kidney2
+
+/gate/world/daughters/name    muscleskeletal3_box
+/gate/world/daughters/insert    box
+/gate/muscleskeletal3_box/geometry/setXLength    1 cm
+/gate/muscleskeletal3_box/geometry/setYLength    1 cm
+/gate/muscleskeletal3_box/geometry/setYLength    1 cm
+/gate/muscleskeletal3_box/placement/setTranslation -21 0 0 cm
+/gate/muscleskeletal3_box/setMaterial    Muscleskeletal3
+
+/gate/world/daughters/name    heart3_box
+/gate/world/daughters/insert    box
+/gate/heart3_box/geometry/setXLength    1 cm
+/gate/heart3_box/geometry/setYLength    1 cm
+/gate/heart3_box/geometry/setYLength    1 cm
+/gate/heart3_box/placement/setTranslation -20 0 0 cm
+/gate/heart3_box/setMaterial    Heart3
+
+/gate/world/daughters/name    mammarygland3_box
+/gate/world/daughters/insert    box
+/gate/mammarygland3_box/geometry/setXLength    1 cm
+/gate/mammarygland3_box/geometry/setYLength    1 cm
+/gate/mammarygland3_box/geometry/setYLength    1 cm
+/gate/mammarygland3_box/placement/setTranslation -19 0 0 cm
+/gate/mammarygland3_box/setMaterial    Mammarygland3
+
+/gate/world/daughters/name    kidney3_box
+/gate/world/daughters/insert    box
+/gate/kidney3_box/geometry/setXLength    1 cm
+/gate/kidney3_box/geometry/setYLength    1 cm
+/gate/kidney3_box/geometry/setYLength    1 cm
+/gate/kidney3_box/placement/setTranslation -18 0 0 cm
+/gate/kidney3_box/setMaterial    Kidney3
+
+/gate/world/daughters/name    ovary_box
+/gate/world/daughters/insert    box
+/gate/ovary_box/geometry/setXLength    1 cm
+/gate/ovary_box/geometry/setYLength    1 cm
+/gate/ovary_box/geometry/setYLength    1 cm
+/gate/ovary_box/placement/setTranslation -17 0 0 cm
+/gate/ovary_box/setMaterial    Ovary
+
+/gate/world/daughters/name    eyelens_box
+/gate/world/daughters/insert    box
+/gate/eyelens_box/geometry/setXLength    1 cm
+/gate/eyelens_box/geometry/setYLength    1 cm
+/gate/eyelens_box/geometry/setYLength    1 cm
+/gate/eyelens_box/placement/setTranslation -16 0 0 cm
+/gate/eyelens_box/setMaterial    Eyelens
+
+/gate/world/daughters/name    liver2_box
+/gate/world/daughters/insert    box
+/gate/liver2_box/geometry/setXLength    1 cm
+/gate/liver2_box/geometry/setYLength    1 cm
+/gate/liver2_box/geometry/setYLength    1 cm
+/gate/liver2_box/placement/setTranslation -15 0 0 cm
+/gate/liver2_box/setMaterial    Liver2
+
+/gate/world/daughters/name    spleen_box
+/gate/world/daughters/insert    box
+/gate/spleen_box/geometry/setXLength    1 cm
+/gate/spleen_box/geometry/setYLength    1 cm
+/gate/spleen_box/geometry/setYLength    1 cm
+/gate/spleen_box/placement/setTranslation -14 0 0 cm
+/gate/spleen_box/setMaterial    Spleen
+
+/gate/world/daughters/name    trachea_box
+/gate/world/daughters/insert    box
+/gate/trachea_box/geometry/setXLength    1 cm
+/gate/trachea_box/geometry/setYLength    1 cm
+/gate/trachea_box/geometry/setYLength    1 cm
+/gate/trachea_box/placement/setTranslation -13 0 0 cm
+/gate/trachea_box/setMaterial    Trachea
+
+/gate/world/daughters/name    heartbloodfilled_box
+/gate/world/daughters/insert    box
+/gate/heartbloodfilled_box/geometry/setXLength    1 cm
+/gate/heartbloodfilled_box/geometry/setYLength    1 cm
+/gate/heartbloodfilled_box/geometry/setYLength    1 cm
+/gate/heartbloodfilled_box/placement/setTranslation -12 0 0 cm
+/gate/heartbloodfilled_box/setMaterial    Heartbloodfilled
+
+/gate/world/daughters/name    bloodwhole_box
+/gate/world/daughters/insert    box
+/gate/bloodwhole_box/geometry/setXLength    1 cm
+/gate/bloodwhole_box/geometry/setYLength    1 cm
+/gate/bloodwhole_box/geometry/setYLength    1 cm
+/gate/bloodwhole_box/placement/setTranslation -11 0 0 cm
+/gate/bloodwhole_box/setMaterial    Bloodwhole
+
+/gate/world/daughters/name    liver3_box
+/gate/world/daughters/insert    box
+/gate/liver3_box/geometry/setXLength    1 cm
+/gate/liver3_box/geometry/setYLength    1 cm
+/gate/liver3_box/geometry/setYLength    1 cm
+/gate/liver3_box/placement/setTranslation -10 0 0 cm
+/gate/liver3_box/setMaterial    Liver3
+
+/gate/world/daughters/name    skin1_box
+/gate/world/daughters/insert    box
+/gate/skin1_box/geometry/setXLength    1 cm
+/gate/skin1_box/geometry/setYLength    1 cm
+/gate/skin1_box/geometry/setYLength    1 cm
+/gate/skin1_box/placement/setTranslation -9 0 0 cm
+/gate/skin1_box/setMaterial    Skin1
+
+/gate/world/daughters/name    skin2_box
+/gate/world/daughters/insert    box
+/gate/skin2_box/geometry/setXLength    1 cm
+/gate/skin2_box/geometry/setYLength    1 cm
+/gate/skin2_box/geometry/setYLength    1 cm
+/gate/skin2_box/placement/setTranslation -8 0 0 cm
+/gate/skin2_box/setMaterial    Skin2
+
+/gate/world/daughters/name    skin3_box
+/gate/world/daughters/insert    box
+/gate/skin3_box/geometry/setXLength    1 cm
+/gate/skin3_box/geometry/setYLength    1 cm
+/gate/skin3_box/geometry/setYLength    1 cm
+/gate/skin3_box/placement/setTranslation -7 0 0 cm
+/gate/skin3_box/setMaterial    Skin3
+
+/gate/world/daughters/name    connectivetissue_box
+/gate/world/daughters/insert    box
+/gate/connectivetissue_box/geometry/setXLength    1 cm
+/gate/connectivetissue_box/geometry/setYLength    1 cm
+/gate/connectivetissue_box/geometry/setYLength    1 cm
+/gate/connectivetissue_box/placement/setTranslation -6 0 0 cm
+/gate/connectivetissue_box/setMaterial    Connectivetissue
+
+/gate/world/daughters/name    cartilage_box
+/gate/world/daughters/insert    box
+/gate/cartilage_box/geometry/setXLength    1 cm
+/gate/cartilage_box/geometry/setYLength    1 cm
+/gate/cartilage_box/geometry/setYLength    1 cm
+/gate/cartilage_box/placement/setTranslation -5 0 0 cm
+/gate/cartilage_box/setMaterial    Cartilage
+
+/gate/world/daughters/name    sternum_box
+/gate/world/daughters/insert    box
+/gate/sternum_box/geometry/setXLength    1 cm
+/gate/sternum_box/geometry/setYLength    1 cm
+/gate/sternum_box/geometry/setYLength    1 cm
+/gate/sternum_box/placement/setTranslation -4 0 0 cm
+/gate/sternum_box/setMaterial    Sternum
+
+/gate/world/daughters/name    sacrummale_box
+/gate/world/daughters/insert    box
+/gate/sacrummale_box/geometry/setXLength    1 cm
+/gate/sacrummale_box/geometry/setYLength    1 cm
+/gate/sacrummale_box/geometry/setYLength    1 cm
+/gate/sacrummale_box/placement/setTranslation -3 0 0 cm
+/gate/sacrummale_box/setMaterial    Sacrummale
+
+/gate/world/daughters/name    d6l3inclcartilagem_box
+/gate/world/daughters/insert    box
+/gate/d6l3inclcartilagem_box/geometry/setXLength    1 cm
+/gate/d6l3inclcartilagem_box/geometry/setYLength    1 cm
+/gate/d6l3inclcartilagem_box/geometry/setYLength    1 cm
+/gate/d6l3inclcartilagem_box/placement/setTranslation -2 0 0 cm
+/gate/d6l3inclcartilagem_box/setMaterial    D6L3inclcartilagem
+
+/gate/world/daughters/name    vertcolwhole_box
+/gate/world/daughters/insert    box
+/gate/vertcolwhole_box/geometry/setXLength    1 cm
+/gate/vertcolwhole_box/geometry/setYLength    1 cm
+/gate/vertcolwhole_box/geometry/setYLength    1 cm
+/gate/vertcolwhole_box/placement/setTranslation -1 0 0 cm
+/gate/vertcolwhole_box/setMaterial    Vertcolwhole
+
+/gate/world/daughters/name    vertcold6l3exclcartilage_box
+/gate/world/daughters/insert    box
+/gate/vertcold6l3exclcartilage_box/geometry/setXLength    1 cm
+/gate/vertcold6l3exclcartilage_box/geometry/setYLength    1 cm
+/gate/vertcold6l3exclcartilage_box/geometry/setYLength    1 cm
+/gate/vertcold6l3exclcartilage_box/placement/setTranslation 0 0 0 cm
+/gate/vertcold6l3exclcartilage_box/setMaterial    VertcolD6L3exclcartilage
+
+/gate/world/daughters/name    femurhumerussphericalhead_box
+/gate/world/daughters/insert    box
+/gate/femurhumerussphericalhead_box/geometry/setXLength    1 cm
+/gate/femurhumerussphericalhead_box/geometry/setYLength    1 cm
+/gate/femurhumerussphericalhead_box/geometry/setYLength    1 cm
+/gate/femurhumerussphericalhead_box/placement/setTranslation 1 0 0 cm
+/gate/femurhumerussphericalhead_box/setMaterial    FemurHumerussphericalhead
+
+/gate/world/daughters/name    femurconicaltrochanter_box
+/gate/world/daughters/insert    box
+/gate/femurconicaltrochanter_box/geometry/setXLength    1 cm
+/gate/femurconicaltrochanter_box/geometry/setYLength    1 cm
+/gate/femurconicaltrochanter_box/geometry/setYLength    1 cm
+/gate/femurconicaltrochanter_box/placement/setTranslation 2 0 0 cm
+/gate/femurconicaltrochanter_box/setMaterial    Femurconicaltrochanter
+
+/gate/world/daughters/name    c4inclcartilagemale_box
+/gate/world/daughters/insert    box
+/gate/c4inclcartilagemale_box/geometry/setXLength    1 cm
+/gate/c4inclcartilagemale_box/geometry/setYLength    1 cm
+/gate/c4inclcartilagemale_box/geometry/setYLength    1 cm
+/gate/c4inclcartilagemale_box/placement/setTranslation 3 0 0 cm
+/gate/c4inclcartilagemale_box/setMaterial    C4inclcartilagemale
+
+/gate/world/daughters/name    sacrumfemale_box
+/gate/world/daughters/insert    box
+/gate/sacrumfemale_box/geometry/setXLength    1 cm
+/gate/sacrumfemale_box/geometry/setYLength    1 cm
+/gate/sacrumfemale_box/geometry/setYLength    1 cm
+/gate/sacrumfemale_box/placement/setTranslation 4 0 0 cm
+/gate/sacrumfemale_box/setMaterial    Sacrumfemale
+
+/gate/world/daughters/name    humeruswholespecimen_box
+/gate/world/daughters/insert    box
+/gate/humeruswholespecimen_box/geometry/setXLength    1 cm
+/gate/humeruswholespecimen_box/geometry/setYLength    1 cm
+/gate/humeruswholespecimen_box/geometry/setYLength    1 cm
+/gate/humeruswholespecimen_box/placement/setTranslation 5 0 0 cm
+/gate/humeruswholespecimen_box/setMaterial    Humeruswholespecimen
+
+/gate/world/daughters/name    ribs2nd6th_box
+/gate/world/daughters/insert    box
+/gate/ribs2nd6th_box/geometry/setXLength    1 cm
+/gate/ribs2nd6th_box/geometry/setYLength    1 cm
+/gate/ribs2nd6th_box/geometry/setYLength    1 cm
+/gate/ribs2nd6th_box/placement/setTranslation 6 0 0 cm
+/gate/ribs2nd6th_box/setMaterial    Ribs2nd6th
+
+/gate/world/daughters/name    innominatemale_box
+/gate/world/daughters/insert    box
+/gate/innominatemale_box/geometry/setXLength    1 cm
+/gate/innominatemale_box/geometry/setYLength    1 cm
+/gate/innominatemale_box/geometry/setYLength    1 cm
+/gate/innominatemale_box/placement/setTranslation 7 0 0 cm
+/gate/innominatemale_box/setMaterial    Innominatemale
+
+/gate/world/daughters/name    vertcolc4exclcartilage_box
+/gate/world/daughters/insert    box
+/gate/vertcolc4exclcartilage_box/geometry/setXLength    1 cm
+/gate/vertcolc4exclcartilage_box/geometry/setYLength    1 cm
+/gate/vertcolc4exclcartilage_box/geometry/setYLength    1 cm
+/gate/vertcolc4exclcartilage_box/placement/setTranslation 8 0 0 cm
+/gate/vertcolc4exclcartilage_box/setMaterial    VertcolC4exclcartilage
+
+/gate/world/daughters/name    femurtotalbone_box
+/gate/world/daughters/insert    box
+/gate/femurtotalbone_box/geometry/setXLength    1 cm
+/gate/femurtotalbone_box/geometry/setYLength    1 cm
+/gate/femurtotalbone_box/geometry/setYLength    1 cm
+/gate/femurtotalbone_box/placement/setTranslation 9 0 0 cm
+/gate/femurtotalbone_box/setMaterial    Femurtotalbone
+
+/gate/world/daughters/name    femurwholespecism_box
+/gate/world/daughters/insert    box
+/gate/femurwholespecism_box/geometry/setXLength    1 cm
+/gate/femurwholespecism_box/geometry/setYLength    1 cm
+/gate/femurwholespecism_box/geometry/setYLength    1 cm
+/gate/femurwholespecism_box/placement/setTranslation 10 0 0 cm
+/gate/femurwholespecism_box/setMaterial    Femurwholespecism
+
+/gate/world/daughters/name    innominatefemale_box
+/gate/world/daughters/insert    box
+/gate/innominatefemale_box/geometry/setXLength    1 cm
+/gate/innominatefemale_box/geometry/setYLength    1 cm
+/gate/innominatefemale_box/geometry/setYLength    1 cm
+/gate/innominatefemale_box/placement/setTranslation 11 0 0 cm
+/gate/innominatefemale_box/setMaterial    Innominatefemale
+
+/gate/world/daughters/name    humerustotalbone_box
+/gate/world/daughters/insert    box
+/gate/humerustotalbone_box/geometry/setXLength    1 cm
+/gate/humerustotalbone_box/geometry/setYLength    1 cm
+/gate/humerustotalbone_box/geometry/setYLength    1 cm
+/gate/humerustotalbone_box/placement/setTranslation 12 0 0 cm
+/gate/humerustotalbone_box/setMaterial    Humerustotalbone
+
+/gate/world/daughters/name    claviclescapula_box
+/gate/world/daughters/insert    box
+/gate/claviclescapula_box/geometry/setXLength    1 cm
+/gate/claviclescapula_box/geometry/setYLength    1 cm
+/gate/claviclescapula_box/geometry/setYLength    1 cm
+/gate/claviclescapula_box/placement/setTranslation 13 0 0 cm
+/gate/claviclescapula_box/setMaterial    Claviclescapula
+
+/gate/world/daughters/name    humeruscylindricalshaft_box
+/gate/world/daughters/insert    box
+/gate/humeruscylindricalshaft_box/geometry/setXLength    1 cm
+/gate/humeruscylindricalshaft_box/geometry/setYLength    1 cm
+/gate/humeruscylindricalshaft_box/geometry/setYLength    1 cm
+/gate/humeruscylindricalshaft_box/placement/setTranslation 14 0 0 cm
+/gate/humeruscylindricalshaft_box/setMaterial    Humeruscylindricalshaft
+
+/gate/world/daughters/name    ribs10th_box
+/gate/world/daughters/insert    box
+/gate/ribs10th_box/geometry/setXLength    1 cm
+/gate/ribs10th_box/geometry/setYLength    1 cm
+/gate/ribs10th_box/geometry/setYLength    1 cm
+/gate/ribs10th_box/placement/setTranslation 15 0 0 cm
+/gate/ribs10th_box/setMaterial    Ribs10th
+
+/gate/world/daughters/name    cranium_box
+/gate/world/daughters/insert    box
+/gate/cranium_box/geometry/setXLength    1 cm
+/gate/cranium_box/geometry/setYLength    1 cm
+/gate/cranium_box/geometry/setYLength    1 cm
+/gate/cranium_box/placement/setTranslation 16 0 0 cm
+/gate/cranium_box/setMaterial    Cranium
+
+/gate/world/daughters/name    mandible_box
+/gate/world/daughters/insert    box
+/gate/mandible_box/geometry/setXLength    1 cm
+/gate/mandible_box/geometry/setYLength    1 cm
+/gate/mandible_box/geometry/setYLength    1 cm
+/gate/mandible_box/placement/setTranslation 17 0 0 cm
+/gate/mandible_box/setMaterial    Mandible
+
+/gate/world/daughters/name    femurcylindricalshaft_box
+/gate/world/daughters/insert    box
+/gate/femurcylindricalshaft_box/geometry/setXLength    1 cm
+/gate/femurcylindricalshaft_box/geometry/setYLength    1 cm
+/gate/femurcylindricalshaft_box/geometry/setYLength    1 cm
+/gate/femurcylindricalshaft_box/placement/setTranslation 18 0 0 cm
+/gate/femurcylindricalshaft_box/setMaterial    Femurcylindricalshaft
+
+/gate/world/daughters/name    corticalbone_box
+/gate/world/daughters/insert    box
+/gate/corticalbone_box/geometry/setXLength    1 cm
+/gate/corticalbone_box/geometry/setYLength    1 cm
+/gate/corticalbone_box/geometry/setYLength    1 cm
+/gate/corticalbone_box/placement/setTranslation 19 0 0 cm
+/gate/corticalbone_box/setMaterial    Corticalbone
+
+/gate/world/daughters/name    titanium_box
+/gate/world/daughters/insert    box
+/gate/titanium_box/geometry/setXLength    1 cm
+/gate/titanium_box/geometry/setYLength    1 cm
+/gate/titanium_box/geometry/setYLength    1 cm
+/gate/titanium_box/placement/setTranslation 19 0 0 cm
+/gate/titanium_box/setMaterial    Titanium
+
+
+#=====================================================
+# PHYSICS
+#=====================================================
+
+
+/gate/physics/addPhysicsList QGSP_BIC_HP
+
+/gate/physics/Gamma/SetCutInRegion      world 1 mm
+/gate/physics/Electron/SetCutInRegion   world 1 mm
+/gate/physics/Positron/SetCutInRegion   world 1 mm
+
+/gate/physics/Gamma/SetCutInRegion      waterbox 0.1 mm
+/gate/physics/Electron/SetCutInRegion   waterbox 0.1 mm
+/gate/physics/Positron/SetCutInRegion   waterbox 0.1 mm
+
+#/gate/physics/Gamma/SetCutInRegion      block 0.1 mm
+#/gate/physics/Electron/SetCutInRegion   block 0.1 mm
+#/gate/physics/Positron/SetCutInRegion   block 0.1 mm
+
+/gate/physics/displayCuts
+
+
+#=====================================================
+# DETECTORS
+#=====================================================
+
+
+/gate/actor/addActor   EmCalculatorActor       emcalc 
+/gate/actor/emcalc/save                        output/emcalc.txt 
+/gate/actor/emcalc/setParticleName             proton
+/gate/actor/emcalc/setEnergy                   155 MeV
+
+
+
+
+#=====================================================
+# INITIALISATION
+#=====================================================
+
+/gate/run/initialize
+
+
+#=====================================================
+# BEAMS
+#=====================================================
+
+/gate/source/addSource mybeam gps
+/gate/source/mybeam/gps/particle proton
+/gate/source/mybeam/gps/pos/type Beam
+/gate/source/mybeam/gps/pos/rot1 0 1 0
+/gate/source/mybeam/gps/pos/rot2 1 0 0
+/gate/source/mybeam/gps/pos/shape Circle
+/gate/source/mybeam/gps/pos/centre 0 0 -100 cm
+/gate/source/mybeam/gps/pos/sigma_x 3 mm
+/gate/source/mybeam/gps/pos/sigma_y 3 mm
+/gate/source/mybeam/gps/ene/mono 180 MeV
+/gate/source/mybeam/gps/ene/type Gauss
+/gate/source/mybeam/gps/ene/sigma 5.0 MeV
+/gate/source/mybeam/gps/direction 0 0 1
+
+#=====================================================
+# START BEAMS
+#=====================================================
+
+# JamesRandom Ranlux64 MersenneTwister
+/gate/random/setEngineName MersenneTwister
+/gate/random/setEngineSeed auto
+
+/gate/application/noGlobalOutput
+/gate/application/setTotalNumberOfPrimaries 10
+/gate/application/start

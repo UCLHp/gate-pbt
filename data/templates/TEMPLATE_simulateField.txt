@@ -48,18 +48,18 @@
 ### Voxelized phantom added to the GlobalVol container
 
 # Generate materials from Hounsfield units
-/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
-/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
-/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
-/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
-/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
-/gate/HounsfieldMaterialGenerator/Generate
+#/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
+#/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
+#/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
+#/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
+#/gate/HounsfieldMaterialGenerator/Generate
 
 # Create parameterized phantom object
 /gate/GlobalVol/daughters/name                      patient
 /gate/GlobalVol/daughters/insert                    ImageNestedParametrisedVolume
-/gate/geometry/setMaterialDatabase              {path}/data/patient-HUmaterials.db
-/gate/patient/geometry/setHUToMaterialFile      {path}/data/patient-HU2mat.txt
+/gate/geometry/setMaterialDatabase              {path}/data/patient-HUmaterials_UCLHv1.db
+/gate/patient/geometry/setHUToMaterialFile      {path}/data/patient-HU2mat_UCLHv1.txt
 
 # Position patient 
 /gate/patient/geometry/setImage                {path}/data/XXXX
@@ -131,11 +131,11 @@
 /gate/actor/dose3d/enableEdep            false
 /gate/actor/dose3d/enableUncertaintyEdep false
 /gate/actor/dose3d/enableDose            true
-/gate/actor/dose3d/enableSquaredDose     true
+/gate/actor/dose3d/enableSquaredDose     false
 /gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
 #/gate/actor/dose3d/normaliseDoseToMax   false
-/gate/actor/dose3d/enableDoseToWater     true
+/gate/actor/dose3d/enableDoseToWater     false
 
 #/gate/actor/addActor                 LETActor  let3d
 #/gate/actor/let3d/save               {path}/output/letActor.mhd
@@ -170,7 +170,7 @@
 /gate/source/PBS/setSortedSpotGenerationFlag false
 /gate/source/PBS/setFlatGenerationFlag false
 /gate/source/PBS/setBeamConvergence false
-/gate/source/PBS/setSourceDescriptionFile {path}/data/XXXXX.txt
+/gate/source/PBS/setSourceDescriptionFile {path}/data/SourceDescriptionFile.txt
 
 #=====================================================
 # START BEAMS
