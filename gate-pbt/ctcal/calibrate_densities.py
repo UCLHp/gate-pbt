@@ -8,7 +8,6 @@ stopping powers calculated in Gate. Calculate the density of
 each material in Gate so as to force RSP match with CT data
 """
 
-import pandas as pd
 
 #############################################################
 # Stopping power data from Gate's EMCalculatorActor

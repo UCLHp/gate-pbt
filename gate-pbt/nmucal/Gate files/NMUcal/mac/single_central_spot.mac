@@ -1,0 +1,155 @@
+
+#=====================================================
+# VERBOSITY
+#=====================================================
+
+/control/execute {path}/mac/verbose.mac
+
+#=====================================================
+# VISUALISATION
+#=====================================================
+
+#/control/execute {path}/mac/visu.mac
+
+#=====================================================
+# GEOMETRY
+#=====================================================
+
+/gate/geometry/setMaterialDatabase {path}/data/GateMaterials.db
+
+/gate/geometry/setIonisationPotential    Water    78 eV
+
+
+### World
+/gate/world/geometry/setXLength 2 m
+/gate/world/geometry/setYLength 2 m
+/gate/world/geometry/setZLength 2 m
+/gate/world/setMaterial Air
+
+
+
+### Rangeshifter
+/gate/world/daughters/name                     rangeshifter
+/gate/world/daughters/insert                   box
+/gate/rangeshifter/geometry/setXLength         310 mm        
+/gate/rangeshifter/geometry/setYLength         50 mm
+/gate/rangeshifter/geometry/setZLength         410 mm         
+/gate/rangeshifter/placement/setRotationAxis         0 0 1
+/gate/rangeshifter/placement/setRotationAngle    0 deg
+/gate/rangeshifter/placement/setTranslation    0 -880 0 mm
+/gate/rangeshifter/setMaterial                 LexanPolycarbonate
+/gate/rangeshifter/vis/setVisible              1
+/gate/rangeshifter/vis/setColor                green
+
+
+
+### Water
+/gate/world/daughters/name                     waterbox
+/gate/world/daughters/insert                   box
+/gate/waterbox/geometry/setXLength         900 mm        
+/gate/waterbox/geometry/setYLength         900 mm
+/gate/waterbox/geometry/setZLength         900 mm         
+/gate/waterbox/placement/setRotationAxis         0 0 1
+/gate/waterbox/placement/setRotationAngle    0 deg
+/gate/waterbox/placement/setTranslation    0 450 0 mm      #SURFACE AT ISOCENTRE
+/gate/waterbox/setMaterial                 Water
+/gate/waterbox/vis/setVisible              1
+/gate/waterbox/vis/setColor                blue
+
+
+
+### Roos chamber volume
+/gate/waterbox/daughters/name             detector
+/gate/waterbox/daughters/insert           cylinder
+/gate/detector/geometry/setRmax               400 mm 
+/gate/detector/geometry/setHeight             1 mm 
+/gate/detector/placement/setRotationAxis      1 0 0
+/gate/detector/placement/setRotationAngle     90 deg
+/gate/detector/placement/setTranslation       0 -430 0 mm   # (450 - depth of measurement)
+/gate/detector/setMaterial                    Water 
+/gate/detector/vis/setVisible                 1
+/gate/detector/vis/setColor                   red
+
+
+
+
+
+
+
+
+#=====================================================
+# PHYSICS
+#=====================================================
+# (2 recommended lists for Gate RTIon)
+/gate/physics/addPhysicsList QGSP_BIC_EMZ
+
+/gate/physics/Gamma/SetCutInRegion      world 1 mm
+/gate/physics/Electron/SetCutInRegion   world 1 mm
+/gate/physics/Positron/SetCutInRegion   world 1 mm
+
+/gate/physics/Gamma/SetCutInRegion      waterbox 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   waterbox 0.1 mm
+/gate/physics/Positron/SetCutInRegion   waterbox 0.1 mm
+
+/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   rangeshifter 0.1 mm
+/gate/physics/Positron/SetCutInRegion   rangeshifter 0.1 mm
+
+/gate/physics/Gamma/SetCutInRegion      detector 0.05 mm 
+/gate/physics/Electron/SetCutInRegion   detector 0.05 mm
+/gate/physics/Positron/SetCutInRegion   detector 0.05 mm
+
+/gate/physics/displayCuts
+
+
+#=====================================================
+# DETECTORS
+#=====================================================
+
+/gate/actor/addActor                   DoseActor  dose
+/gate/actor/dose/save                  {path}/output/SingleSpot_{energy}MeV.txt
+/gate/actor/dose/attachTo    	       detector
+/gate/actor/dose/stepHitType           random
+/gate/actor/dose/setResolution         1 1 1
+/gate/actor/dose/saveEveryNSeconds     600
+/gate/actor/dose/enableDose            true
+/gate/actor/dose/enableSquaredDose     false
+/gate/actor/dose/enableUncertaintyDose true
+/gate/actor/dose/enableDoseToWater     false
+
+
+/gate/actor/addActor               SimulationStatisticActor stat
+/gate/actor/stat/save              {path}/output/SingleSpot_stat_{energy}MeV.txt
+/gate/actor/stat/saveEveryNSeconds 600
+
+
+#=====================================================
+# INITIALISATION
+#=====================================================
+
+/gate/run/initialize
+
+
+#=====================================================
+# SOURCE
+#=====================================================
+/gate/source/addSource PBS TPSPencilBeam
+/gate/source/PBS/setParticleType proton
+/gate/source/PBS/setPlan    {path}/data/SingleSpot_{energy}MeV.txt
+/gate/source/PBS/setSpotIntensityAsNbIons false
+
+/gate/source/PBS/setSigmaEnergyInMeVFlag true
+/gate/source/PBS/setSortedSpotGenerationFlag false
+/gate/source/PBS/setFlatGenerationFlag false
+/gate/source/PBS/setBeamConvergence false
+/gate/source/PBS/setSourceDescriptionFile    {path}/data/SourceDescFile.txt
+
+#=====================================================
+# START BEAMS
+#=====================================================
+
+/gate/random/setEngineName MersenneTwister
+/gate/random/setEngineSeed auto
+
+/gate/application/setTotalNumberOfPrimaries 10000000
+/gate/application/start

@@ -17,9 +17,7 @@
 
 /gate/geometry/setMaterialDatabase {path}/data/GateMaterials.db
 
-# Ionisation potential assumed in CT calibration was 78 eV
 /gate/geometry/setIonisationPotential    Water    78 eV
-
 
 
 ### World
@@ -28,15 +26,6 @@
 /gate/world/geometry/setZLength 2 m
 /gate/world/setMaterial Air
 
-
-### Voxelized phantom added to the GlobalVol container
-# Generate materials from Hounsfield units
-#/gate/HounsfieldMaterialGenerator/SetMaterialTable {path}/data/UCLH2019MaterialsTable_v1.txt
-#/gate/HounsfieldMaterialGenerator/SetDensityTable  {path}/data/UCLH2019DensitiesTable_v1.txt
-#/gate/HounsfieldMaterialGenerator/SetDensityTolerance               0.1 g/cm3
-#/gate/HounsfieldMaterialGenerator/SetOutputMaterialDatabaseFilename {path}/data/patient-HUmaterials.db
-#/gate/HounsfieldMaterialGenerator/SetOutputHUMaterialFilename       {path}/data/patient-HU2mat.txt
-#/gate/HounsfieldMaterialGenerator/Generate
 
 
 ### Rangeshifter
@@ -95,9 +84,9 @@
 # (2 recommended lists for Gate RTIon)
 /gate/physics/addPhysicsList QGSP_BIC_EMZ
 
-/gate/physics/Gamma/SetCutInRegion      world 5 mm
-/gate/physics/Electron/SetCutInRegion   world 5 mm
-/gate/physics/Positron/SetCutInRegion   world 5 mm
+/gate/physics/Gamma/SetCutInRegion      world 1 mm
+/gate/physics/Electron/SetCutInRegion   world 1 mm
+/gate/physics/Positron/SetCutInRegion   world 1 mm
 
 /gate/physics/Gamma/SetCutInRegion      waterbox 0.1 mm 
 /gate/physics/Electron/SetCutInRegion   waterbox 0.1 mm
@@ -118,41 +107,23 @@
 # DETECTORS
 #=====================================================
 
-#/gate/actor/addActor                     DoseActor  dose3d
-#/gate/actor/dose3d/save                  {path}/output/waterbox.mhd
-#/gate/actor/dose3d/attachTo    	      waterbox
-#/gate/actor/dose3d/stepHitType           random
-#/gate/actor/dose3d/setVoxelSize          1 1 1 mm
-#/gate/actor/dose3d/saveEveryNSeconds     60
-#/gate/actor/dose3d/enableEdep            false
-#/gate/actor/dose3d/enableUncertaintyEdep false
-#/gate/actor/dose3d/enableDose            true
-#/gate/actor/dose3d/enableSquaredDose     true
-#/gate/actor/dose3d/enableUncertaintyDose false
-#/gate/actor/dose3d/enableNumberOfHits    false
-#/gate/actor/dose3d/normaliseDoseToMax    false
-#/gate/actor/dose3d/enableDoseToWater     false
-#/gate/actor/dose3d/enableSquaredDoseToWater      false
-#/gate/actor/dose3d/enableUncertaintyDoseToWater false
-
-
 
 /gate/actor/addActor                       DoseActor  doseroos
-/gate/actor/doseroos/save                  {path}/output/roos_{energy}MeV.txt
-/gate/actor/doseroos/attachTo    	       roos
+/gate/actor/doseroos/save                  {path}/output/SquareField_{energy}MeV_spot{spotID}.txt
+/gate/actor/doseroos/attachTo              roos
 /gate/actor/doseroos/stepHitType           random
 /gate/actor/doseroos/setResolution          1 1 1
-/gate/actor/doseroos/saveEveryNSeconds     600
+/gate/actor/doseroos/saveEveryNSeconds     1200
 /gate/actor/doseroos/enableDose            true
 /gate/actor/doseroos/enableSquaredDose     true
-/gate/actor/doseroos/enableUncertaintyDose false
-/gate/actor/doseroos/enableDoseToWater     false
+/gate/actor/doseroos/enableUncertaintyDose true
+#/gate/actor/doseroos/enableDoseToWater     false
 
 
 
 /gate/actor/addActor               SimulationStatisticActor stat
-/gate/actor/stat/save              {path}/output/stat_{energy}MeV.txt
-/gate/actor/stat/saveEveryNSeconds 600
+/gate/actor/stat/save              {path}/output/SquareField_stat_{energy}MeV_spot{spotID}.txt
+/gate/actor/stat/saveEveryNSeconds 1200
 
 
 #=====================================================
@@ -167,14 +138,25 @@
 #=====================================================
 /gate/source/addSource PBS TPSPencilBeam
 /gate/source/PBS/setParticleType proton
-/gate/source/PBS/setPlan    {path}/data/Sq200mm_Spacing5mm_10MU_{energy}MeV.txt
-/gate/source/PBS/setSpotIntensityAsNbIons false
+##/gate/source/PBS/setPlan    {path}/data/Sq200mm_Spacing5mm_{energy}MeV.txt
+/gate/source/PBS/setPlan    {path}/data/Sq100mm_Spacing2.5mm_{energy}MeV.txt
+/gate/source/PBS/setSpotIntensityAsNbIons true
 
+
+
+# Choose single spot to simulate from energy layer 
+/gate/source/PBS/setAllowedFieldID 1
+/gate/source/PBS/selectLayerID 0
+/gate/source/PBS/selectSpotID {spotID}
+
+
+/gate/source/PBS/setSourceDescriptionFile    {path}/data/SourceDescFile.txt
 /gate/source/PBS/setSigmaEnergyInMeVFlag true
 /gate/source/PBS/setSortedSpotGenerationFlag false
 /gate/source/PBS/setFlatGenerationFlag false
-/gate/source/PBS/setBeamConvergence true
-/gate/source/PBS/setSourceDescriptionFile    {path}/data/SourceDescFile.txt
+/gate/source/PBS/setBeamConvergence false
+
+
 
 #=====================================================
 # START BEAMS
@@ -183,5 +165,5 @@
 /gate/random/setEngineName MersenneTwister
 /gate/random/setEngineSeed auto
 
-/gate/application/setTotalNumberOfPrimaries 1000000
+/gate/application/setTotalNumberOfPrimaries 100000
 /gate/application/start
