@@ -33,7 +33,7 @@ def get_external_name( structure_file ):
     for struct in ss.RTROIObservationsSequence:
         if struct.RTROIInterpretedType.lower() == "external":
             contour = struct.ROIObservationLabel
-            print("Found external: {}".format(contour))
+            #print("Found external: {}".format(contour))
         elif struct.RTROIInterpretedType.lower() == "bolus":
             print("\n\nWARNING: Bolus found. It will be overriden with air.\n")
     if contour=="":

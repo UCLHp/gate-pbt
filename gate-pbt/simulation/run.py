@@ -198,14 +198,15 @@ def main():
     
     
     # Crop image to structure
-    #ext_contour = overrides.get_external_name( struct_file )
-    #cropped_img_path = os.path.join(sim_dir,"data","ct_cropped.mhd")
-    #cropdicom.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
+    ext_contour = overrides.get_external_name( struct_file )
+    print("Cropping img to ", ext_contour)
+    cropped_img_path = os.path.join(sim_dir,"data","ct_cropped.mhd")
+    cropdicom.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
     
     
     # TODO: SET THIS AUTOMATICALLY IF CROPPING OR NOT
-    ct_for_simulation = ct_air
-    #ct_for_simulation = cropped_img_path
+    #ct_for_simulation = ct_air
+    ct_for_simulation = cropped_img_path
     
     
     

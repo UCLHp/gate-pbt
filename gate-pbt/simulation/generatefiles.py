@@ -188,8 +188,8 @@ def get_img_properties( mhdimgpath, ct_file ):
     
     rg = mhdimg.GetLargestPossibleRegion()
     size = np.array(  rg.GetSize()  )
-    properties["Rows"] = size[0]
-    properties["Columns"] = size[1]
+    properties["Columns"] = size[0]
+    properties["Rows"] = size[1]       
     properties["Slices"] = size[2]
 
     # Patient setup ("HFS", "FFS" etc)
@@ -217,6 +217,7 @@ def get_min_corner( mhdimg, spacings, size ):
         else:
             print("ERROR: direction not +/- 1")
             exit()
+    return min_corner
     
   
 # ## TODO: appraoch may need rethink

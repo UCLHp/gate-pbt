@@ -16,6 +16,7 @@ develop a framework to analyze the effect of patient motion on the dose
 distribution in proton PBS (primarily at Skandion, but it should work for
 other clinics as well).
 Authors: David Boersma and Pierre Granger
+Modified by Steven Court
 """
 
 from boundingbox import *
