@@ -19,6 +19,7 @@ import imageconversion
 import overrides
 import generatefiles
 import config
+import cropdicom
 
 
 
@@ -177,47 +178,56 @@ def main():
     CONFIG = os.path.join(sim_dir, "data", "simconfig.ini")
  
     ct_unmod = os.path.join(sim_dir,"data","ct_orig.mhd")  ##path or name?
-    ct_for_simulation = "ct_air.mhd"
-    ct_air = os.path.join(sim_dir,"data",ct_for_simulation)
+    ct_air = os.path.join(sim_dir,"data","ct_air.mhd")
+    
     
     # Convert dicom series to mhd + raw
     print("Converting dcm CT files to mhd image")
     imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
-    # Add number fractions to config
-    nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
-    config.add_fractions( CONFIG, nfractions )
-    # Add ct name being used in sim to simconfig.ini
-    config.add_ct_to_config( CONFIG, ct_for_simulation )
-    # Add ct transform matrix to simconfig.ini
-    config.add_transformmatrix_to_config( CONFIG, ct_unmod )
-    
-    
-    # Copy over dicom dose files to /data
-    print("Copying dcm dose files over")
-    copy_dcm_doses( dose_files, os.path.join(sim_dir,"data") )   
-    
-    
-    # roi_utils does not like image properties of HFP set-up
-    # Could try manually changing it here so that the TransformMatrix is
-    # always 100010001, Origin coords all negative, AntomicalOrientation 
-    # is RAI (or whatever i s"standard").
-    
     
     # Set all external HUs to air
     print("Overriding all external structures to air")
-    overrides.set_air_external( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air) )
+    ct_air_path = os.path.join(sim_dir,"data",ct_air)
+    overrides.set_air_external( ct_unmod, struct_file, ct_air_path )
     
     # Check for density overrides and apply
     # TODO
     #overrides.override_hu( ct_unmod, struct_file, os.path.join(sim_dir,"data",ct_air), "BODY", -43 )
     
     
+    # Crop image to structure
+    #ext_contour = overrides.get_external_name( struct_file )
+    #cropped_img_path = os.path.join(sim_dir,"data","ct_cropped.mhd")
+    #cropdicom.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
+    
+    
+    # TODO: SET THIS AUTOMATICALLY IF CROPPING OR NOT
+    ct_for_simulation = ct_air
+    #ct_for_simulation = cropped_img_path
+    
+    
+    
+    # Add number fractions to config
+    nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
+    config.add_fractions( CONFIG, nfractions )
+    # Add ct name being used in sim to simconfig.ini
+    config.add_ct_to_config( CONFIG, os.path.basename(ct_for_simulation) )
+    # Add ct transform matrix to simconfig.ini
+    config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
+    
+    
+    # Copy over dicom dose files to /data
+    print("Copying dcm dose files over")
+    copy_dcm_doses( dose_files, os.path.join(sim_dir,"data") )   
+    
+       
+    
     # Generate all files required for simulation; SPLIT JOBS IN HERE
     print("Generating simulation files")
-    generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)
-    
+    #generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)
+    generatefiles.generate_files(ct_files[0], plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, os.path.basename(ct_for_simulation), sim_dir)
     
 
     

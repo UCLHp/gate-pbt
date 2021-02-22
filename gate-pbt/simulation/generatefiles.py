@@ -57,10 +57,10 @@ def rotation_matrix_z( deg ):
     return z_rot_matrix
 
 
-def get_rotation_matrix(ct_files, field):
+def get_rotation_matrix(mhdimgpath, ct_file, field):
     """Return combined matrix for patient setup and couchkick rotations"""
  
-    img_props = get_img_properties( ct_files )
+    img_props = get_img_properties( mhdimgpath, ct_file )
     
     # Setup as HFS, HFP, FFS etc...
     patient_position = img_props["PatientPosition"]
@@ -133,12 +133,12 @@ def get_rotation_angle( rotation_matrix ):
 
 
 
-def get_translation_vector( ct_files, field, rotation_matrix ):
+def get_translation_vector( mhdimgpath, ct_file, field, rotation_matrix ):
     """Return the translation vector required to shift plan isocentre
     to origin of World volume (to be applied AFTER couch rotation)
     """
     
-    img_props = get_img_properties( ct_files )
+    img_props = get_img_properties( mhdimgpath, ct_file )
     
     minCornerVox = np.array( img_props["MinCornerVoxelCentre"] ) 
     voxelDims_mm = np.array( [img_props["PixelSpacing_x"],img_props["PixelSpacing_y"],img_props["SliceThickness"]  ] )
@@ -174,88 +174,98 @@ def get_translation_vector( ct_files, field, rotation_matrix ):
 
 
 
-def get_img_properties( ct_files ):
+def get_img_properties( mhdimgpath, ct_file ):
     """Method to retrieve Rows, Columns, pixelSpacing from DICOM image"""
     
-    properties = {}
+    properties = {}   
     
-    #ct_files = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and "CT" in f  ]
-    ## NOT GOOD; CHECK FILE TAGS
-    ## CHECK ALL IMAGES BELONG TO SAME SEQUENCE
+    mhdimg = itk.imread( mhdimgpath )
+    ##ctorigin = np.array(  mhdimg.GetOrigin()  )
+    spacings = np.array(  mhdimg.GetSpacing()  )
+    properties["PixelSpacing_x"] = spacings[0]
+    properties["PixelSpacing_y"] = spacings[1]
+    properties["SliceThickness"] = spacings[2]
     
-    #ds = pydicom.dcmread( os.path.join(input_dir,ct_files[0]) )
-    ds = pydicom.dcmread( ct_files[0] )
+    rg = mhdimg.GetLargestPossibleRegion()
+    size = np.array(  rg.GetSize()  )
+    properties["Rows"] = size[0]
+    properties["Columns"] = size[1]
+    properties["Slices"] = size[2]
 
-    
-    properties["Rows"] = ds.Rows
-    properties["Columns"] = ds.Columns
-    properties["Slices"] = len(ct_files) ## NO - TODO THIS PROPERLY!!!
-    properties["PixelSpacing_x"] = ds.PixelSpacing[0]
-    properties["PixelSpacing_y"] = ds.PixelSpacing[1]
-    properties["SliceThickness"] = ds.SliceThickness
-    ##properties["SliceThickness"] = 1.0
-
-        
-    properties["ImageOrientationPatient"] = ds.ImageOrientationPatient
-    
-    img_limits = corner_voxel_centres( ct_files, ds.ImageOrientationPatient )
-    properties["MinCornerVoxelCentre"] = [ img_limits["minX"], img_limits["minY"], img_limits["minZ"]]
-    
     # Patient setup ("HFS", "FFS" etc)
+    ds = pydicom.dcmread( ct_file )
     properties["PatientPosition"] = ds.PatientPosition
     
+    properties["MinCornerVoxelCentre"] = get_min_corner( mhdimg, spacings, size )
+ 
     return properties
-    
 
 
- ## TODO: appraoch may need rethink
-def corner_voxel_centres( ct_files, imageorientationpatient ): 
-    """X,Y,Z limits: centre of corner voxels
-    """
+
+def get_min_corner( mhdimg, spacings, size ):
+    """ Return the coords for centre of minimum corner voxel"""
+    direction = np.array(  mhdimg.GetDirection()*[1,1,1]  )
+    offset = np.array( mhdimg.GetOrigin() )
     
-    iop = imageorientationpatient
+    min_corner = []
+    for o,d,sp,sz in zip(offset,direction,spacings,size):
+        if d==1:
+            min_corner.append( o )
+        elif d==-1:
+            p = o - sp*(sz-1)
+            min_corner.append( p )
+        else:
+            print("ERROR: direction not +/- 1")
+            exit()
     
-    xmin, xmax = 99999.0, -99999.0
-    ymin, ymax = 99999.0, -99999.0
-    zmin, zmax = 99999.0, -99999.0  
-       
-    for i,f in enumerate(ct_files):
-        
-        ds = pydicom.dcmread( f )
-        
-        #z = ds.SliceLocation
-        z = ds.ImagePositionPatient[2]
-        
-        if z<zmin:
-            zmin = z
-        if z>zmax:
-            zmax = z
-            
-        if i==0:
-            #Only get x and y 1 time
-            rows = ds.Rows
-            cols = ds.Columns
-            
-            ## TODO: is this approach valid/robust?
-            ## TODO could use ImageOrientation here?
-            if ds.ImagePositionPatient[0]<0:  
-                 xmin = ds.ImagePositionPatient[0]
-                 xmax = xmin + cols * ds.PixelSpacing[0]
-            else:
-                 xmax = ds.ImagePositionPatient[0]         
-                 xmin = xmax - (cols-1) * ds.PixelSpacing[0]
-                 # cols-1 since we want centre of final voxel       
-          
-            if ds.ImagePositionPatient[1]<0:
-                ymin = ds.ImagePositionPatient[1]
-                ymax = ymin + rows * ds.PixelSpacing[1]
-            else:
-                ymax = ds.ImagePositionPatient[1]
-                ymin = ymax - (rows-1) * ds.PixelSpacing[1]   
-                # rows-1 since we want centre of final voxel
-         
-    dct = {"minX":xmin, "maxX":xmax, "minY":ymin, "maxY":ymax, "minZ":zmin, "maxZ":zmax }
-    return dct
+  
+# ## TODO: appraoch may need rethink
+#def corner_voxel_centres( ct_files ): 
+#    """X,Y,Z limits: centre of corner voxels
+#    """
+#
+#    
+#    xmin, xmax = 99999.0, -99999.0
+#    ymin, ymax = 99999.0, -99999.0
+#    zmin, zmax = 99999.0, -99999.0  
+#       
+#    for i,f in enumerate(ct_files):
+#        
+#        ds = pydicom.dcmread( f )
+#        
+#        #z = ds.SliceLocation
+#        z = ds.ImagePositionPatient[2]
+#        
+#        if z<zmin:
+#            zmin = z
+#        if z>zmax:
+#            zmax = z
+#            
+#        if i==0:
+#            #Only get x and y 1 time
+#            rows = ds.Rows
+#            cols = ds.Columns
+#            
+#            ## TODO: is this approach valid/robust?
+#            ## TODO could use ImageOrientation here?
+#            if ds.ImagePositionPatient[0]<0:  
+#                 xmin = ds.ImagePositionPatient[0]
+#                 xmax = xmin + cols * ds.PixelSpacing[0]
+#            else:
+#                 xmax = ds.ImagePositionPatient[0]         
+#                 xmin = xmax - (cols-1) * ds.PixelSpacing[0]
+#                 # cols-1 since we want centre of final voxel       
+#          
+#            if ds.ImagePositionPatient[1]<0:
+#                ymin = ds.ImagePositionPatient[1]
+#                ymax = ymin + rows * ds.PixelSpacing[1]
+#            else:
+#                ymax = ds.ImagePositionPatient[1]
+#                ymin = ymax - (rows-1) * ds.PixelSpacing[1]   
+#                # rows-1 since we want centre of final voxel
+#         
+#    dct = {"minX":xmin, "maxX":xmax, "minY":ymin, "maxY":ymax, "minZ":zmin, "maxZ":zmax }
+#    return dct
 
 
 
@@ -369,8 +379,11 @@ def calc_dose_offset( mhdimgpath, dcmdose ):
 ## TODO: THIS METHOD SHOULD BE FIELD SPECIFIC AS IN FUTURE WE MIGHT HAVE DIFFERENT IMAGES
 ##    FOR EACH FIELD, CROPPED FOR MINIMUM MEMORY USAGE
     
-def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
+##def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
+def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
     """Method to generate all description and mac files"""
+    
+    mhdimgpath = os.path.join(sim_dir,"data",ct_mhd)
     
     # TODO: assumes all dose files are same plan; write check
     #dose_vox_dims = get_dose_voxel_dims( os.path.join(dcm_data_dir,dose_files[0])  ) 
@@ -397,7 +410,7 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         # Calculate correct origin for dose output
         # TODO: THIS MAY BE FIELD SPECIFIC IF WE DO ANYTHING CLEVER WITH
         #   IMAGE CROPPING.
-        dose_origin = calc_dose_offset( os.path.join(sim_dir,"data",ct_mhd), dose_files[0] )
+        dose_origin = calc_dose_offset( mhdimgpath, dose_files[0] )   #OKKKK
         config.add_correct_dose_offset(CONFIG, beamname, dose_origin)
         
         # Rangeshifter object
@@ -414,10 +427,10 @@ def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURC
         
         
         ##### Make field-specific .mac Gate file for simulation    
-        rotation_matrix = get_rotation_matrix(ct_files, field)
+        rotation_matrix = get_rotation_matrix(mhdimgpath, ct_file, field)   ##
         axis = get_rotation_axis(rotation_matrix)
         angle = get_rotation_angle(rotation_matrix)
-        translation_vector = get_translation_vector( ct_files, field, rotation_matrix )
+        translation_vector = get_translation_vector(mhdimgpath, ct_file, field, rotation_matrix )
         #print( translation_vector )
         mac_filename = os.path.join(sim_dir,"mac",beamname+".mac")
         write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename,
