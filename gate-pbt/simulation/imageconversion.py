@@ -6,8 +6,8 @@ Created on Thu Nov 21 10:17:18 2019
 Methods converting CT and mhd images and dose images
 
 """
-import os
 import sys
+from os.path import join
 
 import itk
 
@@ -69,7 +69,7 @@ def dcm2mhd( dirName, output ):
     
         writer = itk.ImageFileWriter[ImageType].New()
     
-        outFileName = os.path.join(output)
+        outFileName = join(output)
     
         writer.SetFileName(outFileName)
         writer.SetInput(reader.GetOutput())

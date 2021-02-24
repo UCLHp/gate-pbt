@@ -539,9 +539,7 @@ class region_of_interest(object):
 
         # directions +/- 1 for each axis       
         directions = list( roimask.GetDirection()*(1,1,1) )
-
-
-        print("directions = {}".format(directions))  
+        #print("directions = {}".format(directions))  
 
         # Find minimum corner (voxel centre)
         # This assumes image (x,y) is centred close to zero
@@ -552,9 +550,9 @@ class region_of_interest(object):
             else:
                 orig_min_corner.append(o-(dim-1)*s)
         
-        print( "dims = {}".format(dims) )
+        #print( "dims = {}".format(dims) )
         #####print( "im_size = {}".format(im_size) )
-        print( "orig_min_corner = {}".format(orig_min_corner) )        
+        #print( "orig_min_corner = {}".format(orig_min_corner) )        
     
         # --------------------------------------------------------
         

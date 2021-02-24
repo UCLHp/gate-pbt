@@ -67,7 +67,8 @@ def get_pass_rate( gamma_img ):
     """
 
     gamma_vals = itk.GetArrayViewFromImage(gamma_img)
-    print( "  Max gamma = {}".format( np.max(gamma_vals) ) )
+    max_gam = float(np.max(gamma_vals))
+    print( "  Max gamma = {}".format( round(max_gam,2)  ) )
     # Only look at valid gammas (i.e. > 0) for % fail count
     pass_rate = 100.0 - 100*gamma_vals[gamma_vals>1].size / gamma_vals[gamma_vals>0].size
     #print( "  Gamma < 1 = {}%".format( pass_rate )  )  
@@ -137,7 +138,8 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     mhdpix[ mhdpix<0 ] = 0
     
     
-    # NOT NECESSARY TO CHANGE THESE IF USING CORRECT DCM DOSE FILE
+    # mhd.GetLargestPossibleRegion().GetSize() gives [cols, rows, slices]
+    # pixel_array.shape gives [slices, rows, cols]
     dcm.NumberOfFrames = mhdpix.shape[0]
     dcm.Rows = mhdpix.shape[1]            # ARE THESE CORRECT WAY ROUND?
     dcm.Columns = mhdpix.shape[2]

@@ -11,9 +11,6 @@ Automated analysis of Gate simulation output:
   - Scaling for absolute dose
   - Conversion of dose-to-material to dose-to-water
   - Conversion from mhd/raw to dicom for import into TPS
-  
-  TODO
-  - Gamma analysis
 
 """
 import sys
@@ -163,7 +160,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions
+        scalefactor = (nreq / nsim) * nfractions #* 1.071
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
@@ -197,7 +194,7 @@ def full_analysis( outputdir ):
             gamma_img = gamma.gamma_image( tps_dose, d2wimg )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
-            print("    gamma pass rate = {}%".format(pass_rate)  )
+            print("    gamma pass rate = {}%".format( round(pass_rate,2) ))
             #####
             #print( "gamma img type = ", type(gamma_img))
             # MAKE DCM OF GAMMA IMAGE

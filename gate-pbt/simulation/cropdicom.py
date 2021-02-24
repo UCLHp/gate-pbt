@@ -128,21 +128,16 @@ def get_cs_limits( cs, axis ):
 
 
 
-
- 
-
-
-
-def main():
-    
-    mhdimg = "ct_air.mhd"
-    dicom_struct = "dcmstruct.dcm"
-    structure = "EXT"
-    
-    crop_to_structure( mhdimg, dicom_struct, structure, "test_crop.mhd", margin=10 )
-    
-
-    
-if __name__=="__main__":
-    main()
+#def main():
+#    
+#    mhdimg = "ct_air.mhd"
+#    dicom_struct = "dcmstruct.dcm"
+#    structure = "EXT"
+#    
+#    crop_to_structure( mhdimg, dicom_struct, structure, "test_crop.mhd", margin=10 )
+#    
+#
+#    
+#if __name__=="__main__":
+#    main()
 

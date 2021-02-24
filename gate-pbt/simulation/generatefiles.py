@@ -9,7 +9,7 @@ source descrition file *for each field*.
 Currently no cropping and no rangeshifter implemented
 
 """
-import os
+from os.path import join
 import pydicom
 import numpy as np
 from math import radians, degrees, sqrt, isclose
@@ -215,59 +215,10 @@ def get_min_corner( mhdimg, spacings, size ):
             p = o - sp*(sz-1)
             min_corner.append( p )
         else:
-            print("ERROR: direction not +/- 1")
+            print("ERROR: generatefiles.get_min_corner; direction not +/- 1")
             exit()
     return min_corner
     
-  
-# ## TODO: appraoch may need rethink
-#def corner_voxel_centres( ct_files ): 
-#    """X,Y,Z limits: centre of corner voxels
-#    """
-#
-#    
-#    xmin, xmax = 99999.0, -99999.0
-#    ymin, ymax = 99999.0, -99999.0
-#    zmin, zmax = 99999.0, -99999.0  
-#       
-#    for i,f in enumerate(ct_files):
-#        
-#        ds = pydicom.dcmread( f )
-#        
-#        #z = ds.SliceLocation
-#        z = ds.ImagePositionPatient[2]
-#        
-#        if z<zmin:
-#            zmin = z
-#        if z>zmax:
-#            zmax = z
-#            
-#        if i==0:
-#            #Only get x and y 1 time
-#            rows = ds.Rows
-#            cols = ds.Columns
-#            
-#            ## TODO: is this approach valid/robust?
-#            ## TODO could use ImageOrientation here?
-#            if ds.ImagePositionPatient[0]<0:  
-#                 xmin = ds.ImagePositionPatient[0]
-#                 xmax = xmin + cols * ds.PixelSpacing[0]
-#            else:
-#                 xmax = ds.ImagePositionPatient[0]         
-#                 xmin = xmax - (cols-1) * ds.PixelSpacing[0]
-#                 # cols-1 since we want centre of final voxel       
-#          
-#            if ds.ImagePositionPatient[1]<0:
-#                ymin = ds.ImagePositionPatient[1]
-#                ymax = ymin + rows * ds.PixelSpacing[1]
-#            else:
-#                ymax = ds.ImagePositionPatient[1]
-#                ymin = ymax - (rows-1) * ds.PixelSpacing[1]   
-#                # rows-1 since we want centre of final voxel
-#         
-#    dct = {"minX":xmin, "maxX":xmax, "minY":ymin, "maxY":ymax, "minZ":zmin, "maxZ":zmax }
-#    return dct
-
 
 
 def get_dose_voxel_dims( dcm_dose ):
@@ -384,7 +335,7 @@ def calc_dose_offset( mhdimgpath, dcmdose ):
 def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
     """Method to generate all description and mac files"""
     
-    mhdimgpath = os.path.join(sim_dir,"data",ct_mhd)
+    mhdimgpath = join(sim_dir,"data",ct_mhd)
     
     # TODO: assumes all dose files are same plan; write check
     #dose_vox_dims = get_dose_voxel_dims( os.path.join(dcm_data_dir,dose_files[0])  ) 
@@ -422,18 +373,18 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
         fld_dsc = gfdf.get_field_description(field)
         plan_dsc = gfdf.get_plan_description(dcmPlan, field)   
         pdf_filename = "PlanDescFile_"+beamname+".txt"
-        gfdf.make_field_description( os.path.join(sim_dir,"data",pdf_filename),
+        gfdf.make_field_description( join(sim_dir,"data",pdf_filename),
                                     plan_dsc, fld_dsc 
                                     )
         
         
         ##### Make field-specific .mac Gate file for simulation    
-        rotation_matrix = get_rotation_matrix(mhdimgpath, ct_file, field)   ##
+        rotation_matrix = get_rotation_matrix(mhdimgpath, ct_file, field)
         axis = get_rotation_axis(rotation_matrix)
         angle = get_rotation_angle(rotation_matrix)
         translation_vector = get_translation_vector(mhdimgpath, ct_file, field, rotation_matrix )
         #print( translation_vector )
-        mac_filename = os.path.join(sim_dir,"mac",beamname+".mac")
+        mac_filename = join(sim_dir,"mac",beamname+".mac")
         write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename,
                        setRotationAngle=angle,
                        setRotationAxis=axis,
@@ -448,7 +399,7 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
     
         ##### Split field mac file here ####
         # Simulate Nreq/1000 for reasonable stats
-        splits = 10  ## TODO automate this for efficiency
+        splits = 40  ## TODO automate this for efficiency
         nprotons = int( req_prims[field.BeamName]/1000 )  # will be split into separate sims
         #splits = 80
         #nprotons = 4000000       
@@ -458,7 +409,7 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
        
         # Make SLURM job script
         scriptname = "submit_"+beamname+".sh"
-        scriptpath = os.path.join(sim_dir, scriptname )
+        scriptpath = join(sim_dir, scriptname )
         slurm.make_script(sim_dir, beamname, splits, scriptpath)
 
 
