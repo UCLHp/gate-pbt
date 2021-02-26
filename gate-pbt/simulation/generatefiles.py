@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Dec 11 15:59:37 2019
-@author: SCOURT01
-
+@author: Steven Court
 Script to generate a Gate mac file plus a plan description and
-source descrition file *for each field*. 
-
-Currently no cropping and no rangeshifter implemented
-
+source descrition file for each field 
 """
+
 from os.path import join
 import pydicom
 import numpy as np

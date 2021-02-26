@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jan 23 15:50:48 2021
-
-@author: SCOURT01
-
+@author: Steven Court
 Automated analysis of Gate simulation output:
   - Check of data integrity
   - Merging all results
@@ -11,8 +8,8 @@ Automated analysis of Gate simulation output:
   - Scaling for absolute dose
   - Conversion of dose-to-material to dose-to-water
   - Conversion from mhd/raw to dicom for import into TPS
-
 """
+
 import sys
 import os
 from os.path import join, basename
@@ -208,8 +205,16 @@ def full_analysis( outputdir ):
         if dose2water in [basename(f) for f in mergedfiles]:
             print("  Scaling merged-DoseToWater.mhd")
             doseimg = join(outputdir, dose2water)
-            outname = join(outputdir, field+"_Gate_DoseToWater.mhd")
-            write_scaled_dose( doseimg, outname, scalefactor )
+            scaledimg = join(outputdir, field+"_Gate_DoseToWater.mhd")
+            write_scaled_dose( doseimg, scaledimg, scalefactor )
+            
+            print("  Converting Gate dose-to-water to dicom")
+            beamref = config.get_beam_ref_no( outputdir, field )
+            print("    beam_ref_no = ",beamref)
+            path_to_dcmdose = dosetodicom.get_dcm_file_path( outputdir, beamref )
+            ##print("XXX ", path_to_dcmdose)
+            dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
+            dosetodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
 
         
 

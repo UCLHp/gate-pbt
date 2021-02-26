@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jan 10 15:13:07 2020
-@author: SCOURT01
-
+@author: Steven Court
 Main program to read in all relevant dicom files and 
-generate all files required for gate simulation.
+generate the files required for a Gate simulation.
 """
 
 import sys
@@ -198,19 +196,19 @@ def main():
     #overrides.override_hu( ct_unmod, struct_file, join(sim_dir,"data",ct_air), "BODY", -43 )
     
     
+    
     # Crop image to structure
     ext_contour = overrides.get_external_name( struct_file )
     print("Cropping img to ", ext_contour)
     cropped_img_path = join(sim_dir,"data","ct_cropped.mhd")
     cropdicom.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
-    
-    
+
     # TODO: SET THIS AUTOMATICALLY IF CROPPING OR NOT
     #ct_for_simulation = ct_air
     ct_for_simulation = cropped_img_path
     
     
-    
+
     # Add number fractions to config
     nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
     config.add_fractions( CONFIG, nfractions )

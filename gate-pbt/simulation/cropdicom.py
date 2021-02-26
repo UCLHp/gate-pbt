@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Methods for cropping images to dicom structures
-
 @author: Steven Court
+Methods for cropping images to dicom structures
 """
+
 import numpy as np
 import pydicom
 import itk
@@ -11,10 +11,9 @@ import itk
 
 
 def crop_to_structure( mhdfile, dcm_struct_file, struct_name, outputimg, margin=0 ):
-    """Method to crop mhd img to ROI in dicom structure file
+    """Crop mhd img to ROI in dicom structure file
     
     Optional margin (# voxels) applied isotropically
-    Output cropped mhd to same location of original img
     """
     img = itk.imread( mhdfile )
     # Find limits of roi in dicom coords
@@ -26,7 +25,8 @@ def crop_to_structure( mhdfile, dcm_struct_file, struct_name, outputimg, margin=
 
 def crop_mhd(img, mincorner, maxcorner, margin):
     """
-    Crop an image according from mincorner to maxcorner (x,y,z) coords"""
+    Crop an image according from mincorner to maxcorner (x,y,z) coords
+    """
     
     dims = np.array(img.GetLargestPossibleRegion().GetSize())
     if len(dims) != 3:
@@ -135,9 +135,8 @@ def get_cs_limits( cs, axis ):
 #    structure = "EXT"
 #    
 #    crop_to_structure( mhdimg, dicom_struct, structure, "test_crop.mhd", margin=10 )
-#    
 #
-#    
+#
 #if __name__=="__main__":
 #    main()
 

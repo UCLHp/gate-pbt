@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jun 19 16:18:58 2020
-@author: SCOURT01
-
+@author: Steven Court
 Method to calculate number of primaries required for each field to yield the
 absolute dose.
 
@@ -13,12 +11,12 @@ See N/MU calibration for details on how this was produced
 """
 
 
-
+#TODO: Connect this with source desc file
 def particles_per_MU( energy ):
     """Return number of particles per MU
-    i.e the N/MU curve in the source desc file
+    i.e the N/MU curve in the source desc file 
     """
-    # Daniela's curve; FIRST DRAFT
+    # FIRST DRAFT
     E = energy 
     n_mu = (3.063861502761413e-05)*E**4 + (0.048007375737805)*E**3 - (50.926377749348596)*E**2 + (2.727779564382193e+04)*E + 2.931906878221635e+05    
     return n_mu
@@ -42,7 +40,7 @@ def get_beam_meterset(plan, beamnum):
 
 
 def calc_field_primaries(plan, field):
-    """Plot MUs, #spots and estimated simulation time for each CP"""    
+    """Return number of protons required for absolute TPS dosimetry"""    
 
     ##############################
     # Plan DICOM contains scan spot meterset weights, NOT MUs.
@@ -61,7 +59,7 @@ def calc_field_primaries(plan, field):
     tot_mus = []
     
     for i,cp in enumerate(cps):
-        if i%2 == 0:   # Skip empty CPs
+        if i%2 == 0:   # Skip empty control points
             energies.append( cp.NominalBeamEnergy )
             # Count spots and MUs
             if isinstance(cp.ScanSpotMetersetWeights, float):

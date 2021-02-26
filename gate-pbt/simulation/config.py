@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 26 11:32:50 2021
-@author: SCOURT01
-
+@author: Steven Court
 Methods for creating / modifying simulation config file
 """
 

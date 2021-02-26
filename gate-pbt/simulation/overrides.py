@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 21 10:17:18 2019
-@author: SCOURT01
-
+@author: Steven Court
 Methods to apply HU overrides directly to image pixels. Should:
     (i)  Replace all pixels outside external with air HU=-1000
    (ii)  Replace all pixels within a specified structure

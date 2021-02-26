@@ -6,7 +6,7 @@
 #
 #
 # Both boundingbox.py and roiutils.py have been taken and modified from 
-# GateTools here: https://github.com/OpenGATE/GateTools
+# GateTools; originals here: https://github.com/OpenGATE/GateTools
 #
 # -----------------------------------------------------------------------------
 

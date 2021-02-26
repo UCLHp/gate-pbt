@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 24 10:25:04 2020
-@author: SCOURT01
-
-Methods to split the Gate simulations up
-for running on the cluster.
+@author: Steven Court
+Methods to split the Gate simulations up for running on cluster.
 """
+
 import os
 
 
 def split_by_primaries( macfilepath, primaries=None, splits=1 ):
     """
-    Splits a mac file intoseparate simulations with equal number of primaries
+    Splits a mac file into separate simulations with equal number of primaries
     If primaries not specified, value in template mac file will be taken
     """    
     
     #Take fieldname from macfile and add to output files
     macfilename = os.path.basename( macfilepath )
     fieldname, ext = os.path.splitext( macfilename )
-
 
     maclines = open(macfilepath).readlines()
 
@@ -54,7 +51,6 @@ def split_by_primaries( macfilepath, primaries=None, splits=1 ):
 
 
 
-
 def split_by_energies( macfile, plandescfile ):
     """
     Split in some sensible way accounting for fact that higher energy layers
@@ -64,9 +60,3 @@ def split_by_energies( macfile, plandescfile ):
     """
     pass
 
-
-
-
-
-
-#split_by_primaries( "TESTFILE.mac", 5 )
