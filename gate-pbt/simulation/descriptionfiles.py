@@ -1,18 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Oct 18 08:56:55 2019
-@author: scourt01
-
-Methods to generate a "plan description file" for each field along
-with a field-specific "source description file". This is needed since 
-the "Nozzle exit to Isocenter distance" field (i.e. "Snout Position" in Eclipse
-) will be different for different fields.
-
+@author: Steven Court
+Methods to generate the plan description file for each field and
+the source description file"
 """
 
 from math import isclose
-
-
 
 
 def get_plan_description(plan, field):
@@ -130,9 +123,8 @@ def make_field_description(filename, plan_description, field_descriptions):
 
 '''
 def main():
-    #DICOM_INPUT = "RN.1.2.246.352.71.5.708763130694.20003.20171128092302.dcm" # BaseOfSkull05??
-    #DICOM_INPUT = "zzzPaedCranio02_data\RN.1.2.246.352.71.5.708763130694.20491.20180105151005.dcm" # zzzPaedCranio02>AJG>Plan1
-    DICOM_INPUT = "eyeball_iso.dcm" # zzzPaedCranio02>AJG>Plan1
+
+    DICOM_INPUT = "plan.dcm"
 
     plan = pydicom.read_file(DICOM_INPUT)
    
@@ -142,10 +134,7 @@ def main():
 
         fname = "PlanDescFile_"+str(field.BeamName)+".txt"
         make_field_description( fname, plan_dsc, fld_dsc  )
-        
-        snout_pos = field.IonControlPointSequence[0].SnoutPosition
-        make_source_description("SourceDescriptionFile_UCLH_v1.txt", str(field.BeamName), snout_pos)
-  
+
     
 if __name__=="__main__":
     main()

@@ -1,16 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May  7 16:25:22 2020
-@author: SCOURT01
-
-
+@author: Steven Court
 Methods related to positioning of rangeshifter.
-
-Gate simulates the beam from the nozzle exit. Hence if a rangeshifter is
-in place we must first position this correctly wrt the patient and then
-offset the beam so that it passes through the rangeshifter. (The number to
-offset is the nozzle to exit distance in the source description file).
-
 So as to only have 1 mac template file, any field without a rangeshifter
 will technically contain a 0.001 mm thick rangeshitfer positioned so as 
 to be out of the beam.
@@ -18,14 +9,10 @@ to be out of the beam.
 
 from math import sin, cos, radians
 
-
 ######### TODO
-#
 # 1. Need exact RS dimensions / chemical composition
 # 2. Add all rangeshifters to RS_THICKNESS
-#
 #########
-
 
 # dictionary of rangeshifter WET to physical thicknesses in use (since
 # dicom file will only contain WET)
@@ -51,11 +38,9 @@ class Rangeshifter:
 def get_translation( iso_to_rs, thick, gantryangle ):
     """Get translation vector required to correctly shift RS in Gate"""
     
-    shift = iso_to_rs + 0.5*thick
-    
+    shift = iso_to_rs + 0.5*thick  
     d_x = shift * sin( radians(gantryangle) )
     d_y = -1.0 * shift * cos( radians(gantryangle) )
-    
     translation = [d_x, d_y, 0]
     return translation
 

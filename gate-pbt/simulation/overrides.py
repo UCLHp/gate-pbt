@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 21 10:17:18 2019
-@author: SCOURT01
-
+@author: Steven Court
 Methods to apply HU overrides directly to image pixels. Should:
     (i)  Replace all pixels outside external with air HU=-1000
    (ii)  Replace all pixels within a specified structure
@@ -11,10 +9,7 @@ Methods to apply HU overrides directly to image pixels. Should:
 
 import itk
 import pydicom
-import gatetools.roi_utils as rt
-
-
-#testing Gatetools
+#import gatetools.roi_utils as rt
 import roiutils
 
 
@@ -33,13 +28,12 @@ def get_external_name( structure_file ):
     for struct in ss.RTROIObservationsSequence:
         if struct.RTROIInterpretedType.lower() == "external":
             contour = struct.ROIObservationLabel
-            print("Found external: {}".format(contour))
+            #print("Found external: {}".format(contour))
         elif struct.RTROIInterpretedType.lower() == "bolus":
             print("\n\nWARNING: Bolus found. It will be overriden with air.\n")
     if contour=="":
         raise Exception("No external structure found. Exiting.")
         exit(1)
-    #####contour="Body"
     return contour
 
 
@@ -59,13 +53,8 @@ def set_air_external( img_file, structure_file, output_img_file ):
     # MODIFYING GATETOOLS; get_mask() disn't work for HFP setup
     aroi = roiutils.region_of_interest(ds,contour)
     mask = aroi.get_mask(img, corrected=False)
-    #itk.imwrite(mask, "mask.mhd")
-    
-    '''
-    aroi = rt.region_of_interest( ds, contour)
-    mask = aroi.get_mask(img, corrected=False)  
-    # NOTE: if corrected=True mask has dtype=np.float32; if not dtype=np.uint8
-    ''' 
+    #itk.imwrite(mask, "mask.mhd")  
+
     
     pix_mask = itk.array_view_from_image(mask)
     pix_img = itk.array_view_from_image(img) 
@@ -81,9 +70,6 @@ def set_air_external( img_file, structure_file, output_img_file ):
     img_modified = itk.image_view_from_array( pix_img )
     
     img_modified.CopyInformation(img)
-    
-    #img_modified.SetSpacing( img.GetSpacing()  ) # "ElementSpacing" in .mhd
-    #img_modified.SetOrigin( img.GetOrigin() )    # "Offset" in .mhd
 
     itk.imwrite(img_modified, output_img_file )
 
@@ -98,12 +84,9 @@ def override_hu( img_file, structure_file, output_img, structure, hu ):   #MAYBE
     ds = pydicom.dcmread( structure_file )
   
     
-    # TESTING GATETOOLS
     aroi = roiutils.region_of_interest(ds,structure)
     mask = aroi.get_mask(img, corrected=False)    
-    ##aroi = rt.region_of_interest( ds, structure )
-    ##mask = aroi.get_mask(img, corrected=False)
-    
+ 
     pix_mask = itk.array_view_from_image(mask)
     pix_img = itk.array_view_from_image(img) 
     if( pix_mask.shape!=pix_img.shape ):
@@ -117,8 +100,6 @@ def override_hu( img_file, structure_file, output_img, structure, hu ):   #MAYBE
     img_modified = itk.image_view_from_array( pix_img )
     
     img_modified.CopyInformation(img)
-    ##img_modified.SetSpacing( img.GetSpacing()  ) # "ElementSpacing" in .mhd
-    ##img_modified.SetOrigin( img.GetOrigin() )    # "Offset" in .mhd
 
     itk.imwrite(img_modified, output_img )
 

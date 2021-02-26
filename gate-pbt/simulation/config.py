@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 26 11:32:50 2021
-@author: SCOURT01
-
+@author: Steven Court
 Methods for creating / modifying simulation config file
 """
 
@@ -68,11 +66,11 @@ def add_correct_dose_offset( configfile, beamname, dose_origin):
         config.write( q )   
         
 
-def add_transformmatrix_to_config( configfile, ctmhd ):
+def add_transformmatrix_to_config( configfile, mhdpath ):
     """Store original TransformMatrix of ct image"""
     
     transform = ""
-    lines = open(ctmhd, "r").readlines()
+    lines = open(mhdpath, "r").readlines()
     for line in lines:
         if "TransformMatrix" in line:
             transform = line.split("=")[1].strip()    

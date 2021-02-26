@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 26 10:03:44 2021
-@author: SCOURT01
-
+@author: Steven Court
 Methods to make SLURM job script. Split field submitted as a job array.
 Our jobs are run on a virtualized linux cluster
-
 """
 import os
 
@@ -16,7 +13,7 @@ CLUSTER_LOCATION = "/mnt/clustshare"
 
 
 def dos2unix( filein, fileout ):
-    """Convert Windows file endings to unix"""   
+    """Convert Windows line endings to unix"""   
     with open( filein, 'rb') as infile:    
       content = infile.read()
     with open( fileout, 'wb') as output:

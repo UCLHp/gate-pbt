@@ -75,7 +75,9 @@ def convert_dose_to_water(ctpath, dosepath, output=None):
     
     # Resample CT image to match voxel resolution of dose image
     resamp = applyTransformation(input=ctimg, like=doseimg, force_resample=True)
-    #itk.imwrite(resamp, "resampled_ct.mhd")
+    
+    
+    itk.imwrite(resamp, "resampled_ct.mhd")  #######################################################################################
     
     hus = itk.array_from_image( resamp )
     doses = itk.array_from_image( doseimg )
