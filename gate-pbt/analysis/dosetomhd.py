@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jan 30 17:05:33 2021
-@author: SCOURT01
+@author: Steven Court
 
 Method to convert dicom dose file to mhd format for import
 into GateTools' gamma analysis function
@@ -38,18 +37,28 @@ def dcm2mhd( dicomfile, outpath=None ):
         
     imgpospat = ds.ImagePositionPatient
     xy_spacing = ds.PixelSpacing
-    ##orientation = ds.ImageOrientationPatient?
     z_spacing = ds.GridFrameOffsetVector[1]-ds.GridFrameOffsetVector[0]  ##TODO: assumed these are equal but they might not be with our scanner
     pixelspacing = [xy_spacing[0],xy_spacing[1]] + [z_spacing]
     
-    # 3D ITK image 
+    # ASSUME THIS IS ALWAYS A DIAGONAL MATRIX WITH VALS +/- 1
+    orientation = [ float(x) for x in ds.ImageOrientationPatient]
+    zor=None
+    if z_spacing > 0:    ## TODO IS THIS CORRECT?
+        zor = 1
+    else:
+        zor = -1  
+    direction = np.array( orientation + [0,0,zor] )
+    mhdtransform = direction.reshape(3,3)    
+
+    # Set ITK image properties (for mhd file)
     doseimg = itk.image_from_array( px_data )
     doseimg.SetOrigin( imgpospat )
     doseimg.SetSpacing( pixelspacing )
-    ##doseimg.SetDirection( orientation )
+    doseimg.SetDirection( mhdtransform )
     
     # Save file is outpath specified
     if outpath is None:
+        ##itk.imwrite(doseimg, "EclipseDose.mhd")
         return doseimg
     else:
         itk.imwrite(doseimg, "EclipseDose.mhd")

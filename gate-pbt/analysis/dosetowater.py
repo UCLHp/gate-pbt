@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Oct 27 16:46:03 2020
 @author: Steven Court
 
 Method to retrospectively convert MC dose to material -> dose to water
@@ -11,15 +10,6 @@ therapy".
 
 import itk
 import numpy as np
-
-from gatetools.affine_transform import applyTransformation
-
-#at.applyTransformation(input=None, like=None, spacinglike=None, matrix=None, newsize=None, neworigin=None,
-#                       newspacing=None, newdirection=None, force_resample=None, keep_original_canvas=None,
-#                       adaptive=None, rotation=None, rotation_center=None, translation=None, pad=None,
-#                       interpolation_mode=None, bspline_order=2):
-
-
 
 
 # TEMPORARY FIX - REMOVE THIS / just set dose outside patient to zero
@@ -61,6 +51,30 @@ def get_density(hu):
 
 
 
+def resample( img, refimg ):
+    """ Resample image to same dimensions as reference """ 
+
+    spacing = refimg.GetSpacing()
+    origin = refimg.GetOrigin()
+    direction = refimg.GetDirection()
+    size = refimg.GetLargestPossibleRegion().GetSize()
+       
+    resampleFilter = itk.ResampleImageFilter.New(Input=img)
+    resampleFilter.SetOutputSpacing(spacing)
+    resampleFilter.SetOutputOrigin(origin)
+    resampleFilter.SetOutputDirection(direction)
+    resampleFilter.SetSize(size)
+    
+    #Default interpolation is LinearInterpolateImageFunction<InputImageType, TInterpolatorPrecisionType>, 
+    #which is reasonable for ordinary medical images. However, some synthetic images have pixels 
+    #drawn from a finite prescribed set. An example would be a mask indicating the segmentation of a 
+    #brain into a small number of tissue types. For such an image, one does not want to interpolate between
+    #different pixel values, and so NearestNeighborInterpolateImageFunction< InputImageType, TCoordRep > would be a better choice.   
+
+    resampleFilter.Update()
+    return resampleFilter.GetOutput()
+
+
 
 
 def convert_dose_to_water(ctpath, dosepath, output=None):
@@ -74,23 +88,19 @@ def convert_dose_to_water(ctpath, dosepath, output=None):
     doseimg = itk.imread( dosepath )
     
     # Resample CT image to match voxel resolution of dose image
-    resamp = applyTransformation(input=ctimg, like=doseimg, force_resample=True)
+    resampledimg = resample( ctimg, doseimg )
+    #itk.imwrite(resampledimg, "resampled_ct.mhd")  
     
-    
-    itk.imwrite(resamp, "resampled_ct.mhd")  #######################################################################################
-    
-    hus = itk.array_from_image( resamp )
+    hus = itk.array_from_image( resampledimg )
     doses = itk.array_from_image( doseimg )
     
     shape = hus.shape
 
     hus_flat = hus.flatten()
-    doses_flat = doses.flatten()
-    
+    doses_flat = doses.flatten() 
     d2water = np.zeros(len(hus_flat))
-    
     if len(hus_flat)!=len(doses_flat):
-        print("Resampled image does not match dose image dimensions")
+        print("ERROR: resampled image does not match dose image dimensions")
         exit()
     else:
         for i,hu in enumerate(hus_flat):
