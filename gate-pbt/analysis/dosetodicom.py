@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan 26 15:17:10 2021
 @author: SCOURT01
 
 Methods for converting Gate's mhd output to dicom dose file

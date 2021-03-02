@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Dec  9 12:59:03 2019
-@author: SCOURT01
+@author: Steven Court
 
 Code to take 2 dose distributions (in mhd + raw format)
 and perform a 3D gamma analysis using the gatetools function.
