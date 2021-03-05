@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: SCOURT01
+@author: Steven Court
 
 Methods for converting Gate's mhd output to dicom dose file
 
@@ -109,8 +109,9 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     dcm.Rows = mhdpix.shape[1]            # ARE THESE CORRECT WAY ROUND?
     dcm.Columns = mhdpix.shape[2]
     
-    #Is GridFrameOffsetVector always in "relative interpretations"?
+    #Is GridFrameOffsetVector always in "relative interpretations"? 
     # TODO: check this is safe
+    # TODO: should this ever negative?
     dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
          
     dose_abs = mhdpix * dosescaling

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 17 08:56:32 2020
-@author: SCOURT01
+@author: Steven Court
 
 Methods to merge cluster simulation results:
     - Summing doses
