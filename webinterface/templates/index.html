@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+MC Home
+{% endblock %}
+
+
+{% block content %}
+<center>
+<h4> <br><br><br> Welcome </h4>
+<p> Please ensure the correct dicom files have been exported before submitting your request!</p>
+<p><br><br></p>
+</center>
+
+<center>
+<image src="{{ url_for('static', filename='img/logo200x200.png')}}">
+</center>
+
+{% endblock %}
+
+
+

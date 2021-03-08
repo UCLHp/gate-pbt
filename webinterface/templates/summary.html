@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+Summary
+{% endblock %}
+
+
+{% block content %}
+<center>
+<h4><br><br>Simulation submitted!</h4>
+<p><br></p>
+<table border="2" cellpadding="15">
+  <tbody>
+    <tr>
+      <th scope="row">Patient ID</th>
+      <td>{{patientid}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Plan</th>
+      <td>{{plan}}</td>
+    </tr>
+    <tr>
+      <th scope="row">LET</th>
+      <td>{{let}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Gate dose-to-water</th>
+      <td>{{dosetowater}}</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
+
+
+

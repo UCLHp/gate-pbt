@@ -157,7 +157,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions #* 1.071
+        scalefactor = (nreq / nsim) * nfractions #* 1.077
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
@@ -184,17 +184,15 @@ def full_analysis( outputdir ):
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
             dosetodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
-            
-            
+                     
             print("  Performing gamma analysis")
             tps_dose = dosetomhd.dcm2mhd( path_to_dcmdose )
             gamma_img = gamma.gamma_image( tps_dose, d2wimg )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
             print("    gamma pass rate = {}%".format( round(pass_rate,2) ))
-            #####
-            #print( "gamma img type = ", type(gamma_img))
-            # MAKE DCM OF GAMMA IMAGE
+            #
+            # Make dcm for gamnma image for visualizaiton
             print("  Converting gamma image to dicom")
             gamma_dcm = join(outputdir, field+"_Gamma.dcm")
             gamma.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )

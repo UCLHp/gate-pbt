@@ -14,10 +14,10 @@ These are Linux VMs that include a Geant4 install along with various other usefu
 If you wish to align with the Gate-RTion recommendations, a VM with Gate 8.1 and Geant4 10.3.3
 will be available soon.  
 
-Development has been done using pencil beam scanning proton plans created in the Eclipse treatment planning system (versions 13.7, 15.5 and 16.1). If you run into issues using another TPS let me know.
+Development and testing has so far been done using pencil beam scanning proton plans created in the Eclipse treatment planning system (versions 13.7, 15.5 and 16.1). If you run into issues using another TPS let me know.
 
 The physics list and simulation parameters used in the simulation can be set in the mac 
-template file and are aligned to the [Gate-RTion recommendations](https://aapm.onlinelibrary.wiley.com/doi/10.1002/mp.14481) as default. More information about the Gate-RTion collaboration can be found [here](https://gate.uca.fr/download/gate-rtion#/admin).
+template file and will be aligned to the [Gate-RTion recommendations](https://aapm.onlinelibrary.wiley.com/doi/10.1002/mp.14481) as default. More information about the Gate-RTion collaboration can be found [here](https://gate.uca.fr/download/gate-rtion#/admin).
 
 
 ## Usage
@@ -48,21 +48,16 @@ A full analysis of the data generated can be performed from the analysis directo
 It will prompt for the directory containing the simulation output and:
 
 1. Separate the data for individual fields and merge all data present (dose, dose-squared, LET)
-2. Calculate the dose uncertainty following [Chetty2006](https://pubmed.ncbi.nlm.nih.gov/16798417/)
-3. Scale the simulation to absolute dose using the N/MU curve provided
-4. Convert dose-to-material to dose-to-water following [Paganetti2009](https://iopscience.iop.org/article/10.1088/0031-9155/54/14/004/pdf), using the HU-density and HU-RSP curves provided
-5. Convert each field's dicom dose into an mhd image and perform a 3D gamma analysis using gatetools
-6. Convert the dose-to-water plus gamma mhd images from each field into dicom files for import into the treatment planning system
-
-
-
+2. Import, from the simconfig.ini file produced in the file preparation stage, the correct Offset and TransformMatrix parameters into these merged mhd files. We need to alter these since Gate preserves any patient rotations performed in the simulation in its output's TransformMatrix, and unfortunately calculates the Offset parameter incorrectly for some non-HFS patient set-ups
+3. Calculate the dose uncertainty following [Chetty2006](https://pubmed.ncbi.nlm.nih.gov/16798417/)
+4. Scale the simulation to absolute dose using the N/MU curve provided
+5. Convert Gate's dose-to-material to dose-to-water following [Paganetti2009](https://iopscience.iop.org/article/10.1088/0031-9155/54/14/004/pdf), using the HU-density and HU-RSP curves provided. Gate has the option of calculating dose-to-water on the fly but this slows down the simulations by a factor of about 3
+6. Convert each field's dicom dose into an mhd image and perform a 3D gamma analysis between this and the dose calculated in the simulation
+7. Convert the dose and gamma mhd images into dicom format for easy import and visualization in the treatment planning system
 
 
 ## Limitations / known bugs
 Likely many - feel free to get in touch if you have any questions.
-
-When simulating certain patient positions (HFP for example) Gate will produce the wrong Offset in the
-mhd file. This hasn't been auto-corrected in my script yet.
 
 
 ## Contributing
