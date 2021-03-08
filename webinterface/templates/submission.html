@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+MC submit
+{% endblock %}
+
+
+{% block content %}
+<style>
+form.cent {
+  padding-left: 100px;
+  padding-top: 50px;
+}
+</style>
+<style>
+h3.cent {
+  padding-left: 100px;
+  padding-top: 50px;
+}
+</style>
+
+<h3 class="cent">Submission request</h3>
+
+<form class="cent" action="#" method="post">
+  <div class="row mb-1">
+    <label for="patientid" class="col-sm-1 col-form-label">Patient ID:</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" id="patientid" name="patientid" required>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <label for="plan" class="col-sm-1 col-form-label">Plan:</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" id="plan" name="plan" required>
+    </div>
+  </div>
+
+  <fieldset class="row mb-3">
+    <legend class="col-form-label col-sm-1 pt-0">Options:</legend>
+     <div class="col-sm-5 pt-2">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="let" name="let">
+          <label class="form-check-label" for="let">
+            LET
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="dosetowater" name="dosetowater">
+          <label class="form-check-label" for="dosetowater">
+            Gate's dose-to-water
+          </label>
+        </div>
+    </div>
+  </fieldset>
+  <p><br></p>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
+
+
