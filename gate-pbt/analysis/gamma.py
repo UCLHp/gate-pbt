@@ -271,25 +271,22 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     dcm.SeriesInstanceUID = seriesinstanceuid[:-digits_to_modify] + digits
     #####################################################
     
-    # NOT NECESSARY; USING ORIGINAL FIELD DICOM DOSE
     dcm.PixelSpacing = list( mhd.GetSpacing() )[0:2]
     dcm.ImagePositionPatient =  list( mhd.GetOrigin() )
+    d = mhd.GetDirection() * [1,1,1]
+    dcm.ImageOrientationPatient = [ d[0],0,0, 0,d[1],0 ]
 
     mhdpix = itk.array_from_image(mhd)
-    
-    
+       
     # REPLACE THE -1 DEFAULT GAMMA VALUES  TODO: more robust
     mhdpix[ mhdpix<0 ] = 0
-    
-    
+      
     # mhd.GetLargestPossibleRegion().GetSize() gives [cols, rows, slices]
     # pixel_array.shape gives [slices, rows, cols]
     dcm.NumberOfFrames = mhdpix.shape[0]
-    dcm.Rows = mhdpix.shape[1]            # ARE THESE CORRECT WAY ROUND?
+    dcm.Rows = mhdpix.shape[1]            
     dcm.Columns = mhdpix.shape[2]
     
-    #Is GridFrameOffsetVector always in "relative interpretations"?
-    # TODO: check this is safe
     dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
          
     dose_abs = mhdpix * dosescaling

@@ -43,10 +43,12 @@ def dcm2mhd( dicomfile, outpath=None ):
     # ASSUME THIS IS ALWAYS A DIAGONAL MATRIX WITH VALS +/- 1
     orientation = [ float(x) for x in ds.ImageOrientationPatient]
     zor=None
-    if z_spacing > 0:    ## TODO IS THIS CORRECT?
+    # HOW TO DO THIS CORRECTLY! What info is in the dose dicom file!?  TODO
+    # Can't use GridFrameOffsetVector as always positive
+    if imgpospat[2] < 0:  
         zor = 1
     else:
-        zor = -1  
+        zor = -1
     direction = np.array( orientation + [0,0,zor] )
     mhdtransform = direction.reshape(3,3)    
 
