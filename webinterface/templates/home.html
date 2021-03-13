@@ -5,15 +5,21 @@ MC Home
 {% endblock %}
 
 
+
+{% block navbartext %}
+<p>User: {{username}}<p> 
+{% endblock %}
+
+
 {% block content %}
 <center>
-<h4> <br><br><br> Welcome </h4>
+<h4> <br><br><br> Welcome {{username}}</h4>
 <p> Please ensure the correct dicom files have been exported before submitting your request!</p>
 <p><br><br></p>
 </center>
 
 <center>
-<image src="{{ url_for('static', filename='img/logo200x200.png')}}">
+<a href="/submission"> <image src="{{ url_for('static', filename='img/logo_clear_180x180.png')}}"> </a>
 </center>
 
 {% endblock %}
