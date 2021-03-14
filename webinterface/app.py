@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: Steven Court
-Main app for web interface using flask 
+Main app for web interface using flask and sqlite3
 """
 
 from datetime import timedelta
@@ -9,16 +9,12 @@ from datetime import timedelta
 import sqlite3
 from werkzeug.security import check_password_hash
 from flask import Flask, redirect, url_for, render_template, request, session
-##from flask_login import current_user, logout_user
+
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
 app.permanent_session_lifetime = timedelta(minutes=2)
 app.secret_key = "your_key_here"
-
-#app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///authorized_users.db"
-#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-#db.init_app(app)
 
 
 def check_password(user, password):
@@ -38,7 +34,6 @@ def check_password(user, password):
         return check_password_hash(pwd_hash, password)
     else:
         return False
-
 
 
 
@@ -65,7 +60,7 @@ def login():
         user = request.form["userid"]
         pwd_text = request.form["password"]
         
-        # Check user exists
+        # Check user exists and pwd correct
         if check_password(user,pwd_text): 
             session["user"] = user
             return redirect(url_for("home", username=user))
