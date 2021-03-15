@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css')}}  ">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.ico')}}" type="image/x-icon">
+    <title>MC login</title>
+</head>
+
+
+<body>
+
+
+{% if msg %}
+<div class="alert alert-danger">
+  <strong>&nbsp &nbsp &nbsp &nbsp {{msg}}</strong>
+</div>
+{% endif %}
+
+
+<style>
+form.cent {
+  padding-left: 100px;
+  padding-top: 30px;
+}
+</style>
+<style>
+h4.cent {
+  padding-left: 100px;
+  padding-top:30px;
+}
+</style>
+
+<h4 class=cent>
+  <image src="{{ url_for('static', filename='img/logo_clear_180x180.png')}}">&nbsp &nbsp UCLH Monte Carlo 
+  <p><br></p>Please log in:
+</h4>
+
+<form class=cent action="{{ url_for('login') }}" method="post">
+  <div class="row mb-1">
+    <label for="patientid" class="col-sm-1 col-form-label">User ID:</label>
+    <div class="col-sm-2">
+      <input type="text" class="form-control" id="userid" name="userid" required>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <label for="plan" class="col-sm-1 col-form-label">Password:</label>
+    <div class="col-sm-2">
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+  </div>
+  <p><br></p>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+</body>
+
+
+</html>

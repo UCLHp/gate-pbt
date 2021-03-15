@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="/">Home</a>
+              <a class="nav-link" aria-current="page" href="/home">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/submission">Submit</a>
@@ -24,15 +24,20 @@
             <li class="nav-item">
               <a class="nav-link" href="/help">Help</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log out</a>
+            </li>
           </ul>
           <span class="navbar-text">
-            UCLH proton therapy monte carlo submission
+            {% block navbartext %}{% endblock %}
           </span>
         </div>
       </div>
     </nav>
 
-    {% block content %}{% endblock %}
+    <div class="container-fluid">
+        {% block content %}{% endblock %}
+    </div>    
     
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
