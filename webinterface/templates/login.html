@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 
+
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css')}}  ">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.ico')}}" type="image/x-icon">
@@ -8,50 +9,66 @@
 </head>
 
 
+
+
+
 <body>
 
 
-{% if msg %}
-<div class="alert alert-danger">
-  <strong>&nbsp &nbsp &nbsp &nbsp {{msg}}</strong>
-</div>
-{% endif %}
-
-
-<style>
-form.cent {
-  padding-left: 100px;
-  padding-top: 30px;
-}
-</style>
-<style>
-h4.cent {
-  padding-left: 100px;
-  padding-top:30px;
-}
-</style>
-
-<h4 class=cent>
-  <image src="{{ url_for('static', filename='img/logo_clear_180x180.png')}}">&nbsp &nbsp UCLH Monte Carlo 
-  <p><br></p>Please log in:
-</h4>
-
-<form class=cent action="{{ url_for('login') }}" method="post">
-  <div class="row mb-1">
-    <label for="patientid" class="col-sm-1 col-form-label">User ID:</label>
-    <div class="col-sm-2">
-      <input type="text" class="form-control" id="userid" name="userid" required>
+    {% if msg %}
+    <div class="alert alert-danger">
+      <strong>&nbsp &nbsp &nbsp &nbsp {{msg}}</strong>
     </div>
-  </div>
-  <div class="row mb-1">
-    <label for="plan" class="col-sm-1 col-form-label">Password:</label>
-    <div class="col-sm-2">
-      <input type="password" class="form-control" id="password" name="password" required>
+    {% endif %}
+
+    <div class="row my-5"></div>
+
+    <div class="container">
+      <div class="row mt-5 mb-3">
+        <div class="col-3" ></div>
+        <div class="col-5" >
+                <center>
+                <h4>
+                  <image src="{{ url_for('static', filename='img/logo_clear_180x180.png')}}">
+                  <p><br>UCLH Monte Carlo</p> 
+                </h4>
+                </center>
+        </div>
+        <div class="col-4" ></div>
+        </div>
+      </div>
     </div>
-  </div>
-  <p><br></p>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+
+
+    <div class=container>
+        <form action="{{ url_for('login') }}" method="post">
+      
+          <div class="row my-2">
+            <div class="col-3"></div>
+            <label for="plan" class="col-sm-1 col-form-label">User ID:</label>
+            <div class="col-sm-3">
+               <input type="text" class="form-control" id="userid" name="userid" required>
+            </div>
+          </div>
+
+          <div class="row my-2">
+            <div class="col-3"></div>
+            <label for="plan" class="col-sm-1 col-form-label">Password:</label>
+            <div class="col-sm-3">
+               <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+          </div>
+          
+          <div class="row my-4">
+            <div class="col-4"></div>
+            <div class="col-4">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+
+        </form>
+    <div>
+
 
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 </body>

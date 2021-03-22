@@ -13,7 +13,7 @@ from flask import Flask, redirect, url_for, render_template, request, session
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
-app.permanent_session_lifetime = timedelta(minutes=2)
+app.permanent_session_lifetime = timedelta(minutes=5)
 app.secret_key = "your_key_here"
 
 
@@ -93,7 +93,7 @@ def submission():
                                     let=let, dosetowater=dosetowater)
         else:
             # render page
-            return render_template("submission.html")
+            return render_template("submission.html",username=session["user"])
     else:
         return redirect(url_for("login"))
 
@@ -106,7 +106,11 @@ def summary(patientid, plan, let, dosetowater):
 
 @app.route("/help")
 def help():
-    return render_template("help.html")
+    if "user" not in session:
+        user=""
+    else:
+        user=session["user"]
+    return render_template("help.html",username=user)
 
 
 @app.route('/logout')

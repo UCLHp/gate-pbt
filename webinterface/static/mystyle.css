@@ -1,0 +1,20 @@
+.top-bar{
+  height: 0.75rem;
+}
+.navbar{
+  padding-left: 1rem;
+  font-weight: 500;
+  font-size: 1.2rem;
+  box-shadow: 0.5rem 0.6rem 0.5rem rgba(0,0,0,0.07);
+  z-index: 1;
+}
+.navbar-text{
+  padding-right: 2rem;
+  font-size: 1rem;
+}
+.nav-item{
+  padding: .25rem;
+}
+.nav-link{
+  color: #5b5555;
+}
