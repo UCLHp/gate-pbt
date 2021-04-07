@@ -11,6 +11,19 @@ import configparser
 
 
 
+def get_patient_position( outputdir ):
+    """Return patient position"""
+    ########## ASSUME CONFIG FILE IN /../data
+    parent = dirname(outputdir)
+    configfile = join(parent,"data","simconfig.ini")
+    ########################################
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    patpos = config.get("Image", "patient_position")
+    return patpos
+
+
 def get_fractions( outputdir ):
     """Return required primaries for field"""
     ########## ASSUME CONFIG FILE IN /../data

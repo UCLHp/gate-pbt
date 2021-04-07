@@ -42,7 +42,7 @@ def get_dcm_file_path( outputdir, beamref ):
                 if dcmdose.ReferencedRTPlanSequence[0].ReferencedFractionGroupSequence[0].ReferencedBeamSequence[0].ReferencedBeamNumber == beamref:
                     dcmfile = dcm
             else:
-                print(" -- possible plan dose found rather than field?  {}".format(dcm)  ) 
+                print(" -- possible plan dose found rather than field dose: {}".format(dcm)  ) 
                 ##TODO - WHY IS THIS MISSING? BECAUSE IT WAS A PLAN DOSE AND NOT FIELD DOSE?
                 #dcmfile = dcm
 

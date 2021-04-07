@@ -12,6 +12,20 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
+import easygui
+
+
+def choose_directory():
+    """Choose directory containing acquisition files
+    """
+    msg = "Select data directory"
+    title = "Select data directory"
+    if easygui.ccbox(msg, title):
+        pass
+    else:
+        exit(0)
+    return easygui.diropenbox()
+
 
 def get_pps( file ):
     """Return PPS from each sim"""
@@ -42,16 +56,19 @@ def get_runtime( file ):
 
 if __name__=="__main__":
     
-    outputdir = r"C:\Users\SCOURT01.UCLH\Desktop\45sims_a"
+    
+    #outputdir = r"C:\Users\SCOURT01.UCLH\Desktop\Uncertainty moedlling\zzzHFP_test1--Plan1\output"
+    outputdir = choose_directory()
     
     times = []
     pps = []
     
     allfiles = listdir(outputdir)
-    filelist = sorted(allfiles, key=lambda x: int(x.split("_")[1]) )
-    statfiles = [f for f in filelist if "stat" in f]
-    
-    
+    statfilesonly = [f for f in allfiles if "stat" in f]
+    #filelist = sorted(allfiles, key=lambda x: int(x.split("_")[1]) )
+    statfiles = sorted(statfilesonly, key=lambda x: int(x.split("_")[1]) )
+
+ 
     for file in statfiles:
         path = join(outputdir,file)
         runtime = get_runtime( path )
@@ -62,12 +79,16 @@ if __name__=="__main__":
     times = np.array(times) 
     pps = np.array(pps)
     
+    totaltimehours = sum(times) / (60*60)
+    
     
     print("sim times = ", times)
     print()
     print("Max = ", times.max() )
     print("Min = ", times.min() )
     print("Mean = ", times.mean() )
+    print("Total sim time = {} hrs".format(totaltimehours))
+    
     print()
     print("PPS = ", pps)
     print("PPS MAX = ", pps.max())
@@ -76,8 +97,8 @@ if __name__=="__main__":
     print("PPS STDEV = ", pps.std() )
     
     
-    for f,p in zip(statfiles,pps):
-        print( f,p )
+    #for f,p in zip(statfiles,pps):
+    #    print( f,p )
         
         
     plt.plot(pps)

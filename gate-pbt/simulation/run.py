@@ -180,21 +180,22 @@ def main():
     ct_air = join(sim_dir,"data","ct_air.mhd")
     
     
-    # Convert dicom series to mhd + raw
+    patient_position = pydicom.dcmread(ct_files[0]).PatientPosition
+    config.add_patient_position( CONFIG, patient_position )
+    
     print("Converting dcm CT files to mhd image")
     imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
     
-    # Set all external HUs to air
     print("Overriding all external structures to air")
     ct_air_path = join(sim_dir,"data",ct_air)
     overrides.set_air_external( ct_unmod, struct_file, ct_air_path )
     
+    
     # Check for density overrides and apply
     # TODO
     #overrides.override_hu( ct_unmod, struct_file, join(sim_dir,"data",ct_air), "BODY", -43 )
-    
     
     
     # Crop image to structure
@@ -224,7 +225,7 @@ def main():
     
        
     
-    # Generate all files required for simulation; SPLIT JOBS IN HERE
+    # Generate all files required for simulation
     print("Generating simulation files")
     #generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)
     generatefiles.generate_files(ct_files[0], plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, basename(ct_for_simulation), sim_dir)

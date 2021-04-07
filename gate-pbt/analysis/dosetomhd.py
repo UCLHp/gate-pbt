@@ -11,10 +11,10 @@ import itk
 import pydicom
 
 
-def dcm2mhd( dicomfile, outpath=None ):
+def dcm2mhd( dicomfile, patientposition="HFS", outpath=None ):
     """
-    Convert a dcm dose file into mhd+raw image 
-    """           
+    Convert a dcm field dose file into mhd+raw image 
+    """   
     
     ds = pydicom.dcmread( dicomfile )
     # Must cast to numpy.float32 for ITK to write mhd with ElementType MET_FLOAT
@@ -37,18 +37,15 @@ def dcm2mhd( dicomfile, outpath=None ):
         
     imgpospat = ds.ImagePositionPatient
     xy_spacing = ds.PixelSpacing
-    z_spacing = ds.GridFrameOffsetVector[1]-ds.GridFrameOffsetVector[0]  ##TODO: assumed these are equal but they might not be with our scanner
+    z_spacing = ds.GridFrameOffsetVector[1]-ds.GridFrameOffsetVector[0]  
+    ## (assume z spacings equal, but may not be for some protocols)
     pixelspacing = [xy_spacing[0],xy_spacing[1]] + [z_spacing]
     
-    # ASSUME THIS IS ALWAYS A DIAGONAL MATRIX WITH VALS +/- 1
+    # For CT scan this is always a diagonal matrix wiwth vals +/- 1
     orientation = [ float(x) for x in ds.ImageOrientationPatient]
-    zor=None
-    # HOW TO DO THIS CORRECTLY! What info is in the dose dicom file!?  TODO
-    # Can't use GridFrameOffsetVector as always positive
-    if imgpospat[2] < 0:  
-        zor = 1
-    else:
-        zor = -1
+    ##print("XXX ORIENTATION = ",orientation)
+    # Directionality of z-axis comes from cross product of x and y directions
+    zor = ds.ImageOrientationPatient[0] * ds.ImageOrientationPatient[4]
     direction = np.array( orientation + [0,0,zor] )
     mhdtransform = direction.reshape(3,3)    
 

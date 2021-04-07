@@ -20,6 +20,19 @@ def update_config( configfile, section, key, value ):
         config[section]  =  {key: value } 
     with open(configfile, "w") as q:
         config.write( q )
+        
+        
+def add_patient_position( configfile, patpos ):
+    """Update simconfig.ini with patient position 
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    if config.has_section("Image"):
+        config["Image"]["patient_position"] = patpos
+    else:
+        config["Image"]  =  {"patient_position": patpos } 
+    with open(configfile, "w") as q:
+        config.write( q )
 
 
 def add_fractions( configfile, nfractions ):

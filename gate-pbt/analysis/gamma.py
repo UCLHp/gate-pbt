@@ -65,14 +65,14 @@ def get_gamma_index(ref,target,**kwargs):
     if (np.allclose(ref.GetOrigin(),target.GetOrigin())) and \
        (np.allclose(ref.GetSpacing(),target.GetSpacing())) and \
        (ref.GetLargestPossibleRegion().GetSize() == ref.GetLargestPossibleRegion().GetSize() ):
-        print("Dose images have equal geometry =:)")
+        print("  Dose images have equal geometry =:)")
         return gamma_index_3d_equal_geometry(ref,target,**kwargs)
     else:
-        print("Dose images have different geometry. Correcting...")
+        print("  Dose images have different geometry. Correcting...")
         # Output from resample( img, ref ) has dimensions of ref
         resampled_ref = resample( ref, target )
         #itk.imwrite(resampled_ref, "resampled_mc_dose.mhd")
-        print("Resampled ref (MC) to match target (TPS)")
+        print("  Resampled ref (MC) to match target (TPS)")
         return gamma_index_3d_equal_geometry(resampled_ref,target,**kwargs)        
 
 
