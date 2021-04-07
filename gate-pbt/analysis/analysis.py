@@ -129,7 +129,7 @@ def full_analysis( outputdir ):
     print("\nData directory: ",outputdir)
 
     ## check_integrity( outputdir )  #TODO
-    
+        
     fieldnames = get_field_names( outputdir )
     print("Fields found: ", fieldnames)
     
@@ -147,11 +147,6 @@ def full_analysis( outputdir ):
         
         print("  Correcting dose mhd Offset in merged files")
         correct_offset( mergedfiles, field )
-        
-        # TODO #### Perhaps only necessary if using the mhd?
-        #   Could ignore if we just deal with dicom doses (gamma analysis)?
-        # print("  Correcting mhd Offset in merged files")
-        # correct_offwet(mergedfiles)
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
@@ -186,7 +181,7 @@ def full_analysis( outputdir ):
             dosetodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
                      
             print("  Performing gamma analysis")
-            tps_dose = dosetomhd.dcm2mhd( path_to_dcmdose )
+            tps_dose = dosetomhd.dcm2mhd( path_to_dcmdose) 
             gamma_img = gamma.gamma_image( tps_dose, d2wimg )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
@@ -208,7 +203,6 @@ def full_analysis( outputdir ):
             
             print("  Converting Gate dose-to-water to dicom")
             beamref = config.get_beam_ref_no( outputdir, field )
-            print("    beam_ref_no = ",beamref)
             path_to_dcmdose = dosetodicom.get_dcm_file_path( outputdir, beamref )
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")

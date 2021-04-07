@@ -9,6 +9,7 @@ total number of CPs, spots and MUs binned by energy.
 """
 import pydicom
 import matplotlib.pyplot as plt
+import easygui
 
 
 
@@ -69,8 +70,8 @@ def plot_relative_cp_sim_time( fieldname, energies, tot_mus ):
         tot_prims += primaries
     
     times_rel = [ t/sum(times)*100 for t in times ]    
-    print("Relative CP simulation times (%) for field '{}':".format(fieldname))
-    print(times_rel)
+    #print("Relative CP simulation times (%) for field '{}':".format(fieldname))
+    #print(times_rel)
     
     
     #times_norm = [ t/max(times) for t in times ]    
@@ -195,7 +196,9 @@ def main():
     #DICOM_PLAN = "RN.ZZ_Proton_COP.Layer.dcm"
     
     
-    DICOM_PLAN = r"M:\vGATE-GEANT4\_dcm_data\DCM_zzzBaseSkull05\RN.1.2.246.352.71.5.179454110911.38673.20201217164318.dcm"
+    #DICOM_PLAN = r"M:\vGATE-GEANT4\_dcm_data\DCM_zzzBaseSkull05\RN.1.2.246.352.71.5.179454110911.38673.20201217164318.dcm"
+    
+    DICOM_PLAN = easygui.fileopenbox()
 
 
 
