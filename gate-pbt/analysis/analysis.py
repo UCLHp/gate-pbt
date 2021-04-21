@@ -20,8 +20,8 @@ import itk
 import config
 import mergeresults
 import dosetowater
-import dosetodicom
-import dosetomhd
+import mhdtodicom
+import dicomtomhd
 import gamma
 
 
@@ -137,9 +137,8 @@ def full_analysis( outputdir ):
         
         print("Analyzing field: ", field)
 
-        # Merge all results and return list of files produced
-        mergedfiles = mergeresults.merge_results( outputdir, field )
         print("  Merging results...")
+        mergedfiles = mergeresults.merge_results( outputdir, field )
         print("  Merged files: ", [basename(f) for f in mergedfiles])
         
         print("  Correcting mhd TransformMatrix in merged files")
@@ -157,7 +156,6 @@ def full_analysis( outputdir ):
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
         print("  Fractions planned: ",nfractions)
-        #print("  Dose scaling: ",scalefactor)
         
         dose = field+"_merged-Dose.mhd"
         if dose in [basename(f) for f in mergedfiles]:
@@ -175,13 +173,13 @@ def full_analysis( outputdir ):
             print("  Converting mhd dose to dicom")
             beamref = config.get_beam_ref_no( outputdir, field )
             print("    beam_ref_no = ",beamref)
-            path_to_dcmdose = dosetodicom.get_dcm_file_path( outputdir, beamref )
+            path_to_dcmdose = mhdtodicom.get_dcm_file_path( outputdir, beamref )
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
-            dosetodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
+            mhdtodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
                      
             print("  Performing gamma analysis")
-            tps_dose = dosetomhd.dcm2mhd( path_to_dcmdose) 
+            tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose) 
             gamma_img = gamma.gamma_image( tps_dose, d2wimg )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
@@ -190,7 +188,7 @@ def full_analysis( outputdir ):
             # Make dcm for gamnma image for visualizaiton
             print("  Converting gamma image to dicom")
             gamma_dcm = join(outputdir, field+"_Gamma.dcm")
-            gamma.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
+            mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
 
             
             
@@ -203,10 +201,10 @@ def full_analysis( outputdir ):
             
             print("  Converting Gate dose-to-water to dicom")
             beamref = config.get_beam_ref_no( outputdir, field )
-            path_to_dcmdose = dosetodicom.get_dcm_file_path( outputdir, beamref )
+            path_to_dcmdose = mhdtodicom.get_dcm_file_path( outputdir, beamref )
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
-            dosetodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
+            mhdtodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
 
         
 
