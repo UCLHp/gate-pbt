@@ -3,7 +3,7 @@
 @author: Steven Court
 
 Method to convert dicom field dose file to mhd format for use
-into GateTools' gamma analysis function
+in GateTools' gamma analysis function
 """
 
 from math import isclose

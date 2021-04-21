@@ -4,6 +4,8 @@
 Main app for web interface using flask and sqlite3
 """
 
+import sys
+from os.path import join, isfile
 from datetime import timedelta
 
 import sqlite3
@@ -11,10 +13,17 @@ from werkzeug.security import check_password_hash
 from flask import Flask, redirect, url_for, render_template, request, session
 
 
+
+DB_PATH = join(sys.path[0], "authorized_users.db")
+
+
+
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
 app.permanent_session_lifetime = timedelta(minutes=5)
 app.secret_key = "your_key_here"
+
+
 
 
 def check_password(user, password):
@@ -24,7 +33,7 @@ def check_password(user, password):
     Returns True/False
     """
     # Connect to sqlite3 db
-    connection = sqlite3.connect("authorized_users.db")
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
     # Get hashed password
     cursor.execute('''SELECT pwd FROM users WHERE userid=?''', (user,))
@@ -98,7 +107,6 @@ def submission():
         return redirect(url_for("login"))
 
 
-
 @app.route("/summary")
 def summary(patientid, plan, let, dosetowater):
     return render_template("summary.html")
@@ -122,5 +130,14 @@ def logout():
    return redirect(url_for("login"))
    
 
+
+
+
 if __name__== "__main__":
-    app.run(debug=True)
+    
+    #Check if user db exists; exit if not
+    if not isfile(DB_PATH):
+        print("No user database detected. Run authorized_users.py first")
+        exit(0)
+    else:
+        app.run(debug=True)

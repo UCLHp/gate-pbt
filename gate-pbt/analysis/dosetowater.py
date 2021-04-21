@@ -12,10 +12,10 @@ import itk
 import numpy as np
 
 
-# TEMPORARY FIX - REMOVE THIS / just set dose outside patient to zero
+# TEMPORARY FIX - REMOVE THIS
 # Ignore conversion for air / where HU-RSP extrapolation not reliable.
-# Set dose to zero here
-HU_CUTOFF = -900
+# Set dose to zero here; below this we'd get -ve RSP and so -ve dose
+HU_CUTOFF = -975
 
 
 

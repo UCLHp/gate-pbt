@@ -8,14 +8,18 @@ exist for users to access the interface.
 Both the database and users table (userid, pwd) 
 will be created if they do not already exist
 """
-
+import sys
+from os.path import join
 import sqlite3
 from sqlite3 import Error
 from werkzeug.security import generate_password_hash
 from getpass import getpass
 
 
-DB_PATH = "authorized_users.db"
+#print(sys.argv[0])
+#print(__file__)
+
+DB_PATH = join(sys.path[0], "authorized_users.db")
 
 
 def add_user():

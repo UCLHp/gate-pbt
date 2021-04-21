@@ -73,12 +73,14 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     """
     
     if dosescaling==None:
-        #print("No dose scaling specified")
         dosescaling = 1
+    else:
+        print("  Dose scaling of {} used in mhd2dcm".format(dosescaling))
     
     dcm = pydicom.dcmread(dcmFile)
     mhd=None
     if type(mhdFile)==str:
+        # Assume file path
         mhd = itk.imread(mhdFile)
     else:
         #Assume image
@@ -113,6 +115,10 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     dcm.ImageOrientationPatient = [ d[0],0,0, 0,d[1],0 ]
 
     mhdpix = itk.array_from_image(mhd)
+    
+    # Replace the default -1 values in gamma image
+    # Can't have -ve values in a dicom dose file
+    # mhdpix[ mhdpix<0 ] = 0
     
     dcm.NumberOfFrames = mhdpix.shape[0]
     dcm.Rows = mhdpix.shape[1]            

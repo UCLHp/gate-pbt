@@ -16,10 +16,8 @@ Low 1998 uses TPS dose as target and measured dose as ref
        -> Use TPS as target and monte carlo as ref
 """
 
-import random
 import numpy as np
 import itk
-import pydicom
 
 #import logging
 #logger=logging.getLogger(__name__)
@@ -157,7 +155,7 @@ def gamma_index_3d_equal_geometry(imgref,imgtarget,dta=3.,dd=3., ddpercent=True,
 def gamma_image( ref_dose, target_dose ):
     """ Gamma analysis of MC and TPS beam dose using GateTools
     
-    Return accepts ITK-like image, or path to image
+    Accepts ITK-like image, or path to image
     Returns image matching dimensions of target
     Set ref -> MC dose, target -> Monte Carlo dose
     """    
@@ -175,7 +173,7 @@ def gamma_image( ref_dose, target_dose ):
              
     max_tps_dose = np.max( targ )
     ##print("    max tps dose = ", max_tps_dose)
-    gamma_threshold = max_tps_dose * DOSE_THRESHOLD   ## TODO: SENSIBLE THRESHOLD??
+    gamma_threshold = max_tps_dose * DOSE_THRESHOLD   
     
     gamma = get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)   
     return gamma
@@ -224,96 +222,6 @@ def resample( img, refimg ):
 
 
 
-
-
-
-#TODO; THESE ARE ALREADY IN dosetodicom.py; combine
-
-def rand_digits_str( digits_to_modify ):
-    """
-    Return a zero-padded random 4 digit string to modify the dicom UIDs
-    """
-    limit = 10**digits_to_modify - 1
-    return str( int(random.random()*limit) ).zfill(digits_to_modify)
-
-
-def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
-    """
-    Takes mhd dose from Gate and the dicom dose file corresponding field,
-    modifes appropriate dicom fields for import into Eclipse.
-    
-    Optional scaling of dose    
-    """
-    
-    if dosescaling==None:
-        #print("No dose scaling specified")
-        dosescaling = 1
-    
-    dcm = pydicom.dcmread(dcmFile)
-    mhd=None
-    if type(mhdFile)==str:
-        mhd = itk.imread(mhdFile)
-    else:
-        #Assume image
-        mhd = mhdFile  ##TODO: TIDY THIS
-    
-    ###### Alter UID tags  -- 
-    # Patient > Study > Series > Instance
-    # TODO: what exactly needs changed? In Eclipse v16 we can just directly
-    # import field doses and these don't matter (as long as patient name, 
-    # patient ID and patient geometry FrameOfReferenceUID match)
-    digits_to_modify = 4
-    digits = rand_digits_str( digits_to_modify )
-    
-    # StudyInstanceUID links dose, plan, structure set and images
-    #studyinstanceuid = dcm.StudyInstanceUID 
-    #dcm.StudyInstanceUID = studyinstanceuid[:-digits_to_modify] + digits
-    
-    # Dose SeriesInstanceUID does not match in plan / image
-    # It will match in all files in a given scan
-    seriesinstanceuid = dcm.SeriesInstanceUID 
-    dcm.SeriesInstanceUID = seriesinstanceuid[:-digits_to_modify] + digits
-    
-    # SOPInstanceUID unique to specific FILE
-    sopinstanceuid = dcm.SOPInstanceUID 
-    dcm.SOPInstanceUID = sopinstanceuid[:-digits_to_modify] + digits
-    #####################################################
-    
-    dcm.PixelSpacing = list( mhd.GetSpacing() )[0:2]
-    dcm.ImagePositionPatient =  list( mhd.GetOrigin() )
-    d = mhd.GetDirection() * [1,1,1]
-    dcm.ImageOrientationPatient = [ d[0],0,0, 0,d[1],0 ]
-
-    mhdpix = itk.array_from_image(mhd)
-       
-    # REPLACE THE -1 DEFAULT GAMMA VALUES  TODO: more robust
-    mhdpix[ mhdpix<0 ] = 0
-      
-    # mhd.GetLargestPossibleRegion().GetSize() gives [cols, rows, slices]
-    # pixel_array.shape gives [slices, rows, cols]
-    dcm.NumberOfFrames = mhdpix.shape[0]
-    dcm.Rows = mhdpix.shape[1]            
-    dcm.Columns = mhdpix.shape[2]
-    
-    dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
-         
-    dose_abs = mhdpix * dosescaling
-    
-    scale_to_int = 1E4   
-    mhd_scaled = dose_abs * scale_to_int
-    mhd_scaled = mhd_scaled.astype(int)       
-    dcm.PixelData = mhd_scaled.tobytes()
-    
-    dcm_scaling = 1.0/scale_to_int
-    dcm.DoseGridScaling = dcm_scaling  
-   
-    dcm.save_as( output )
-    
-    
-    
-    
-    
-    
     
     
     
