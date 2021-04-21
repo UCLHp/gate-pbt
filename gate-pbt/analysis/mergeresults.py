@@ -119,8 +119,8 @@ def combine_let( dosefiles, letfiles, outname):
         totlet = np.zeros( nvoxels )      
         # File lists must be in same order - TODO: CHECK
         for fdose,flet in zip(dosefiles, letfiles):
-            dose = itk.array_from_image(itk.imread(fdose).flatten() )
-            let = itk.array_from_image(itk.imread(flet).flatten() )               
+            dose = itk.array_from_image(itk.imread(fdose)).flatten()
+            let = itk.array_from_image(itk.imread(flet)).flatten()               
             for i in range(len(totlet)):
                 if sumdose[i]!=0:
                     totlet[i] += let[i]*(dose[i]/sumdose[i])
