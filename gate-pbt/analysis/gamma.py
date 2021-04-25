@@ -13,7 +13,7 @@ resampling the MC dose to match the dimensions of the TPS dose.
 for certain non-HFS patient positions).
 
 Low 1998 uses TPS dose as target and measured dose as ref
-       -> Use TPS as target and monte carlo as ref
+       -> Use TPS as target and Monte Carlo as ref
 """
 
 import numpy as np
@@ -67,7 +67,7 @@ def get_gamma_index(ref,target,**kwargs):
         return gamma_index_3d_equal_geometry(ref,target,**kwargs)
     else:
         print("  Dose images have different geometry. Correcting...")
-        # Output from resample( img, ref ) has dimensions of ref
+        # Output from resample( img1, img2 ) has dimensions of img2
         resampled_ref = resample( ref, target )
         #itk.imwrite(resampled_ref, "resampled_mc_dose.mhd")
         print("  Resampled ref (MC) to match target (TPS)")
@@ -157,7 +157,7 @@ def gamma_image( ref_dose, target_dose ):
     
     Accepts ITK-like image, or path to image
     Returns image matching dimensions of target
-    Set ref -> MC dose, target -> Monte Carlo dose
+    Set ref -> MC dose, target -> TPS dose
     """    
     ref, targ = None, None 
     if type(ref_dose)==str:

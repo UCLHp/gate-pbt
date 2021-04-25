@@ -13,6 +13,8 @@ Automated analysis of Gate simulation output:
 import sys
 import os
 from os.path import join, basename
+from pathlib import Path
+
 
 import easygui
 import itk
@@ -128,6 +130,16 @@ def full_analysis( outputdir ):
     """ 
     print("\nData directory: ",outputdir)
 
+
+    # Get absolute path to template/data files
+    base_path = Path(__file__).parent
+    path_to_templates = (base_path / "../../data/templates").resolve()
+    
+    #TODO: read this from config file
+    material_db = "patient-HUmaterials_UCLHv1.db"
+    material_db_path = join(path_to_templates, material_db)
+
+
     ## check_integrity( outputdir )  #TODO
         
     fieldnames = get_field_names( outputdir )
@@ -168,7 +180,7 @@ def full_analysis( outputdir ):
             ctpath = config.get_ct_path( outputdir )
             ##ctpath = os.path.join( outputdir, ctname )
             d2wimg = join(outputdir, field+"_AbsoluteDoseToWater.mhd")
-            dosetowater.convert_dose_to_water( ctpath, scaledimg, output=d2wimg )
+            dosetowater.convert_dose_to_water( ctpath, scaledimg, material_db_path, output=d2wimg )
             
             print("  Converting mhd dose to dicom")
             beamref = config.get_beam_ref_no( outputdir, field )
@@ -180,7 +192,7 @@ def full_analysis( outputdir ):
                      
             print("  Performing gamma analysis")
             tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose) 
-            gamma_img = gamma.gamma_image( tps_dose, d2wimg )
+            gamma_img = gamma.gamma_image(  d2wimg, tps_dose )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
             print("    gamma pass rate = {}%".format( round(pass_rate,2) ))
