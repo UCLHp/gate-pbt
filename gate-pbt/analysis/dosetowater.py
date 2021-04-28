@@ -17,7 +17,7 @@ import numpy as np
 # Set dose to zero here; below this we'd get -ve RSP and so -ve dose
 # USE RSP OF AIR WHEN HU < -950 (OR WHATEVER MIN HU IS IN MATERIALS DB)
 
-HU_CUTOFF = -940        # i.e. what is defined as air in Gate
+HU_CUTOFF = -950        # i.e. what is defined as air in Gate
 RSP_AIR = 0.001075      # from materials db and emcalc
 DENSITY_AIR = 1.21E-3   # (g/cm^3)
 

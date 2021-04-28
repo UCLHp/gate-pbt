@@ -15,7 +15,6 @@ import os
 from os.path import join, basename
 from pathlib import Path
 
-
 import easygui
 import itk
 
@@ -191,7 +190,7 @@ def full_analysis( outputdir ):
             mhdtodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
                      
             print("  Performing gamma analysis")
-            tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose) 
+            tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
             gamma_img = gamma.gamma_image(  d2wimg, tps_dose )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
