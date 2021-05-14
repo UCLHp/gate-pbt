@@ -49,7 +49,7 @@ def get_sp_water( emCalc_filename )   :
         if cols[0].lower()=="water":
             sp_water = float(cols[7])
     f.close()
-    if sp_water==999:
+    if sp_water == -999:
         print("ERROR - NO WATER ENTRY IN DATA")
     #print(sp_water)
     return sp_water

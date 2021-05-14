@@ -243,60 +243,53 @@ def write_mac_file(template, output, planDescription,
     with open(output,'w') as out:
         for line in open( template, "r" ):
             
-            if "/patient/placement/setRotationAngle" in line and setRotationAngle is not None:
-                out.write( "/gate/patient/placement/setRotationAngle    {} deg\n".format( setRotationAngle  ) )
-                
-            elif "patient/placement/setRotationAxis" in line and setRotationAxis is not None:
-                out.write( "/gate/patient/placement/setRotationAxis    {} {} {}\n".format(
-                    setRotationAxis[0],setRotationAxis[1],setRotationAxis[2]) 
-                    )
+            towrite = None
             
+            if "/patient/placement/setRotationAngle" in line and setRotationAngle is not None:
+                towrite="/gate/patient/placement/setRotationAngle    {} deg\n".format( setRotationAngle  )            
+            elif "patient/placement/setRotationAxis" in line and setRotationAxis is not None:
+                towrite="/gate/patient/placement/setRotationAxis    {} {} {}\n".format(
+                    setRotationAxis[0],setRotationAxis[1],setRotationAxis[2])                             
             elif "/patient/placement/setTranslation" in line and setTranslation is not None:
-                out.write( "/gate/patient/placement/setTranslation    {} {} {} mm\n".format(
+                towrite="/gate/patient/placement/setTranslation    {} {} {} mm\n".format(
                         setTranslation[0],setTranslation[1],setTranslation[2] )
-                         )
             
             elif "setPlan" in line and planDescription is not None:
-                out.write( "/gate/source/PBS/setPlan    {{path}}/data/{}\n".format(planDescription) )
+                towrite="/gate/source/PBS/setPlan    {{path}}/data/{}\n".format(planDescription)
             
             elif "dose3d/setVoxelSize" in line and setVoxelSize is not None:
-                out.write( "/gate/actor/dose3d/setVoxelSize    {} {} {} mm\n".format(
-                    setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] ) 
-                    )
-            
+                towrite="/gate/actor/dose3d/setVoxelSize    {} {} {} mm\n".format(
+                    setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] )            
             elif "let3d/setVoxelSize" in line and setVoxelSize is not None:    
-                toprint = "/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
-                          setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] 
-                          )
-                if line[0]=="#":
-                    out.write( "#"+toprint)
-                else:
-                    out.write(toprint)
-                
-            
+                towrite="/gate/actor/let3d/setVoxelSize    {} {} {} mm\n".format(
+                          setVoxelSize[0],setVoxelSize[1],setVoxelSize[2] )
+                           
             elif "patient/geometry/setImage" in line and setImage is not None:
-                out.write( "/gate/patient/geometry/setImage    {{path}}/data/{}\n".format(setImage) )    
+                towrite="/gate/patient/geometry/setImage    {{path}}/data/{}\n".format(setImage)  
                 
             elif  "rangeshifter/placement/setRotationAngle" in line and rangeshift_rot is not None:
-                out.write( "/gate/rangeshifter/placement/setRotationAngle    {} deg\n".format(rangeshift_rot) )
+                towrite="/gate/rangeshifter/placement/setRotationAngle    {} deg\n".format(rangeshift_rot)
                 
             elif "rangeshifter/placement/setTranslation" in line and rangeshift_trans is not None:
-                out.write( "/gate/rangeshifter/placement/setTranslation    {} {} {} mm\n".format(
+                towrite="/gate/rangeshifter/placement/setTranslation    {} {} {} mm\n".format(
                     rangeshift_trans[0],rangeshift_trans[1],rangeshift_trans[2]) 
-                    )
             elif "rangeshifter/geometry/setYLength" in line and rangeshift_thick is not None:
-                out.write("/gate/rangeshifter/geometry/setYLength    {} mm\n".format(rangeshift_thick) )
+                towrite="/gate/rangeshifter/geometry/setYLength    {} mm\n".format(rangeshift_thick)
                 
                 
-            else:
+            if towrite is None:
                 out.write(line)
+            else:
+                # Preserve commented lines in template
+                if line[0]=="#":
+                    towrite="#"+towrite
+                out.write(towrite)
 
 
 
 def field_has_rangeshifter( field ):
     """Return true if field has rangeshifter"""
     return hasattr(field.IonControlPointSequence[0],"RangeShifterSettingsSequence")
-
 
 
 
@@ -324,8 +317,8 @@ def calc_dose_offset( mhdimgpath, dcmdose ):
 
 
 
-## TODO: THIS METHOD SHOULD BE FIELD SPECIFIC AS IN FUTURE WE MIGHT HAVE DIFFERENT IMAGES
-##    FOR EACH FIELD, CROPPED FOR MINIMUM MEMORY USAGE
+## TODO: THIS METHOD SHOULD BE FIELD SPECIFIC AS IN FUTURE WE MIGHT HAVE 
+##    DIFFERENT IMAGES FOR EACH FIELD, CROPPED FOR MINIMUM MEMORY USAGE
     
 ##def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
 def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):

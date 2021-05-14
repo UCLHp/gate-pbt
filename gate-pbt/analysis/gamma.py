@@ -13,14 +13,15 @@ resampling the MC dose to match the dimensions of the TPS dose.
 for certain non-HFS patient positions).
 
 Low 1998 uses TPS dose as target and measured dose as ref
-       -> Use TPS as target and monte carlo as ref
+       -> Use TPS as target and Monte Carlo as ref
 """
 
 import numpy as np
 import itk
 
-#import logging
-#logger=logging.getLogger(__name__)
+from gatetools import gamma_index as gi
+
+import reorientate
 
 
 
@@ -33,6 +34,12 @@ DOSE_THRESHOLD = 0.1    # Absolute threshold = this * max tps dose
 
 
 
+
+''' From gatetools
+########################################################################################
+########################################################################################
+#import logging
+#logger=logging.getLogger(__name__)
 
 def _reldiff2(dref,dtarget,ddref):
     """
@@ -67,7 +74,7 @@ def get_gamma_index(ref,target,**kwargs):
         return gamma_index_3d_equal_geometry(ref,target,**kwargs)
     else:
         print("  Dose images have different geometry. Correcting...")
-        # Output from resample( img, ref ) has dimensions of ref
+        # Output from resample( img1, img2 ) has dimensions of img2
         resampled_ref = resample( ref, target )
         #itk.imwrite(resampled_ref, "resampled_mc_dose.mhd")
         print("  Resampled ref (MC) to match target (TPS)")
@@ -144,12 +151,9 @@ def gamma_index_3d_equal_geometry(imgref,imgtarget,dta=3.,dd=3., ddpercent=True,
     gimg.CopyInformation(imgtarget)
     #logger.debug(f"Computed {nmask} gamma values assuming EQUAL geometry in target and reference")
     return gimg
-
-
-
 ############################################################################
 ############################################################################
-
+'''
 
 
 def gamma_image( ref_dose, target_dose ):
@@ -157,7 +161,7 @@ def gamma_image( ref_dose, target_dose ):
     
     Accepts ITK-like image, or path to image
     Returns image matching dimensions of target
-    Set ref -> MC dose, target -> Monte Carlo dose
+    Set ref -> MC dose, target -> TPS dose
     """    
     ref, targ = None, None 
     if type(ref_dose)==str:
@@ -170,12 +174,19 @@ def gamma_image( ref_dose, target_dose ):
         targ = itk.imread( target_dose )
     else:
         targ = target_dose    
+        
+        
+    # Force +ve axes directionality for gatetools methods
+    #   --> No need to resample dose images
+    targ = reorientate.force_positive_directionality( targ )
+    ref = reorientate.force_positive_directionality( ref )
+    
              
     max_tps_dose = np.max( targ )
     ##print("    max tps dose = ", max_tps_dose)
     gamma_threshold = max_tps_dose * DOSE_THRESHOLD   
+    gamma = gi.get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)  
     
-    gamma = get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)   
     return gamma
 
 
@@ -194,8 +205,13 @@ def get_pass_rate( gamma_img ):
 
 
 
+'''
 def resample( img, refimg ):
-    """ Resample image to same dimensions as reference """ 
+    """ Resample image to same dimensions as reference 
+    
+    No: Can we just simply resample a dose grid like this?
+        Should there not be some mas-weighting?
+    """ 
 
     spacing = refimg.GetSpacing()
     origin = refimg.GetOrigin()
@@ -216,7 +232,7 @@ def resample( img, refimg ):
 
     resampleFilter.Update()
     return resampleFilter.GetOutput()
-
+'''
 
 
 
