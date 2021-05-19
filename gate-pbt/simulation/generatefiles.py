@@ -349,8 +349,8 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
         config.add_beam_ref_no( CONFIG, beamname, beam_ref_no )
         
         # Calculate correct origin for dose output
-        # TODO: THIS MAY BE FIELD SPECIFIC IF WE DO ANYTHING CLEVER WITH
-        #   IMAGE CROPPING.
+        # THIS IS NO LONGER IMPORTED INTO SIMULATION OUTPUT.
+        # CHECK THAT IT IS REDUNDANT BEFORE REMOVAL.
         dose_origin = calc_dose_offset( mhdimgpath, dose_files[0] )   #OKKKK
         config.add_correct_dose_offset(CONFIG, beamname, dose_origin)
         
@@ -388,8 +388,8 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
     
         ##### Split field mac file here ####
         # Simulate Nreq/2000 for reasonable stats
-        splits = 50 
-        nprotons = int( req_prims[field.BeamName]/2000 )      
+        splits = 20 
+        nprotons = int( req_prims[field.BeamName]/50000 )      
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
  

@@ -9,8 +9,8 @@ Methods to apply HU overrides directly to image pixels. Should:
 
 import itk
 import pydicom
-#import gatetools.roi_utils as rt
-import roiutils
+import gatetools.roi_utils as roiutils
+##import roiutils
 
 
 ########################

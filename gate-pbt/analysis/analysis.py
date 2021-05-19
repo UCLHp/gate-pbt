@@ -98,30 +98,31 @@ def correct_transform_matrix( mergedfiles ):
                     out.write(line)
                     
                     
-                    
-def correct_offset( mergedfiles, field ):
-    """Set correct mhd Offset param for Gate output
-    
-    Gate calculates this wrong for non-HFS orientations
-    """
-    
-    offset = config.get_offset( outputdir, field )
-    
-    for mf in mergedfiles:
-        file = open(mf, "r")
-        lines = file.readlines()
-        file.close()
-        with open(mf,"w") as out:
-            for line in lines:
-                if "Offset" in line:
-                    out.write("Offset = {}\n".format(offset))
-                else:
-                    out.write(line)
+
+# Correction only needed if the original mhd image used in the simulation
+# was not reorientated to have positive directionality, i.e. with
+# TransformMatrix = 1 0 0 0 1 0 0 0 1. Gate was giving the wrong mhd Offset
+# parameter for the dose output when this was not the case (non-HFS).     
+#                    
+#def correct_offset( mergedfiles, field ):
+#    """Set correct mhd Offset param for Gate output
+#    
+#    Gate calculates this wrong for non-HFS orientations
+#    """
+#    
+#    offset = config.get_offset( outputdir, field )
+#    
+#    for mf in mergedfiles:
+#        file = open(mf, "r")
+#        lines = file.readlines()
+#        file.close()
+#        with open(mf,"w") as out:
+#            for line in lines:
+#                if "Offset" in line:
+#                    out.write("Offset = {}\n".format(offset))
+#                else:
+#                    out.write(line)
         
-
-
-
-
 
 
 def full_analysis( outputdir ):
@@ -155,8 +156,9 @@ def full_analysis( outputdir ):
         print("  Correcting mhd TransformMatrix in merged files")
         correct_transform_matrix(mergedfiles)
         
-        print("  Correcting dose mhd Offset in merged files")
-        correct_offset( mergedfiles, field )
+        # No longer required since we reorientate all images 
+        #print("  Correcting dose mhd Offset in merged files")
+        #correct_offset( mergedfiles, field )
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )

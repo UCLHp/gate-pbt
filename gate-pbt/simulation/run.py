@@ -13,12 +13,14 @@ from pathlib import Path
 
 import pydicom
 import easygui
+import itk
 
+import reorientate
 import imageconversion
 import overrides
 import generatefiles
 import config
-import cropdicom
+import cropimage
 
 
 
@@ -137,11 +139,6 @@ def search_dcm_dir( input_dir ):
 
 
 
-
-
-
-
-
 def main():
     
     # Get absolute path to template files and destination of simulation files
@@ -176,10 +173,11 @@ def main():
     # Define simconfig.ini configuration file
     CONFIG = join(sim_dir, "data", "simconfig.ini")
  
+    #Defining some path names for intermediate images for debugging
     ct_unmod = join(sim_dir,"data","ct_orig.mhd")  ##path or name?
+    ct_reorientate = join(sim_dir, "data", "ct_orig_reorientate.mhd")
     ct_air = join(sim_dir,"data","ct_air.mhd")
-    
-    
+      
     patient_position = pydicom.dcmread(ct_files[0]).PatientPosition
     config.add_patient_position( CONFIG, patient_position )
     
@@ -187,29 +185,29 @@ def main():
     imageconversion.dcm2mhd(CT_DIR, ct_unmod)
     ##imageconversion.dcm2mhd_gatetools(ct_files)
     
+    print("Reorientating image to enforce positive directionality")
+    img_reor=reorientate.force_positive_directionality(ct_unmod)
+    itk.imwrite( img_reor, ct_reorientate)    
     
     print("Overriding all external structures to air")
     ct_air_path = join(sim_dir,"data",ct_air)
-    overrides.set_air_external( ct_unmod, struct_file, ct_air_path )
-    
-    
+    #overrides.set_air_external( ct_unmod, struct_file, ct_air_path )
+    overrides.set_air_external( ct_reorientate, struct_file, ct_air_path )  #  USE REORIENTATED IMG
+      
     # Check for density overrides and apply
     # TODO
     #overrides.override_hu( ct_unmod, struct_file, join(sim_dir,"data",ct_air), "BODY", -43 )
-    
     
     # Crop image to structure
     ext_contour = overrides.get_external_name( struct_file )
     print("Cropping img to ", ext_contour)
     cropped_img_path = join(sim_dir,"data","ct_cropped.mhd")
-    cropdicom.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
+    cropimage.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
 
     # TODO: SET THIS AUTOMATICALLY IF CROPPING OR NOT
     #ct_for_simulation = ct_air
     ct_for_simulation = cropped_img_path
     
-    
-
     # Add number fractions to config
     nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
     config.add_fractions( CONFIG, nfractions )
@@ -217,14 +215,11 @@ def main():
     config.add_ct_to_config( CONFIG, basename(ct_for_simulation) )
     # Add ct transform matrix to simconfig.ini
     config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
-    
-    
+      
     # Copy over dicom dose files to /data
     print("Copying dcm dose files over")
     copy_dcm_doses( dose_files, join(sim_dir,"data") )   
-    
-       
-    
+      
     # Generate all files required for simulation
     print("Generating simulation files")
     #generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)

@@ -25,8 +25,8 @@ import itk
 def force_positive_directionality( image ):
     """Return altered mhd image with positive axes directionality
     
-    Accept path to mhd image (or itk image)
-    Return mhd image
+    Accepts path to mhd image or itk image object
+    Returns mhd image
     """
     
     #img = itk.imread(imgpath)
