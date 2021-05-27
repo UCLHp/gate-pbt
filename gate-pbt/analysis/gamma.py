@@ -19,11 +19,10 @@ Low 1998 uses TPS dose as target and measured dose as ref
 import numpy as np
 import itk
 
-from gatetools import gamma_index as gi
+#from gatetools import gamma_index as gi
+import gamma_index
 
 import reorientate
-
-
 
 
 ########################################################################
@@ -34,7 +33,7 @@ DOSE_THRESHOLD = 0.1    # Absolute threshold = this * max tps dose
 
 
 
-def gamma_image( ref_dose, target_dose ):
+def gamma_image( ref_dose, target_dose, prescription ):
     """ Gamma analysis of MC and TPS beam dose using GateTools
     
     Accepts ITK-like image, or path to image
@@ -63,7 +62,8 @@ def gamma_image( ref_dose, target_dose ):
     max_tps_dose = np.max( targ )
     ##print("    max tps dose = ", max_tps_dose)
     gamma_threshold = max_tps_dose * DOSE_THRESHOLD   
-    gamma = gi.get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)  
+    #gamma = gi.get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)  
+    gamma = gamma_index.get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)  
     
     return gamma
 
@@ -82,11 +82,20 @@ def get_pass_rate( gamma_img ):
     return pass_rate
 
 
-
-
-
-
-
+    
+    
+    
+if __name__=="__main__":
+    tps_dose = itk.imread("EclipseDose.mhd")
+    mc_dose = itk.imread("Gatedose.mhd")
+    
+    # Low 1998 uses TPS dose as target and measured dose as ref
+    #        -> Use TPS as target and monte carlo as ref
+    gamma_img = gamma_image( mc_dose, tps_dose )  #(ref, targ)
+    itk.imwrite(gamma_img, "gamma_img.mhd")
+ 
+    pass_rate = get_pass_rate( gamma_img )
+    print("  Gamma pass rate = {}%".format( round(pass_rate,2) ))
 
 
 
@@ -121,20 +130,4 @@ def resample( img, refimg ):
 '''
 
 
-
-
-    
-    
-    
-if __name__=="__main__":
-    tps_dose = itk.imread("EclipseDose.mhd")
-    mc_dose = itk.imread("Gatedose.mhd")
-    
-    # Low 1998 uses TPS dose as target and measured dose as ref
-    #        -> Use TPS as target and monte carlo as ref
-    gamma_img = gamma_image( mc_dose, tps_dose )  #(ref, targ)
-    itk.imwrite(gamma_img, "gamma_img.mhd")
- 
-    pass_rate = get_pass_rate( gamma_img )
-    print("  Gamma pass rate = {}%".format( round(pass_rate,2) ))
 
