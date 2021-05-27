@@ -14,9 +14,10 @@ from pathlib import Path
 import pydicom
 import easygui
 import itk
+from gatetools.image_convert import read_dicom
 
 import reorientate
-import imageconversion
+#import imageconversion
 import overrides
 import generatefiles
 import config
@@ -63,7 +64,7 @@ def copy_dcm_doses( dcmfiles, destinationdir ):
 
 
 def list_all_files(dirName):
-    """For the given path, get the List of all files in the directory tree"""
+    """Return file list within immediate directory"""
     # Create a list of file and sub-dirs in given dir 
     print(dirName)
     listOfFile = os.listdir(dirName)
@@ -72,9 +73,10 @@ def list_all_files(dirName):
     for entry in listOfFile:
         # Create full path
         fullPath = join(dirName, entry)
-        # If entry is a directory then get the list of files in this directory 
         if isdir(fullPath):
-            allFiles = allFiles + list_all_files(fullPath)
+            # Ignore sub directories
+            ##allFiles = allFiles + list_all_files(fullPath) 
+            pass
         else:
             allFiles.append(fullPath)
                 
@@ -83,8 +85,11 @@ def list_all_files(dirName):
 
 
 def search_dcm_dir( input_dir ):
-    """Confirm dcm files belong to same scan and that only one plan and one structure set are present
-    Return list of CT images and the Dicom plan file"""
+    """Confirm dcm files belong to same scan and that only one plan and one 
+    structure set are present
+    
+    Return list of CT images, dcm plan, list of dcm doses, structure set
+    """
     
     #allfiles = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and ".dcm" in f ]  
     allfiles = list_all_files( input_dir )
@@ -156,7 +161,7 @@ def main():
         sys.exit(0)
         
     DICOM_DIR = easygui.diropenbox()
-    CT_DIR = join(DICOM_DIR,"ct")
+    #CT_DIR = join(DICOM_DIR,"ct")
     TEMPLATE_MAC = join(path_to_templates,"TEMPLATE_simulateField.txt")
     TEMPLATE_SOURCE = join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
@@ -182,8 +187,8 @@ def main():
     config.add_patient_position( CONFIG, patient_position )
     
     print("Converting dcm CT files to mhd image")
-    imageconversion.dcm2mhd(CT_DIR, ct_unmod)
-    ##imageconversion.dcm2mhd_gatetools(ct_files)
+    itkimg = read_dicom( ct_files )
+    itk.imwrite(itkimg, ct_unmod) 
     
     print("Reorientating image to enforce positive directionality")
     img_reor=reorientate.force_positive_directionality(ct_unmod)
@@ -191,7 +196,6 @@ def main():
     
     print("Overriding all external structures to air")
     ct_air_path = join(sim_dir,"data",ct_air)
-    #overrides.set_air_external( ct_unmod, struct_file, ct_air_path )
     overrides.set_air_external( ct_reorientate, struct_file, ct_air_path )  #  USE REORIENTATED IMG
       
     # Check for density overrides and apply

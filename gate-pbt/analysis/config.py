@@ -77,31 +77,6 @@ def get_ct_path( outputdir ):
     return ctpath
 
 
-def get_transform_matrix( outputdir ):
-    """Return transofrm matrix of original ct"""
-    ########## ASSUME CONFIG FILE IN /../data
-    parent = dirname(outputdir)
-    configfile = join(parent,"data","simconfig.ini")
-    ########################################
-    
-    config = configparser.ConfigParser()
-    config.read(configfile)
-    transform = config.get("Image", "transform_matrix")
-    return transform
-
-
-def get_offset( outputdir, beamname ):
-    """Return transofrm matrix of original ct"""
-    ########## ASSUME CONFIG FILE IN /../data
-    parent = dirname(outputdir)
-    configfile = join(parent,"data","simconfig.ini")
-    ########################################
-    
-    config = configparser.ConfigParser()
-    config.read(configfile)
-    transform = config.get(beamname, "dose_offset")
-    return transform
-
 
 
 

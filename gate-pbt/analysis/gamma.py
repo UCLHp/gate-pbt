@@ -34,128 +34,6 @@ DOSE_THRESHOLD = 0.1    # Absolute threshold = this * max tps dose
 
 
 
-
-''' From gatetools
-########################################################################################
-########################################################################################
-#import logging
-#logger=logging.getLogger(__name__)
-
-def _reldiff2(dref,dtarget,ddref):
-    """
-    Convenience function for implementation of the following functions.
-    The arguments `dref` and `dtarget` maybe scalars or arrays.
-    The calling code is responsible for avoiding division by zero (make sure that ddref>0).
-    """
-    ddiff=dtarget-dref
-    reldd2=(ddiff/ddref)**2
-    return reldd2
-
-
-def get_gamma_index(ref,target,**kwargs):
-    """
-    Compare two 3D images using the gamma index formalism as introduced by Daniel Low (1998).
-    The positional arguments 'ref' and 'target' should behave like ITK image objects.
-    Possible keyword arguments include:
-    * dd indicates "dose difference" scale as a relative value, in units of percent
-      (the dd value is this percentage of the max dose in the reference image)
-    * ddpercent is a flag, True (default) means that dd is given in percent, False means that dd is absolute.
-    * dta indicates distance scale ("distance to agreement") in millimeter (e.g. 3mm)
-    * threshold indicates minimum dose value (exclusive) for calculating gamma values
-    * verbose is a flag, True will result in a progress bar. All other chatter goes to the "debug" level.
-    Returns an image with the same geometry as the target image.
-    For all target voxels in the overlap between ref and target that have d>dmin, a gamma index value is given.
-    For all other voxels the "defvalue" is given.
-    """    
-    if (np.allclose(ref.GetOrigin(),target.GetOrigin())) and \
-       (np.allclose(ref.GetSpacing(),target.GetSpacing())) and \
-       (ref.GetLargestPossibleRegion().GetSize() == ref.GetLargestPossibleRegion().GetSize() ):
-        print("  Dose images have equal geometry =:)")
-        return gamma_index_3d_equal_geometry(ref,target,**kwargs)
-    else:
-        print("  Dose images have different geometry. Correcting...")
-        # Output from resample( img1, img2 ) has dimensions of img2
-        resampled_ref = resample( ref, target )
-        #itk.imwrite(resampled_ref, "resampled_mc_dose.mhd")
-        print("  Resampled ref (MC) to match target (TPS)")
-        return gamma_index_3d_equal_geometry(resampled_ref,target,**kwargs)        
-
-
-
-def gamma_index_3d_equal_geometry(imgref,imgtarget,dta=3.,dd=3., ddpercent=True,threshold=0.,defvalue=-1.):
-    """
-    Compare two images with equal geometry, using the gamma index formalism as introduced by Daniel Low (1998).
-    * ddpercent indicates "dose difference" scale as a relative value, in units percent (the dd value is this percentage of the max dose in the reference image)
-    * ddabs indicates "dose difference" scale as an absolute value
-    * dta indicates distance scale ("distance to agreement") in millimeter (e.g. 3mm)
-    * threshold indicates minimum dose value (exclusive) for calculating gamma values: target voxels with dose<=threshold are skipped and get assigned gamma=defvalue.
-    Returns an image with the same geometry as the target image.
-    For all target voxels that have d>threshold, a gamma index value is given.
-    For all other voxels the "defvalue" is given.
-    If geometries of the input images are not equal, then a `ValueError` is raised.
-    """
-    aref=itk.array_view_from_image(imgref).swapaxes(0,2)
-    atarget=itk.array_view_from_image(imgtarget).swapaxes(0,2)
-    
-    if aref.shape != atarget.shape:
-        raise ValueError("input images have different geometries ({} vs {} voxels)".format(aref.shape,atarget.shape))
-    if not np.allclose(imgref.GetSpacing(),imgtarget.GetSpacing()):
-        raise ValueError("input images have different geometries ({} vs {} spacing)".format(imgref.GetSpacing(),imgtarget.GetSpacing()))
-    if not np.allclose(imgref.GetOrigin(),imgtarget.GetOrigin()):
-        raise ValueError("input images have different geometries ({} vs {} origin)".format(imgref.GetOrigin(),imgtarget.GetOrigin()))
-    if ddpercent:
-        dd *= 0.01*np.max(aref)
-        
-    relspacing = np.array(imgref.GetSpacing(),dtype=float)/dta
-    inv_spacing = np.ones(3,dtype=float)/relspacing
-    g00=np.ones(aref.shape,dtype=float)*-1
-    mask=atarget>threshold
-    g00[mask]=np.sqrt(_reldiff2(aref[mask],atarget[mask],dd))
-    
-    nx,ny,nz = atarget.shape
-    #ntot = nx*ny*nz
-    #nmask = np.sum(mask)
-    #logger.debug("Both images have {} x {} x {} = {} voxels.".format(nx,ny,nz,ntot))
-    #logger.debug("{} target voxels have a dose > {}.".format(nmask,threshold))
-    g2 = np.zeros((nx,ny,nz),dtype=float)
-
-    for x in range(nx):
-        for y in range(ny):
-            for z in range(nz):
-                if g00[x,y,z] < 0:
-                    continue
-                igmax=np.round(g00[x,y,z]*inv_spacing).astype(int) # maybe we should use "floor" instead of "round"
-                if (igmax==0).all():
-                    g2[x,y,z]=g00[x,y,z]**2
-                else:
-                    ixmin = max(x-igmax[0],0)
-                    ixmax = min(x+igmax[0]+1,nx)
-                    iymin = max(y-igmax[1],0)
-                    iymax = min(y+igmax[1]+1,ny)
-                    izmin = max(z-igmax[2],0)
-                    izmax = min(z+igmax[2]+1,nz)
-                    ix,iy,iz = np.meshgrid(np.arange(ixmin,ixmax),
-                                           np.arange(iymin,iymax),
-                                           np.arange(izmin,izmax),indexing='ij')
-                    g2mesh = _reldiff2(aref[ix,iy,iz],atarget[x,y,z],dd)
-                    g2mesh += ((relspacing[0]*(ix-x)))**2
-                    g2mesh += ((relspacing[1]*(iy-y)))**2
-                    g2mesh += ((relspacing[2]*(iz-z)))**2
-                    g2[x,y,z] = np.min(g2mesh)
-                   
-    g=np.sqrt(g2)
-    g[np.logical_not(mask)]=defvalue
-    # ITK does not support double precision images by default => cast down to float32.
-    # Also: only the first few digits of gamma index values are interesting.
-    gimg=itk.image_from_array(g.swapaxes(0,2).astype(np.float32).copy())
-    gimg.CopyInformation(imgtarget)
-    #logger.debug(f"Computed {nmask} gamma values assuming EQUAL geometry in target and reference")
-    return gimg
-############################################################################
-############################################################################
-'''
-
-
 def gamma_image( ref_dose, target_dose ):
     """ Gamma analysis of MC and TPS beam dose using GateTools
     
@@ -179,7 +57,7 @@ def gamma_image( ref_dose, target_dose ):
     # Force +ve axes directionality for gatetools methods
     #   --> No need to resample dose images
     targ = reorientate.force_positive_directionality( targ )
-    ref = reorientate.force_positive_directionality( ref )
+    #ref = reorientate.force_positive_directionality( ref )
     
              
     max_tps_dose = np.max( targ )
@@ -202,6 +80,14 @@ def get_pass_rate( gamma_img ):
     #print( "  Gamma < 1 = {}%".format( pass_rate )  )  
     
     return pass_rate
+
+
+
+
+
+
+
+
 
 
 
@@ -233,7 +119,6 @@ def resample( img, refimg ):
     resampleFilter.Update()
     return resampleFilter.GetOutput()
 '''
-
 
 
 

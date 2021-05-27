@@ -24,8 +24,7 @@ template file and will be aligned to the [Gate-RTion recommendations](https://aa
 
 ### File preparation
 First export the relevant dicom files from the TPS to an empty folder.
-You will need the plan file, the structure set, the _field_ dose files and all CT images. 
-The CT files must be placed in a subdirectory called "ct".  
+You will need the plan file, the structure set, the _field_ dose files and all CT images.  
 
 In the simulation directory, ```python run.py``` will prompt for the directory containing
 the exported dicom files and generate a folder containing all files required for 
@@ -37,8 +36,8 @@ want to split the simulations.
 
 
 ### Simulation
-On our cluster, submitting the array of jobs corresponding to a given field can be done via
-```sbatch fieldname.sh``` from the control node.
+On our cluster, submitting the array of jobs corresponding to a field can be done via the command
+```sbatch path/to/script.sh``` from the control node.
 
 
 ### Analysis
@@ -48,7 +47,7 @@ A full analysis of the data generated can be performed from the analysis directo
 It will prompt for the directory containing the simulation output and:
 
 1. Separate the data for individual fields and merge all data present (dose, dose-squared, LET)
-2. Import, from the simconfig.ini file produced in the file preparation stage, the correct Offset and TransformMatrix parameters into these merged mhd files. We need to alter these since Gate preserves any patient rotations performed in the simulation in its output's TransformMatrix, and unfortunately calculates the Offset parameter incorrectly for some non-HFS patient set-ups
+2. Override the TransformMatrix to "1 0 0 0 1 0 0 0 1" in all of the merged mhd files. This is required since Gate preserves any patient rotations performed in the simulation in its output's TransformMatrix. In the file preparation stage we reorientated all images to this directionality so as to avoid some bugs in both Gate and GateTools
 3. Calculate the dose uncertainty following [Chetty2006](https://pubmed.ncbi.nlm.nih.gov/16798417/)
 4. Scale the simulation to absolute dose using the N/MU curve provided
 5. Convert Gate's dose-to-material to dose-to-water following [Paganetti2009](https://iopscience.iop.org/article/10.1088/0031-9155/54/14/004/pdf), using the HU-density and HU-RSP curves provided. Gate has the option of calculating dose-to-water on the fly but this slows down the simulations by a factor of about 3
