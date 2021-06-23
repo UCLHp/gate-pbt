@@ -166,7 +166,7 @@
 /gate/source/PBS/setPlan {path}/data/XXXXX.txt
 /gate/source/PBS/setSpotIntensityAsNbIons false
 
-/gate/source/PBS/setSigmaEnergyInMeVFlag true
+/gate/source/PBS/setSigmaEnergyInMeVFlag false
 /gate/source/PBS/setSortedSpotGenerationFlag false
 /gate/source/PBS/setFlatGenerationFlag false
 /gate/source/PBS/setBeamConvergence false

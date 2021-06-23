@@ -389,7 +389,7 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
         ##### Split field mac file here ####
         # Simulate Nreq/2000 for reasonable stats
         splits = 20 
-        nprotons = int( req_prims[field.BeamName]/50000 )      
+        nprotons = int( req_prims[field.BeamName]/5000 )      
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
  

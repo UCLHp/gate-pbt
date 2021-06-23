@@ -33,7 +33,7 @@ DOSE_THRESHOLD = 0.1    # Absolute threshold = this * max tps dose
 
 
 
-def gamma_image( ref_dose, target_dose, prescription ):
+def gamma_image( ref_dose, target_dose ):
     """ Gamma analysis of MC and TPS beam dose using GateTools
     
     Accepts ITK-like image, or path to image

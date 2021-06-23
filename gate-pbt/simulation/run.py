@@ -153,7 +153,7 @@ def main():
      
     # Select directory containing the DICOM files
     msg = "Select directory containing DICOM files"
-    msg += "\nCT files must be contained in a subdirectory called \"ct\""
+    #msg += "\nCT files must be contained in a subdirectory called \"ct\""
     title = "Select directory containing dicom files."
     if easygui.ccbox(msg, title):
         pass
@@ -217,8 +217,8 @@ def main():
     config.add_fractions( CONFIG, nfractions )
     # Add ct name being used in sim to simconfig.ini
     config.add_ct_to_config( CONFIG, basename(ct_for_simulation) )
-    # Add ct transform matrix to simconfig.ini
-    config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
+    # Add ct transform matrix to simconfig.ini - NO NEED; JUST USE 100010
+    #config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
       
     # Copy over dicom dose files to /data
     print("Copying dcm dose files over")
