@@ -1,2 +1,5 @@
+data/simulationfiles/
 gate-pbt/simulation/__pycache__/
+gate-pbt/analysis/__pycache__/
+gate-pbt/verification/code/__pycache__/
 **/*~

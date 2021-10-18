@@ -1,0 +1,39 @@
+#TREATMENT-PLAN-DESCRIPTION
+#PlanName
+RSP_1_d10cm
+#NumberOfFractions
+1
+##FractionID
+1
+##NumberOfFields
+1
+###FieldsID
+1
+#TotalMetersetWeightOfAllFields
+21274.72291
+#FIELD-DESCRIPTION
+###FieldID
+1
+###FinalCumulativeMetersetWeight
+1
+###GantryAngle
+0
+###PatientSupportAngle
+0
+###IsocentrePosition
+0 0 0
+###NumberOfControlPoints
+1
+#SPOTS-DESCRIPTION
+####ControlPointIndex
+0
+####SpotTunnedID
+4.0
+####CumulativeMetersetWeight
+0
+####Energy (MeV)
+70
+####NbOfScannedSpots
+1
+####X Y Weight
+0 0 1

@@ -132,7 +132,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions 
+        scalefactor = (nreq / nsim) * nfractions  ## * 1.1 ## For RBE
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)

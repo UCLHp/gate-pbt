@@ -52,10 +52,11 @@ def force_positive_directionality( image ):
             new_origin.append( o )
         
         arr = itk.array_from_image( img )
-
-
+        
     rot_arr = None   
-    if np.array_equal( direction, np.array([-1,-1,1]) ):
+    if np.array_equal( direction, np.array([1,1,1]) ):
+        pass  # no need to reorientate        
+    elif np.array_equal( direction, np.array([-1,-1,1]) ):
         #(1,2 for z-axes)  (2,1) opposite sense; take care for 90 degrees.
         rot_arr = np.rot90( arr, k=2, axes=(1,2) )   
     elif np.array_equal( direction, np.array([1,-1,-1]) ):
@@ -66,15 +67,12 @@ def force_positive_directionality( image ):
         print("Exiting")
         exit(0)
 
-
     if rot_arr is not None:
-        #Image shape will change for 90 degree rotations (decubitis positions)
-        
+        #Image shape will change for 90 degree rotations (decubitis positions)        
         new_img = itk.image_from_array( rot_arr )
         new_img.CopyInformation(img)
         new_img.SetOrigin( new_origin )
-        new_img.SetDirection( np.array([[1,0,0],[0,1,0],[0,0,1]]) )
-        
+        new_img.SetDirection( np.array([[1,0,0],[0,1,0],[0,0,1]]) )        
         return new_img
     else:
         return img
