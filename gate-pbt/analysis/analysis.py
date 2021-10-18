@@ -79,13 +79,11 @@ def write_scaled_dose( mhdfile, output, scalefactor):
 
 
 def correct_transform_matrix( mergedfiles ):
-    """Set mhd TransformMatrix to that of original CT for all files in list
-    
+    """Set mhd TransformMatrix to 100010001 for all files in list
     Have to do this since Gate will write couch kicks here
-    """
-    
-    transform = config.get_transform_matrix( outputdir )
-    
+    """  
+    # In preparation stage we ensure all images are oriented as 100010001 
+    transform = "1 0 0 0 1 0 0 0 1"   
     for mf in mergedfiles:
         file = open(mf, "r")
         lines = file.readlines()
@@ -98,30 +96,6 @@ def correct_transform_matrix( mergedfiles ):
                     out.write(line)
                     
                     
-                    
-def correct_offset( mergedfiles, field ):
-    """Set correct mhd Offset param for Gate output
-    
-    Gate calculates this wrong for non-HFS orientations
-    """
-    
-    offset = config.get_offset( outputdir, field )
-    
-    for mf in mergedfiles:
-        file = open(mf, "r")
-        lines = file.readlines()
-        file.close()
-        with open(mf,"w") as out:
-            for line in lines:
-                if "Offset" in line:
-                    out.write("Offset = {}\n".format(offset))
-                else:
-                    out.write(line)
-        
-
-
-
-
 
 
 def full_analysis( outputdir ):
@@ -138,7 +112,6 @@ def full_analysis( outputdir ):
     material_db = "patient-HUmaterials_UCLHv1.db"
     material_db_path = join(path_to_templates, material_db)
 
-
     ## check_integrity( outputdir )  #TODO
         
     fieldnames = get_field_names( outputdir )
@@ -154,15 +127,12 @@ def full_analysis( outputdir ):
         
         print("  Correcting mhd TransformMatrix in merged files")
         correct_transform_matrix(mergedfiles)
-        
-        print("  Correcting dose mhd Offset in merged files")
-        correct_offset( mergedfiles, field )
                 
         nsim = count_prims_simulated( outputdir, field )
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions #* 1.077
+        scalefactor = (nreq / nsim) * nfractions  ## * 1.1 ## For RBE
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)

@@ -55,14 +55,14 @@ def force_positive_directionality( image ):
 
 
     rot_arr = None   
-    if np.array_equal( direction, np.array([1,1,1]) ):
-        pass  # no need to reorientate        
-    elif np.array_equal( direction, np.array([-1,-1,1]) ):
+    if np.array_equal( direction, np.array([-1,-1,1]) ):
         #(1,2 for z-axes)  (2,1) opposite sense; take care for 90 degrees.
         rot_arr = np.rot90( arr, k=2, axes=(1,2) )   
     elif np.array_equal( direction, np.array([1,-1,-1]) ):
         rot_arr_1 = np.rot90( arr, k=2, axes=(1,2) )   
         rot_arr = np.rot90( rot_arr_1, k=2, axes=(0,2) )   #(0,2 for y-axis)
+    elif np.array_equal( direction, np.array([1,1,1]) ):
+        pass
     else:
         print("TransformMatrix (Direction) of image not handled correctly")
         print("Exiting")

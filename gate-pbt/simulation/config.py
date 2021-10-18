@@ -63,6 +63,10 @@ def add_ct_to_config( configfile, ct_name ):
         
 def add_correct_dose_offset( configfile, beamname, dose_origin):
     """Add correct dose output mhd Offset (from numpy array)
+    
+    OBSOLETE; just left for checking.
+    Now that we reorientate all images so as to have TransformMatrix=100010001
+    we no longer have to correct Gate's incorrect Offset calculation
     """
     offset = ""
     for c in dose_origin:
@@ -77,26 +81,6 @@ def add_correct_dose_offset( configfile, beamname, dose_origin):
         config[beamname] = {"dose_offset": offset } 
     with open(configfile, "w") as q:
         config.write( q )   
-        
-
-def add_transformmatrix_to_config( configfile, mhdpath ):
-    """Store original TransformMatrix of ct image"""
-    
-    transform = ""
-    lines = open(mhdpath, "r").readlines()
-    for line in lines:
-        if "TransformMatrix" in line:
-            transform = line.split("=")[1].strip()    
-    
-    config = configparser.ConfigParser()
-    config.read(configfile)
-    if config.has_section("Image"):
-        config["Image"]["transform_matrix"] = transform
-    else:
-        config["Image"]  =  {"transform_matrix": transform } 
-    with open(configfile, "w") as q:
-        config.write( q )    
-        
         
         
 def add_prims_to_config( configfile, req_prims ):

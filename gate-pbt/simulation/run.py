@@ -13,12 +13,15 @@ from pathlib import Path
 
 import pydicom
 import easygui
+import itk
+from gatetools.image_convert import read_dicom
 
-import imageconversion
+import reorientate
+#import imageconversion
 import overrides
 import generatefiles
 import config
-import cropdicom
+import cropimage
 
 
 
@@ -61,7 +64,7 @@ def copy_dcm_doses( dcmfiles, destinationdir ):
 
 
 def list_all_files(dirName):
-    """For the given path, get the List of all files in the directory tree"""
+    """Return file list within immediate directory"""
     # Create a list of file and sub-dirs in given dir 
     print(dirName)
     listOfFile = os.listdir(dirName)
@@ -70,9 +73,10 @@ def list_all_files(dirName):
     for entry in listOfFile:
         # Create full path
         fullPath = join(dirName, entry)
-        # If entry is a directory then get the list of files in this directory 
         if isdir(fullPath):
-            allFiles = allFiles + list_all_files(fullPath)
+            # Ignore sub directories
+            ##allFiles = allFiles + list_all_files(fullPath) 
+            pass
         else:
             allFiles.append(fullPath)
                 
@@ -81,8 +85,11 @@ def list_all_files(dirName):
 
 
 def search_dcm_dir( input_dir ):
-    """Confirm dcm files belong to same scan and that only one plan and one structure set are present
-    Return list of CT images and the Dicom plan file"""
+    """Confirm dcm files belong to same scan and that only one plan and one 
+    structure set are present
+    
+    Return list of CT images, dcm plan, list of dcm doses, structure set
+    """
     
     #allfiles = [ f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir,f)) and ".dcm" in f ]  
     allfiles = list_all_files( input_dir )
@@ -137,11 +144,6 @@ def search_dcm_dir( input_dir ):
 
 
 
-
-
-
-
-
 def main():
     
     # Get absolute path to template files and destination of simulation files
@@ -151,7 +153,7 @@ def main():
      
     # Select directory containing the DICOM files
     msg = "Select directory containing DICOM files"
-    msg += "\nCT files must be contained in a subdirectory called \"ct\""
+    #msg += "\nCT files must be contained in a subdirectory called \"ct\""
     title = "Select directory containing dicom files."
     if easygui.ccbox(msg, title):
         pass
@@ -159,7 +161,7 @@ def main():
         sys.exit(0)
         
     DICOM_DIR = easygui.diropenbox()
-    CT_DIR = join(DICOM_DIR,"ct")
+    #CT_DIR = join(DICOM_DIR,"ct")
     TEMPLATE_MAC = join(path_to_templates,"TEMPLATE_simulateField.txt")
     TEMPLATE_SOURCE = join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
    
@@ -176,55 +178,52 @@ def main():
     # Define simconfig.ini configuration file
     CONFIG = join(sim_dir, "data", "simconfig.ini")
  
+    #Defining some path names for intermediate images for debugging
     ct_unmod = join(sim_dir,"data","ct_orig.mhd")  ##path or name?
+    ct_reorientate = join(sim_dir, "data", "ct_orig_reorientate.mhd")
     ct_air = join(sim_dir,"data","ct_air.mhd")
-    
-    
+      
     patient_position = pydicom.dcmread(ct_files[0]).PatientPosition
     config.add_patient_position( CONFIG, patient_position )
     
     print("Converting dcm CT files to mhd image")
-    imageconversion.dcm2mhd(CT_DIR, ct_unmod)
-    ##imageconversion.dcm2mhd_gatetools(ct_files)
+    itkimg = read_dicom( ct_files )
+    itk.imwrite(itkimg, ct_unmod) 
     
+    print("Reorientating image to enforce positive directionality")
+    img_reor=reorientate.force_positive_directionality(ct_unmod)
+    itk.imwrite( img_reor, ct_reorientate)    
     
     print("Overriding all external structures to air")
     ct_air_path = join(sim_dir,"data",ct_air)
-    overrides.set_air_external( ct_unmod, struct_file, ct_air_path )
-    
-    
+    overrides.set_air_external( ct_reorientate, struct_file, ct_air_path )  #  USE REORIENTATED IMG
+      
     # Check for density overrides and apply
     # TODO
     #overrides.override_hu( ct_unmod, struct_file, join(sim_dir,"data",ct_air), "BODY", -43 )
-    
     
     # Crop image to structure
     ext_contour = overrides.get_external_name( struct_file )
     print("Cropping img to ", ext_contour)
     cropped_img_path = join(sim_dir,"data","ct_cropped.mhd")
-    cropdicom.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
+    cropimage.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
 
     # TODO: SET THIS AUTOMATICALLY IF CROPPING OR NOT
     #ct_for_simulation = ct_air
     ct_for_simulation = cropped_img_path
     
-    
-
     # Add number fractions to config
     nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
     config.add_fractions( CONFIG, nfractions )
     # Add ct name being used in sim to simconfig.ini
     config.add_ct_to_config( CONFIG, basename(ct_for_simulation) )
-    # Add ct transform matrix to simconfig.ini
-    config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
-    
-    
+    # Add ct transform matrix to simconfig.ini - NO NEED; JUST USE 100010
+    #config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
+      
     # Copy over dicom dose files to /data
     print("Copying dcm dose files over")
     copy_dcm_doses( dose_files, join(sim_dir,"data") )   
-    
-       
-    
+      
     # Generate all files required for simulation
     print("Generating simulation files")
     #generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)

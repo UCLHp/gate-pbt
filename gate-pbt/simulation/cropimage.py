@@ -37,6 +37,7 @@ def crop_mhd(img, mincorner, maxcorner, margin):
     min_wrong = np.array(img.TransformPhysicalPointToIndex( mincorner ))
     max_wrong = np.array(img.TransformPhysicalPointToIndex( maxcorner ))
     # Ensure min and max correct for all patient orientations
+    # (redundant if we reorientate for positive axes directionality)
     min_indices, max_indices = [],[]
     for i,j in zip(min_wrong, max_wrong):
         min_indices.append( min(i,j) ) 
@@ -51,8 +52,8 @@ def crop_mhd(img, mincorner, maxcorner, margin):
     #    use +1 here since crop method is exclusive
     to_index = np.minimum( dims, max_indices+1 )
             
-    cropper = itk.RegionOfInterestImageFilter.New(Input=img)
-    region = cropper.GetRegionOfInterest()
+    cropper=itk.RegionOfInterestImageFilter.New(Input=img)
+    region=cropper.GetRegionOfInterest()
     indx=region.GetIndex()
     size=region.GetSize()
     for j in range(3):

@@ -28,7 +28,7 @@ def particles_per_MU( energy ):
     return n_mu
 
 
-    
+
 
 def get_beam_meterset(plan, beamnum):
     """Return dcm BeamMeterset value for given beam number"""
