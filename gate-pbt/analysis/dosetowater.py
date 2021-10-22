@@ -12,116 +12,6 @@ import itk
 import numpy as np
 
 
-# TEMPORARY FIX - REMOVE THIS
-# Ignore conversion for air / where HU-RSP extrapolation not reliable.
-# Set dose to zero here; below this we'd get -ve RSP and so -ve dose
-# USE RSP OF AIR WHEN HU < -950 (OR WHATEVER MIN HU IS IN MATERIALS DB)
-
-HU_CUTOFF = -950        # i.e. what is defined as air in Gate
-RSP_AIR = 0.001075      # from materials db and emcalc
-DENSITY_AIR = 1.21E-3   # (g/cm^3)
-
-
-
-
-
-## NEEDS UPDATED; SET IN SOME CALIBRATION FILE
-def get_rsp(hu):
-    """Return RSP for given HU value from fitted CT calibration curve"""
-    # Curve split into 3 straight line segments
-    rsp = -9E99
-    if hu < HU_CUTOFF:
-        rsp = RSP_AIR
-    elif hu < -73.4:
-        rsp = hu*1.0646E-3 + 1.04290
-    elif hu < 128.6:
-        rsp = hu*6.0457E-4 + 1.00914
-    else:
-        rsp = hu*4.4232E-4 + 1.03000
-          
-    return rsp
-
-
-
-## NEEDS UPDATED; SET IN SOME CALIBRATION FILE
-def get_density(hu):
-    """Return RSP for given HU value from fitted CT calibration curve"""
-    # Curve split into 3 straight line segments
-    dens = -9E99
-    if hu < HU_CUTOFF:
-        dens = DENSITY_AIR
-    elif hu < -62:
-        dens = hu*0.001 + 1.00827
-    elif hu < 123:
-        dens = hu*0.0008 + 0.9931
-    else:
-        dens = hu*0.0006 + 1.0050
-          
-    return dens
-
-
-'''
-def get_density(hus, densities, hu_val):
-    """Return physical density for given hu_val
-    
-    Input ordered and matched lists: lower HU bracket values and densities
-    """
-    if len(hus)!=len(densities):
-        print("  HU and density increment lists do not match")
-        exit()
-    # TODO: check lists are ordered
-    
-    index=None
-    try:
-        # first index larger than hu_val
-        fi = next(x[0] for x in enumerate(hus) if x[1]>hu_val)
-        # index for correct density bracket
-        index = fi-1
-        if index == -1:
-            print("  Warning: HU/density lower than min HU defined in materials db")
-            print("     -- Using minimum density value...")
-            index = 0
-    except StopIteration:
-        # and take largest density bracket value
-        print("  Warning: HU/density higher than max HU defined in materials db")
-        print("     -- Using maximum density value...")
-        index = -1
-    density = densities[index]
-    return density
-'''
-
-
-def read_densities(filename):
-    """Read HUs and densities from Gate's patient-HUmaterials.db file
-    
-    Return list of lower HU in range and corresponding density
-    """
-    hu_lims=[]
-    density_lims=[] 
-    with open(filename, "r") as f:
-        all_lines = f.readlines()
-        for line in all_lines:
-            # Line containing HU limits
-            if "Material corresponding to H=" in line:
-                lower_hu = line.split("H=")[1].strip("[").strip("]").strip().split(";")[0].strip()
-                hu_lims.append( float(lower_hu)  )
-            # line containing material density
-            if ": d=" in line:
-                d = float(line.split("d=")[1].split(" ")[0].strip())            
-                unit = line.split(" ")[2].strip(";").strip()
-                # want density in g/cm3
-                if unit=="mg/cm3":
-                    d = d/1000.0
-                elif unit=="g/cm3":
-                    pass
-                else:
-                    print("  XXX: density unit {} not accounted for".format(unit))
-                density_lims.append(d)
-                
-    return hu_lims, density_lims
-                
-
-
 
 def resample( img, refimg ):
     """ Resample image to same dimensions as reference """ 
@@ -148,16 +38,49 @@ def resample( img, refimg ):
 
 
 
+def get_rsps_from_emcalc(emcalcpath):
+    """Return dictionary of materials and RSPs found in simulation"""
+    lines = open(emcalcpath,"r").readlines()
+    
+    # Get mass stopping power of water
+    msp_water = 5.30047  # default I=78 and density 1g/cm3   
+    for line in lines:
+        if "G4_WATER" in line:
+            cols = line.split()
+            msp_water = float(cols[7])
+            print("    msp_water = ",msp_water)
+      
+    # Form dictionary of RSPs
+    rsps = {}
+    start_reading = False
+    for line in lines:
+        if start_reading and "#" not in line and len(line)>1:
+            cols = line.split()
+            material = cols[0]
+            #rsp = float(cols[7])*float(cols[1])  / msp_water
+            rsp = float(cols[7])  / msp_water
+            rsps[material] = rsp
+            print("    material={}; rsp={}; dens={}".format(material,round(rsps[material],3),cols[1]  )  )
+        if "worldDefaultAir" in line:
+            start_reading = True
+    
+    return rsps
 
-def convert_dose_to_water(ctpath, dosepath, materialdbpath, output=None):
+
+
+
+def convert_dose_to_water(ctpath, dosepath, emcalcpath, hu2matpath, output=None):
     """Convert a doseimg (to material) to dose-to-water
        Divide dose-to-tissue by RSP; see Paganetti2019
        
     Input: paths to ct image and doseToMaterial image   
     """
     
+    rsps = get_rsps_from_emcalc(emcalcpath)
+    hu2mat = open(hu2matpath,"r").readlines()
+    
     # Read lower HU bracket and physical density from materials database
-    hu_lims, den_lims = read_densities(materialdbpath)
+    #hu_lims, den_lims = read_densities(materialdbpath)
        
     ctimg = itk.imread( ctpath )
     doseimg = itk.imread( dosepath )
@@ -168,36 +91,43 @@ def convert_dose_to_water(ctpath, dosepath, materialdbpath, output=None):
     
     hus = itk.array_from_image( resampledimg )
     doses = itk.array_from_image( doseimg )
+    shape = hus.shape 
     
-    shape = hus.shape
-
-    hus_flat = hus.flatten()
+    hus_flat = hus.flatten()    
     doses_flat = doses.flatten() 
     d2water = np.zeros(len(hus_flat))
+     
     if len(hus_flat)!=len(doses_flat):
         print("ERROR: resampled image does not match dose image dimensions")
         exit()
     else:
         for i,hu in enumerate(hus_flat):
-            ###if hu < HU_CUTOFF:
-            ###    doses_flat[i] = 0
-            ###else:
-            ###density = get_density(hu_lims, den_lims, hu )
-            rsp = get_rsp( hu )
-            density = get_density( hu )
-            d2water = doses_flat[i] * density / rsp
-            if d2water<0:
+
+            # Get material name from HU
+            material=""
+            for line in hu2mat:
+                cols = line.split()
+                if hu < float(cols[1]):
+                    material = cols[2]
+                    break
+            if material=="":
+                print(" NO MATERIAL ASSIGNED for HU={}".format(hu))
+                material = "Adiposetissue3"
+                        
+            rsp = rsps[material]
+            d2w = doses_flat[i] / rsp
+       
+            if d2w<0:
                 print("  WARNING: d2water < 0 detected")
-            doses_flat[i] = d2water              
-            
-        d2water_arr = doses_flat.reshape( shape )
+            d2water[i] = d2w
+         
+        d2water_arr = d2water.reshape( shape )
         
         dosetowater = itk.image_view_from_array( d2water_arr )
         dosetowater.CopyInformation(doseimg)
         
         if output is not None:
-            itk.imwrite(dosetowater, output)
-        
+            itk.imwrite(dosetowater, output)      
         return dosetowater
     
     

@@ -118,7 +118,7 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     
     # Replace the default -1 values in gamma image
     # Can't have -ve values in a dicom dose file
-    # mhdpix[ mhdpix<0 ] = 0
+    mhdpix[ mhdpix<0 ] = 0
     
     dcm.NumberOfFrames = mhdpix.shape[0]
     dcm.Rows = mhdpix.shape[1]            

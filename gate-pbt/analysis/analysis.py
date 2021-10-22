@@ -109,8 +109,12 @@ def full_analysis( outputdir ):
     path_to_templates = (base_path / "../../data/templates").resolve()
     
     #TODO: read this from config file
-    material_db = "patient-HUmaterials_UCLHv1.db"
-    material_db_path = join(path_to_templates, material_db)
+    #material_db = "patient-HUmaterials_UCLHv1.db"
+    hu2matfile = "patient-HU2mat_UCLHv1.txt"
+    emcalc = "emcalc.txt"
+    #material_db_path = join(path_to_templates, material_db)
+    hu2mat_path = join(path_to_templates, hu2matfile)
+    emcalc_path = join(path_to_templates, emcalc)
 
     ## check_integrity( outputdir )  #TODO
         
@@ -132,7 +136,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions  ## * 1.1 ## For RBE
+        scalefactor = (nreq / nsim) * nfractions * 1.1 ## For RBE
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
@@ -149,7 +153,7 @@ def full_analysis( outputdir ):
             ctpath = config.get_ct_path( outputdir )
             ##ctpath = os.path.join( outputdir, ctname )
             d2wimg = join(outputdir, field+"_AbsoluteDoseToWater.mhd")
-            dosetowater.convert_dose_to_water( ctpath, scaledimg, material_db_path, output=d2wimg )
+            dosetowater.convert_dose_to_water( ctpath, scaledimg, emcalc_path, hu2mat_path, output=d2wimg )
             
             print("  Converting mhd dose to dicom")
             beamref = config.get_beam_ref_no( outputdir, field )
@@ -186,8 +190,6 @@ def full_analysis( outputdir ):
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
             mhdtodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
-
-        
 
         
         
