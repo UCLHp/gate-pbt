@@ -38,23 +38,26 @@ def get_external_name( structure_file ):
 
 
 
-def set_air_external( img_file, structure_file, output_img_file ):
+def set_air_external( image, structure_file ):
     """Set all HUs outside of BODY/EXTERNAL contour to air HU=-1000
     
     The img_file must be the .mhd
     """
-
-    img = itk.imread( img_file )
-    ds = pydicom.dcmread( structure_file )
     
+    img = None 
+    if type(image)==str:
+        #Assume we have file path
+        img = itk.imread( image )
+    else:
+        #Assume we have itk image object
+        img = image   
+        
+    ds = pydicom.dcmread( structure_file )   
     contour = get_external_name( structure_file )
-  
-    
-    # MODIFYING GATETOOLS; get_mask() disn't work for HFP setup
+      
+    # get_mask() doesn't work for HFP setup; need to reorientate
     aroi = roiutils.region_of_interest(ds,contour)
     mask = aroi.get_mask(img, corrected=False)
-    #itk.imwrite(mask, "mask.mhd")  
-
     
     pix_mask = itk.array_view_from_image(mask)
     pix_img = itk.array_view_from_image(img) 
@@ -70,19 +73,23 @@ def set_air_external( img_file, structure_file, output_img_file ):
     img_modified = itk.image_view_from_array( pix_img )
     
     img_modified.CopyInformation(img)
-
-    itk.imwrite(img_modified, output_img_file )
-
+    return img_modified
 
 
 
 
-def override_hu( img_file, structure_file, output_img, structure, hu ):   #MAYBE JUST PASS THE IMAGE OBJECT AND DICOM OBJECT??
+
+def override_hu( image, structure_file, structure, hu ):   #MAYBE JUST PASS THE IMAGE OBJECT AND DICOM OBJECT??
     """Override all HUs inside of specified structure"""
 
-    img = itk.imread( img_file )
     ds = pydicom.dcmread( structure_file )
-  
+    img = None 
+    if type(image)==str:
+        #Assume we have file path
+        img = itk.imread(image)
+    else:
+        #Assume we have itk image object
+        img = image   
     
     aroi = roiutils.region_of_interest(ds,structure)
     mask = aroi.get_mask(img, corrected=False)    
@@ -101,5 +108,6 @@ def override_hu( img_file, structure_file, output_img, structure, hu ):   #MAYBE
     
     img_modified.CopyInformation(img)
 
-    itk.imwrite(img_modified, output_img )
+    #itk.imwrite(img_modified, output_img )
+    return img_modified
 

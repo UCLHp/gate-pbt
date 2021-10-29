@@ -29,7 +29,6 @@ def force_positive_directionality( image ):
     Returns mhd image
     """
     
-    #img = itk.imread(imgpath)
     img = None 
     if type( image )==str:
         #Assume we have file path

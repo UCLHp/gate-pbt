@@ -10,6 +10,7 @@ import os
 from os.path import join, basename, isdir, exists
 import shutil
 from pathlib import Path
+import json
 
 import pydicom
 import easygui
@@ -25,11 +26,19 @@ import cropimage
 
 
 
-DATA_TO_COPY = ["GateMaterials.db","UCLH2019DensitiesTable_v1.txt",
-                 "UCLH2019MaterialsTable_v1.txt", "patient-HU2mat_UCLHv1.txt",
-                 "patient-HUmaterials_UCLHv1.db", "simconfig.ini",
-                 "SourceDescriptionFile.txt"]
-MAC_TO_COPY =  ["verbose.mac","visu.mac"]
+
+##############################################################################
+
+# Get absolute path to template files and destination of simulation files
+base_path = Path(__file__).parent
+PATH_TO_TEMPLATES = (base_path / "../templates").resolve()
+PATH_TO_SIMFILES = (base_path / "../../data/simulationfiles").resolve()
+
+
+# System configuration data; see json file for details
+DATA = json.load( open(join(PATH_TO_TEMPLATES,"sysconfig.json")) )
+
+##############################################################################
 
 
 
@@ -42,12 +51,12 @@ def make_gate_dirs(dir_name, path_to_templates):
         os.mkdir( join(dir_name,"mac") )
         os.mkdir( join(dir_name,"output") )    
     # Copy over data files
-    for f in DATA_TO_COPY:
+    for f in DATA["DATA_TO_COPY"]:
         source = join(path_to_templates,f)  
         destination = join(dir_name,"data",f)
         shutil.copyfile(source,destination)
     # Copy over mac files
-    for f in MAC_TO_COPY:
+    for f in DATA["MACS_TO_COPY"]:
         source = join(path_to_templates,f)  
         destination = join(dir_name,"mac",f)  
         shutil.copyfile(source,destination)
@@ -146,10 +155,6 @@ def search_dcm_dir( input_dir ):
 
 def main():
     
-    # Get absolute path to template files and destination of simulation files
-    base_path = Path(__file__).parent
-    path_to_templates = (base_path / "../../data/templates").resolve()
-    path_to_simfiles = (base_path / "../../data/simulationfiles").resolve()
      
     # Select directory containing the DICOM files
     msg = "Select directory containing DICOM files"
@@ -160,63 +165,55 @@ def main():
     else:
         sys.exit(0)
         
-    DICOM_DIR = easygui.diropenbox()
-    #CT_DIR = join(DICOM_DIR,"ct")
-    TEMPLATE_MAC = join(path_to_templates,"TEMPLATE_simulateField.txt")
-    TEMPLATE_SOURCE = join(path_to_templates,"TEMPLATE_SourceDescFile.txt")
+    dicom_dir = easygui.diropenbox()
+    #mac_template = join(path_to_templates, DATA["MAC_TEMPLATE"])
    
     #Check all images belong to same image and that only one plan and one structure set are present
-    ct_files,plan_file,dose_files,struct_file = search_dcm_dir(DICOM_DIR)    
+    ct_files,plan_file,dose_files,struct_file = search_dcm_dir(dicom_dir)    
     
     # Make Gate directory structure and copy fixed files
     print("Making directories")
     plandcm = pydicom.dcmread(plan_file)
     identifier = plandcm.PatientID+"--"+plandcm.RTPlanLabel
-    sim_dir = join(path_to_simfiles, identifier)
-    make_gate_dirs(sim_dir, path_to_templates)   
+    sim_dir = join(PATH_TO_SIMFILES, identifier)
+    make_gate_dirs(sim_dir, PATH_TO_TEMPLATES)   
     
     # Define simconfig.ini configuration file
-    CONFIG = join(sim_dir, "data", "simconfig.ini")
- 
-    #Defining some path names for intermediate images for debugging
-    ct_unmod = join(sim_dir,"data","ct_orig.mhd")  ##path or name?
-    ct_reorientate = join(sim_dir, "data", "ct_orig_reorientate.mhd")
-    ct_air = join(sim_dir,"data","ct_air.mhd")
-      
+    configpath = join(sim_dir, "data", DATA["CONFIG_FILE"])
     patient_position = pydicom.dcmread(ct_files[0]).PatientPosition
-    config.add_patient_position( CONFIG, patient_position )
+    config.add_patient_position( configpath, patient_position )
     
     print("Converting dcm CT files to mhd image")
-    itkimg = read_dicom( ct_files )
-    itk.imwrite(itkimg, ct_unmod) 
+    ctimg = read_dicom( ct_files )
+    #itk.imwrite(itkimg, join(sim_dir,"data","ct_orig.mhd")) 
     
     print("Reorientating image to enforce positive directionality")
-    img_reor=reorientate.force_positive_directionality(ct_unmod)
-    itk.imwrite( img_reor, ct_reorientate)    
+    ct_reor = reorientate.force_positive_directionality(ctimg)
+    #itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))    
     
     print("Overriding all external structures to air")
-    ct_air_path = join(sim_dir,"data",ct_air)
-    overrides.set_air_external( ct_reorientate, struct_file, ct_air_path )  #  USE REORIENTATED IMG
+    ct_air_override = overrides.set_air_external( ct_reor, struct_file )
+    #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
       
-    # Check for density overrides and apply
-    # TODO
-    #overrides.override_hu( ct_unmod, struct_file, join(sim_dir,"data",ct_air), "BODY", -43 )
+    # TODO: Check for density overrides and apply
+    #overrides.override_hu( ct_air_override, struct_file, "BODY", -43 )
     
     # Crop image to structure
     ext_contour = overrides.get_external_name( struct_file )
     print("Cropping img to ", ext_contour)
-    cropped_img_path = join(sim_dir,"data","ct_cropped.mhd")
-    cropimage.crop_to_structure( ct_air_path, struct_file, ext_contour, cropped_img_path )  #optional margin
+    ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, ext_contour) #optional margin
+    itk.imwrite(ct_cropped, join(sim_dir,"data","ct_cropped.mhd"))
 
-    # TODO: SET THIS AUTOMATICALLY IF CROPPING OR NOT
-    #ct_for_simulation = ct_air
-    ct_for_simulation = cropped_img_path
+    # TODO: set automatically for different cropping / override options
+    ct_for_simulation = "ct_cropped.mhd"
+    ct_sim_path = join(sim_dir,"data",ct_for_simulation)
+    itk.imwrite(ct_cropped, ct_sim_path)
     
     # Add number fractions to config
     nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
-    config.add_fractions( CONFIG, nfractions )
+    config.add_fractions( configpath, nfractions )
     # Add ct name being used in sim to simconfig.ini
-    config.add_ct_to_config( CONFIG, basename(ct_for_simulation) )
+    config.add_ct_to_config( configpath, ct_for_simulation )
     # Add ct transform matrix to simconfig.ini - NO NEED; JUST USE 100010
     #config.add_transformmatrix_to_config( CONFIG, ct_for_simulation )
       
@@ -227,7 +224,7 @@ def main():
     # Generate all files required for simulation
     print("Generating simulation files")
     #generatefiles.generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_for_simulation, sim_dir)
-    generatefiles.generate_files(ct_files[0], plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, basename(ct_for_simulation), sim_dir)
+    generatefiles.generate_files(ct_files[0], plan_file, dose_files, PATH_TO_TEMPLATES, DATA, configpath, ct_for_simulation, sim_dir)
     
 
     

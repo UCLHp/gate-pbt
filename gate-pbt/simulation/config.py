@@ -7,6 +7,7 @@ Methods for creating / modifying simulation config file
 import configparser
 
 
+
 def update_config( configfile, section, key, value ):
     """Update simconfig.ini section and key with value
     

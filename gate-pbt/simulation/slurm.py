@@ -7,11 +7,6 @@ Our jobs are run on a virtualized linux cluster
 import os
 
 
-# LINUX PATH
-CLUSTER_LOCATION = "/mnt/clustshare"
-
-
-
 def dos2unix( filein, fileout ):
     """Convert Windows line endings to unix"""   
     with open( filein, 'rb') as infile:    
@@ -22,12 +17,12 @@ def dos2unix( filein, fileout ):
 
 
 
-def make_script(sim_dir_path, fieldname, splits, outpath):
+def make_script(nfs_share,sim_dir_path, fieldname, splits, outpath):
     """Slurm job submission script for field"""
     
     # Identifier is the name of the sim folder; get from local path:
     simdirname = os.path.basename( sim_dir_path )
-    simdirclustpath = CLUSTER_LOCATION + "/" + simdirname
+    simdirclustpath = nfs_share + "/" + simdirname
     
     with open(outpath, "w") as out:
         out.write("#!/bin/bash\n")
