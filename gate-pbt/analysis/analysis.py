@@ -12,8 +12,7 @@ Automated analysis of Gate simulation output:
 
 import sys
 import os
-from os.path import join, basename
-from pathlib import Path
+from os.path import join, basename, dirname
 
 import easygui
 import itk
@@ -103,18 +102,14 @@ def full_analysis( outputdir ):
     """ 
     print("\nData directory: ",outputdir)
 
-
-    # Get absolute path to template/data files
-    base_path = Path(__file__).parent
-    path_to_templates = (base_path / "../../data/templates").resolve()
-    
+    # Get absolute path to simulation data files  
+    parentdir = dirname(outputdir)   
     #TODO: read this from config file
-    #material_db = "patient-HUmaterials_UCLHv1.db"
     hu2matfile = "patient-HU2mat_UCLHv1.txt"
     emcalc = "emcalc.txt"
-    #material_db_path = join(path_to_templates, material_db)
-    hu2mat_path = join(path_to_templates, hu2matfile)
-    emcalc_path = join(path_to_templates, emcalc)
+    hu2mat_path = join(parentdir,"data",hu2matfile)
+    emcalc_path = join(parentdir,"data",emcalc)
+    
 
     ## check_integrity( outputdir )  #TODO
         
@@ -136,7 +131,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions * 1.1 ## For RBE
+        scalefactor = (nreq / nsim) * nfractions * 1.1   ## RBE
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)

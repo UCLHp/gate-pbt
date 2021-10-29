@@ -77,7 +77,7 @@ def dcm2mhd( dcmfilepath, outpath=None ):
     
     # Save file if outpath specified
     if outpath is None:
-        itk.imwrite(doseimg, "EclipseDose.mhd")
+        #itk.imwrite(doseimg, "EclipseDose.mhd")
         return doseimg
     else:
         itk.imwrite(doseimg, "EclipseDose.mhd")

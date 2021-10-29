@@ -12,7 +12,8 @@
     "patient-HU2mat_UCLHv1.txt",
     "patient-HUmaterials_UCLHv1.db",
     "simconfig.ini",
-    "SourceDescriptionFile.txt"
+    "SourceDescriptionFile.txt",
+    "emcalc.txt"
   ],
 
   "MACS_TO_COPY": ["verbose.mac", "visu.mac"],

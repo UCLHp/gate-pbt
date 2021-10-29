@@ -392,7 +392,6 @@ def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, conf
         nprotons = int( req_prims[field.BeamName]/2000 )      
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
- 
        
         # Make SLURM job script
         scriptname = "submit_"+beamname+".sh"

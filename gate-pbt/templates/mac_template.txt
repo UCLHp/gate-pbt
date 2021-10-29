@@ -123,7 +123,7 @@
 #=====================================================
 
 /gate/actor/addActor                     DoseActor  dose3d
-/gate/actor/dose3d/save                  {path}/output/3d-pat.mhd
+/gate/actor/dose3d/save                  {path}/output/{run}_3d-pat.mhd
 /gate/actor/dose3d/attachTo    	         patient
 /gate/actor/dose3d/stepHitType           random
 /gate/actor/dose3d/setVoxelSize          XX XX XX mm
@@ -138,7 +138,7 @@
 /gate/actor/dose3d/enableDoseToWater     false
 
 #/gate/actor/addActor                 LETActor  let3d
-#/gate/actor/let3d/save               {path}/output/letActor.mhd
+#/gate/actor/let3d/save               {path}/output/{run}_letActor.mhd
 #/gate/actor/let3d/attachTo           patient
 #/gate/actor/let3d/saveEveryNSeconds     12000
 #/gate/actor/let3d/setVoxelSize       XX XX XX mm
@@ -147,7 +147,7 @@
 #/gate/actor/let3d/particleFilter/addParticle   proton
 
 /gate/actor/addActor               SimulationStatisticActor stat
-/gate/actor/stat/save              {path}/output/stat-pat.txt
+/gate/actor/stat/save              {path}/output/{run}_stat-pat.txt
 /gate/actor/stat/saveEveryNSeconds 12000
 
 
