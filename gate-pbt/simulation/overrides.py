@@ -27,7 +27,11 @@ def get_external_name( structure_file ):
     ss = pydicom.dcmread( structure_file )    
     for struct in ss.RTROIObservationsSequence:
         if struct.RTROIInterpretedType.lower() == "external":
-            contour = struct.ROIObservationLabel
+            try:
+                contour = struct.ROIObservationLabel
+            except:
+                contour = struct.RTROIIdentificationCodeSequence[0].CodeValue
+                
             #print("Found external: {}".format(contour))
         elif struct.RTROIInterpretedType.lower() == "bolus":
             print("\n\nWARNING: Bolus found. It will be overriden with air.\n")
