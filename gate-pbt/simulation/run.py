@@ -174,7 +174,7 @@ def main():
     # Make Gate directory structure and copy fixed files
     print("Making directories")
     plandcm = pydicom.dcmread(plan_file)
-    identifier = plandcm.PatientID+"--"+plandcm.RTPlanLabel
+    identifier = plandcm.PatientID+"--"+(plandcm.RTPlanLabel).replace(" ","_")
     sim_dir = join(PATH_TO_SIMFILES, identifier)
     make_gate_dirs(sim_dir, PATH_TO_TEMPLATES)   
     

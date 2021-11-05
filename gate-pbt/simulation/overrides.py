@@ -23,16 +23,14 @@ HU_AIR = -1000
 def get_external_name( structure_file ):
     """Get contour name of external patient contour"""
     contour = ""
-    contains_bolus = False
+    #contains_bolus = False
     ss = pydicom.dcmread( structure_file )    
     for struct in ss.RTROIObservationsSequence:
         if struct.RTROIInterpretedType.lower() == "external":
             try:
                 contour = struct.ROIObservationLabel
             except:
-                contour = struct.RTROIIdentificationCodeSequence[0].CodeValue
-                
-            #print("Found external: {}".format(contour))
+                contour = struct.RTROIIdentificationCodeSequence[0].CodeValue                
         elif struct.RTROIInterpretedType.lower() == "bolus":
             print("\n\nWARNING: Bolus found. It will be overriden with air.\n")
     if contour=="":

@@ -33,17 +33,19 @@ def check_integrity( outputdir ):
     pass
 
 
-def get_field_names( outputdir ):
-    """Return fieldnames contained in directory
-    Corresponds to first part of filename_xx_xx.mhd
-    """
-    fieldnames = []    
-    filelist = os.listdir(outputdir)
-    for entry in filelist:
-        name = entry.split("_")[0]
-        if name not in fieldnames:
-            fieldnames.append(name)                
-    return fieldnames
+#def get_field_names( outputdir ):
+#    """Return fieldnames contained in directory
+#    Corresponds to first part of filename_xx_xx.mhd
+#    """
+#    fieldnames = []    
+#    filelist = os.listdir(outputdir)
+#    for entry in filelist:
+#        name = entry.split("_")[0]
+#        if name not in fieldnames:
+#            fieldnames.append(name)
+#
+#    fieldnames = ["G280_T10_RS0","G80_T270_RS0","G80_T345_RS0"]             
+#    return fieldnames
     
 
 def count_prims_simulated( outputdir, field ):
@@ -105,7 +107,7 @@ def full_analysis( outputdir ):
     # Get absolute path to simulation data files  
     parentdir = dirname(outputdir)   
     #TODO: read this from config file
-    hu2matfile = "patient-HU2mat_UCLHv1.txt"
+    hu2matfile = "PhilipsBody-HU2mat.txt"
     emcalc = "emcalc.txt"
     hu2mat_path = join(parentdir,"data",hu2matfile)
     emcalc_path = join(parentdir,"data",emcalc)
@@ -113,7 +115,10 @@ def full_analysis( outputdir ):
 
     ## check_integrity( outputdir )  #TODO
         
-    fieldnames = get_field_names( outputdir )
+    #fieldnames = get_field_names( outputdir )
+    fieldnames = config.get_beam_names( outputdir )
+    
+    
     print("Fields found: ", fieldnames)
     
     for field in fieldnames:

@@ -344,9 +344,10 @@ def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, conf
         
         beamname = str(field.BeamName).replace(" ","")
         
-        # Add beam ref number to config file
+        # Add beam ref number and name to config file
         beam_ref_no = field.BeamNumber
         config.add_beam_ref_no( configpath, beamname, beam_ref_no )
+        config.add_beam_name( configpath, beamname )
         
         # Calculate correct origin for dose output
         # THIS IS NO LONGER IMPORTED INTO SIMULATION OUTPUT.
