@@ -7,7 +7,7 @@ Methods to merge cluster simulation results:
     - Combining LETd distributions
 """
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, basename
 import math
 
 import easygui
@@ -209,13 +209,14 @@ def merge_results( directory, fieldname=None ):
     Data integrity should be checked before calling this method
     """
     
-    allfiles = [join(directory,f) for f in listdir(directory) if isfile(join(directory,f))]
+    allfilepaths = [join(directory,f) for f in listdir(directory) if isfile(join(directory,f))]
     
     if fieldname is None:
-        fieldfiles = allfiles
+        fieldfiles = allfilepaths
         fieldname = ""
     else:
-        fieldfiles =  [f for f in allfiles if fieldname in f]     
+        fieldfiles =  [f for f in allfilepaths if fieldname in basename(f)]
+  
 
     dosefiles = [f for f in fieldfiles if "pat-Dose.mhd" in f ]
     dosetowaterfiles = [f for f in fieldfiles if "pat-DoseToWater.mhd" in f ]

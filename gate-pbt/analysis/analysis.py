@@ -23,6 +23,7 @@ import dosetowater
 import mhdtodicom
 import dicomtomhd
 import gamma
+import overrides
 
 
 
@@ -191,11 +192,29 @@ def full_analysis( outputdir ):
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
             mhdtodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
 
-        
-        
-        
-        
-        
+            
+            
+            ### Override dose outside of patient contour ###
+            # Means in Mephysto use panel A for Eclipse; B (ref) for MC dose
+            struct_file = r"P:\Protons\SteveCourt_P\__PLANNING MEETINGS__\TestPROTECTD\dcm\RS.1.2.246.352.71.4.957952195770.520542.20220310123122.dcm"
+            pt_contour = "BODY"
+            dose_none_ext = overrides.set_external_dose_zero( scaledimg, struct_file, pt_contour )
+            #itk.imwrite(dose_none_ext, join(outputdir, field+"_Gate_DoseToWater_NoneExt.mhd") )      
+            mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_Gate_DoseToWater_NoneExt.dcm") )
+            
+            
+            
+            print("  Performing gamma analysis for GD2W")
+            tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
+            gamma_img_gd2w = gamma.gamma_image(   tps_dose , dose_none_ext )
+            #itk.imwrite(gamma_img, join(outputdir, field+"_Gamma_NoneExt.mhd") )
+            pass_rate = gamma.get_pass_rate( gamma_img_gd2w )
+            print("    XXXXXXXXX gamma pass rate = {}%".format( round(pass_rate,2) ))
+            #
+            # Make dcm for gamnma image for visualizaiton
+            #print("  Converting gamma image to dicom")
+            #gamma_dcm = join(outputdir, field+"_Gamma.dcm")
+            #mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
         
         
     

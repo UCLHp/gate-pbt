@@ -169,7 +169,8 @@ def main():
     #mac_template = join(path_to_templates, DATA["MAC_TEMPLATE"])
    
     #Check all images belong to same image and that only one plan and one structure set are present
-    ct_files,plan_file,dose_files,struct_file = search_dcm_dir(dicom_dir)    
+    ct_files,plan_file,dose_files,struct_file = search_dcm_dir(dicom_dir) 
+
     
     # Make Gate directory structure and copy fixed files
     print("Making directories")
@@ -185,23 +186,37 @@ def main():
     
     print("Converting dcm CT files to mhd image")
     ctimg = read_dicom( ct_files )
-    #itk.imwrite(itkimg, join(sim_dir,"data","ct_orig.mhd")) 
+    #itk.imwrite(ctimg, join(sim_dir,"data","ct_orig.mhd")) 
     
     print("Reorientating image to enforce positive directionality")
     ct_reor = reorientate.force_positive_directionality(ctimg)
-    #itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))    
+    #itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))   
+    
+    
     
     print("Overriding all external structures to air")
     ct_air_override = overrides.set_air_external( ct_reor, struct_file )
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
-      
+    
+    
+    ##### OVERRIDE FOR PSQA
+    #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
+     
+    
     # TODO: Check for density overrides and apply
-    #overrides.override_hu( ct_air_override, struct_file, "BODY", -43 )
+    ##override_hu( image, structure_file, structure, hu ):
+    #print("Overriding other structures")  
+    #structs_to_air = ["zBB"]    #, "zScarWire"]
+    #for s in structs_to_air:
+    #    print("Overriding "+s+"+to air")
+    #    ct_air_override = overrides.override_hu( ct_air_override, struct_file, s, -1000 )
+        
     
     # Crop image to structure
-    ext_contour = overrides.get_external_name( struct_file )
-    print("Cropping img to ", ext_contour)
-    ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, ext_contour) #optional margin
+    crop_to_contour = overrides.get_external_name( struct_file )
+    crop_to_contour="Dose0.001%"
+    print("Cropping img to", crop_to_contour)
+    ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, crop_to_contour) #optional margin
     itk.imwrite(ct_cropped, join(sim_dir,"data","ct_cropped.mhd"))
 
     # TODO: set automatically for different cropping / override options
