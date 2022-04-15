@@ -148,8 +148,32 @@ def search_dcm_dir( input_dir ):
         sys.exit(1)
     else:
         return ct_files,plan_file,dose_files,struct_file
+    
 
 
+def structure_exists( dcmfile, struct ):
+    """Checks structure dicom file that "struct" exists and is contoured
+    
+    Returns boolean"""
+    
+    exists = False
+    
+    dcmf = pydicom.dcmread(dcmfile)
+    roi_num = None
+    for s in dcmf.StructureSetROISequence:
+        #if s.ROIName.lower()==struct.lower():
+        if s.ROIName==struct:
+            roi_num = s.ROINumber
+            break
+
+    if roi_num is not None:
+        for s in dcmf.ROIContourSequence:
+            if s.ReferencedROINumber == roi_num:
+                if len(s.ContourSequence)>0:
+                    if s.ContourSequence[0].NumberOfContourPoints>3:
+                        exists = True
+                        break
+    return exists
 
 
 
@@ -198,19 +222,23 @@ def main():
     ct_air_override = overrides.set_air_external( ct_reor, struct_file )
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
+    structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
+                      "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire"]
+    for s in structs_to_air:
+        if structure_exists( struct_file, s ):
+            print("Overriding",s,"to air")
+            ct_air_override = overrides.override_hu( ct_air_override, struct_file, s, -1000 )    
+    
+    
+    # TODO: Check for density overrides and apply
+    #override_hu( image, structure_file, structure, hu )
+    
     
     ##### OVERRIDE FOR PSQA
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
      
     
-    # TODO: Check for density overrides and apply
-    ##override_hu( image, structure_file, structure, hu ):
-    #print("Overriding other structures")  
-    #structs_to_air = ["zBB"]    #, "zScarWire"]
-    #for s in structs_to_air:
-    #    print("Overriding "+s+"+to air")
-    #    ct_air_override = overrides.override_hu( ct_air_override, struct_file, s, -1000 )
-        
+ 
     
     # Crop image to structure
     crop_to_contour = overrides.get_external_name( struct_file )

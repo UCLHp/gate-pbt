@@ -111,9 +111,9 @@
 /gate/physics/Electron/SetCutInRegion   patient 0.1 mm
 /gate/physics/Positron/SetCutInRegion   patient 0.1 mm
 
-/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.5 mm 
-/gate/physics/Electron/SetCutInRegion   rangeshifter 0.5 mm
-/gate/physics/Positron/SetCutInRegion   rangeshifter 0.5 mm
+/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   rangeshifter 0.1 mm
+/gate/physics/Positron/SetCutInRegion   rangeshifter 0.1 mm
 
 /gate/physics/displayCuts
 
@@ -135,7 +135,7 @@
 /gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
 #/gate/actor/dose3d/normaliseDoseToMax   false
-/gate/actor/dose3d/enableDoseToWater     false
+/gate/actor/dose3d/enableDoseToWater     true
 
 #/gate/actor/addActor                 LETActor  let3d
 #/gate/actor/let3d/save               {path}/output/{run}_letActor.mhd

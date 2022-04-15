@@ -196,8 +196,8 @@ def full_analysis( outputdir ):
             
             ### Override dose outside of patient contour ###
             # Means in Mephysto use panel A for Eclipse; B (ref) for MC dose
-            struct_file = r"P:\Protons\SteveCourt_P\__PLANNING MEETINGS__\TestPROTECTD\dcm\RS.1.2.246.352.71.4.957952195770.520542.20220310123122.dcm"
-            pt_contour = "BODY"
+            struct_file = r"P:\Protons\SteveCourt_P\__TRIALS__\NB_IMAT_06\dcm\RS.1.2.246.352.71.4.179454110911.10729.20220325132333.dcm"
+            pt_contour = "External"
             dose_none_ext = overrides.set_external_dose_zero( scaledimg, struct_file, pt_contour )
             #itk.imwrite(dose_none_ext, join(outputdir, field+"_Gate_DoseToWater_NoneExt.mhd") )      
             mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_Gate_DoseToWater_NoneExt.dcm") )
@@ -215,6 +215,24 @@ def full_analysis( outputdir ):
             #print("  Converting gamma image to dicom")
             #gamma_dcm = join(outputdir, field+"_Gamma.dcm")
             #mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
+     
+        
+        
+        
+        let = field+"_merged-LET.mhd"
+        if let in [basename(f) for f in mergedfiles]:
+            print("  Converting LET img to dicom")
+            letimg = join(outputdir, let)
+            beamref = config.get_beam_ref_no( outputdir, field )
+            path_to_dcmdose = mhdtodicom.get_dcm_file_path( outputdir, beamref )
+            dcm_out = join(outputdir, field+"_LET.dcm")
+            mhdtodicom.mhd2dcm( letimg, path_to_dcmdose, dcm_out )
+            
+        
+        
+        
+        
+        
         
         
     
