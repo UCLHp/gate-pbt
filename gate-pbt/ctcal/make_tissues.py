@@ -17,9 +17,13 @@ import numpy as np
 # All elements as labelled in WW tissue data file
 ELEMENTS=["Hydrogen","Carbon","Nitrogen","Oxygen","Sodium","Magnesium",
           "Phosphor","Sulfur","Chlorine","Potassium","Calcium","Iron","Iodine"]
-
+#ELEMENTS=["h","c","n","o","f","na","mg","si","p","s","cl","k","ca","fe","i"]
+#  (KC additionally has Si and F?)
+    
 # Data file
-WW_TISSUE_DATA = "example_WW_tissues_compositions.csv"
+#WW_TISSUE_DATA = "example_WW_tissues_compositions.csv"
+#WW_TISSUE_DATA = "tissue_compositions_KC20211101.csv"
+WW_TISSUE_DATA = "tissue_compositions_WW.csv"
 #########################################################################
 
 
@@ -59,7 +63,7 @@ def main():
     for i,row in ww_data.iterrows():
         gate_box_txt( row["Tissue"], i, out_box  )
         n = element_count(row,ELEMENTS)
-        out.write( "{}: d={} g/cm3 ; n={}\n".format(row["Tissue"].strip(),row["density"],n)  )
+        out.write( "{}: d={} g/cm3 ; n={}\n".format(row["Tissue"].strip(),row["Density"],n)  )
         sum_fraction = 0
         for e in ELEMENTS:
             if float(row[e])>0.0001:

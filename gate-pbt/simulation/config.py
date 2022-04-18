@@ -7,6 +7,7 @@ Methods for creating / modifying simulation config file
 import configparser
 
 
+
 def update_config( configfile, section, key, value ):
     """Update simconfig.ini section and key with value
     
@@ -113,6 +114,24 @@ def add_beam_ref_no( configfile, field, beamno ):
         config[name]["beam_ref_no"] = str(beamno)
     else:
         config[name]  =  {"beam_ref_no": str(beamno) }    
+        
+    with open(configfile, "w") as q:
+        config.write( q )
+        
+        
+def add_beam_name( configfile, beamname ):
+    """Update simconfig.ini with beam names
+    """
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    
+    if config.has_option("Plan","beam_names"):
+        config["Plan"]["beam_names"] += ","+beamname
+    else:
+        if config.has_section("Plan"):
+            config["Plan"]["beam_names"] = beamname
+        else:
+            config["Plan"]  =  {"beam_names": beamname }    
         
     with open(configfile, "w") as q:
         config.write( q )

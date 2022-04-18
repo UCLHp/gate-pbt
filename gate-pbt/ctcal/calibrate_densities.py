@@ -11,10 +11,12 @@ each material in Gate so as to force RSP match with CT data
 
 #############################################################
 # Stopping power data from Gate's EMCalculatorActor
-EM_CALC = "example_emcalc.txt"
+#EM_CALC = "example_emcalc.txt"
+EM_CALC = "emcalc_PhilipsCT7500_Body_VR20211101.txt"
 
 # HU-RSP relations from CT calibration curve
-RSP_FROM_CT = "example_ct_data.csv"
+#RSP_FROM_CT = "example_ct_data.csv"
+RSP_FROM_CT = "ct_data_PhilipsCT7500_Body_VR20211101.csv"
 #############################################################
 
 
@@ -63,7 +65,7 @@ def read_calibration_HUs( fname ):
     lines = f.readlines()[1:]
     for l in lines:
         cols = l.split(",")
-        calib_hus[ cols[0].strip("'") ] = float(cols[1])
+        calib_hus[ cols[0].strip("'").strip() ] = float(cols[1])
     return calib_hus
 
 def read_calibration_RSPs( fname ):
@@ -74,7 +76,7 @@ def read_calibration_RSPs( fname ):
     lines = f.readlines()[1:]
     for l in lines:
         cols = l.split(",")
-        calib_rsp[ cols[0].strip("'") ] = float(cols[2])    
+        calib_rsp[ cols[0].strip("'").strip() ] = float(cols[2])    
     return calib_rsp
 
 def read_calibration_densities( fname ):
@@ -85,7 +87,7 @@ def read_calibration_densities( fname ):
     lines = f.readlines()[1:]
     for l in lines:
         cols = l.split(",")
-        calib_hus[ cols[0].strip("'") ] = float(cols[3])
+        calib_hus[ cols[0].strip("'").strip() ] = float(cols[3])
     return calib_hus
 
 

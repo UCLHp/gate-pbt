@@ -64,7 +64,29 @@ Air: d=1.29 mg/cm3 ; n=4 ; state=gas
 Titanium: d=4.506 g/cm3 ; n=1 ; state=solid
 	+el: name=auto ; n=1
 
-Lungdeflated: d=0.26 g/cm3 ; n=9
+Lungdeflated1: d=0.14800000000000002 g/cm3 ; n=9
+        +el: name=Hydrogen; f=0.103
+        +el: name=Carbon; f=0.105
+        +el: name=Nitrogen; f=0.031
+        +el: name=Oxygen; f=0.749
+        +el: name=Sodium; f=0.002
+        +el: name=Phosphor; f=0.002
+        +el: name=Sulfur; f=0.003
+        +el: name=Chlorine; f=0.003
+        +el: name=Potassium; f=0.002
+
+Lungdeflated2: d=0.26 g/cm3 ; n=9
+        +el: name=Hydrogen; f=0.103
+        +el: name=Carbon; f=0.105
+        +el: name=Nitrogen; f=0.031
+        +el: name=Oxygen; f=0.749
+        +el: name=Sodium; f=0.002
+        +el: name=Phosphor; f=0.002
+        +el: name=Sulfur; f=0.003
+        +el: name=Chlorine; f=0.003
+        +el: name=Potassium; f=0.002
+
+Lungdeflated3: d=0.4 g/cm3 ; n=9
         +el: name=Hydrogen; f=0.103
         +el: name=Carbon; f=0.105
         +el: name=Nitrogen; f=0.031

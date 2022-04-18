@@ -10,13 +10,8 @@ to be out of the beam.
 from math import sin, cos, radians
 
 ######### TODO
-# 1. Need exact RS dimensions / chemical composition
-# 2. Add all rangeshifters to RS_THICKNESS
+# 1. Validate rangeshifter RSPs
 #########
-
-# dictionary of rangeshifter WET to physical thicknesses in use (since
-# dicom file will only contain WET)
-RS_THICKNESS = { 57.0:50 }
 
 
 
@@ -46,7 +41,7 @@ def get_translation( iso_to_rs, thick, gantryangle ):
 
 
 
-def get_props( field ):
+def get_props( field, rs_wet_options ):
     """Return RangeShifter object with all relevant properties
     """
     
@@ -56,8 +51,9 @@ def get_props( field ):
     rs = Rangeshifter()
     
     if has_RS:
-        rsss =  field.IonControlPointSequence[0].RangeShifterSettingsSequence[0]    
-        thick = RS_THICKNESS[ rsss.RangeShifterWaterEquivalentThickness ]
+        rsss =  field.IonControlPointSequence[0].RangeShifterSettingsSequence[0]
+        rs_wet = str(rsss.RangeShifterWaterEquivalentThickness)
+        thick = rs_wet_options[ rs_wet ]
         gantryangle = field.IonControlPointSequence[0].GantryAngle       
         iso_to_rs = rsss.IsocenterToRangeShifterDistance
         trans = get_translation(iso_to_rs, thick, gantryangle) 

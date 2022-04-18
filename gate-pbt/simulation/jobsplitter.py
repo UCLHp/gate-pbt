@@ -6,10 +6,9 @@ Methods to split the Gate simulations up for running on cluster.
 
 import os
 
-
 def split_by_primaries( macfilepath, primaries=None, splits=1 ):
     """
-    Splits a mac file into separate simulations with equal number of primaries
+    Splits setTotalNumberOfPrimaries property in macfile
     If primaries not specified, value in template mac file will be taken
     """    
     
@@ -26,27 +25,22 @@ def split_by_primaries( macfilepath, primaries=None, splits=1 ):
                 totprims = int( l.split()[1] )
     else:
         totprims = primaries
-    
-    if splits > 1:
-        for i in range(1,splits+1):
-            filename = macfilepath.replace( ".mac", "_"+str(i)+".mac")
-            with open(filename, 'w') as out:
-                for l in maclines:
-                    if "output" in l:
-                        out.write( l.replace("output/", "output/"+str(fieldname)+"_"+str(i)+"_") )
-                    elif "TotalNumberOfPrimaries" in l:
-                        prims = str( int(totprims/splits) )
-                        out.write("/gate/application/setTotalNumberOfPrimaries {}\n".format(prims))
-                    else:
-                        out.write(l)
-            out.close()
-    elif splits==1:
-        # Leave single mac unmodified
-        pass
+        
+    if splits >= 1:
+        #filename = macfilepath.replace( ".mac", "_"+str(i)+".mac")
+        with open( macfilepath, 'w') as out:
+            for l in maclines:
+                if "output" in l:
+                   out.write( l.replace("output/", "output/"+str(fieldname)+"_") )
+                elif "TotalNumberOfPrimaries" in l:
+                    prims = str( int(totprims/splits) )
+                    out.write("/gate/application/setTotalNumberOfPrimaries {}\n".format(prims))
+                else:
+                    out.write(l)
+        out.close()
     else:
         print("Number of split jobs is <= 0; invalid")
         exit()
-
 
 
 

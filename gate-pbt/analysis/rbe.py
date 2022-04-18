@@ -35,15 +35,12 @@ def let_mcmahon2018( doseimg, letimg ):
 
 
 
-#doseimg = itk.imread(r"M:\vGATE-GEANT4\ClusterSimulationTesting\EarCanal_LET\Total_merged-Dose.mhd")
-#letimg = itk.imread(r"M:\vGATE-GEANT4\ClusterSimulationTesting\EarCanal_LET\Total_merged-LET.mhd")
-
-doseimg = itk.imread(r"M:\vGATE-GEANT4\gatefileprep\sobp_hfs_results\merged-Dose.mhd")
-letimg = itk.imread(r"M:\vGATE-GEANT4\gatefileprep\sobp_hfs_results\merged-LET.mhd")
+doseimg = itk.imread(r"")
+letimg = itk.imread(r"")
 
 weightedimg = let_mcmahon2018(doseimg, letimg)
 
-itk.imwrite(weightedimg, "Total_McMahonLET.mhd")
+itk.imwrite(weightedimg, "G180_McMahonLET.mhd")
 
 
 

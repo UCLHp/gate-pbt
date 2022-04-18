@@ -12,8 +12,7 @@ Automated analysis of Gate simulation output:
 
 import sys
 import os
-from os.path import join, basename
-from pathlib import Path
+from os.path import join, basename, dirname
 
 import easygui
 import itk
@@ -24,6 +23,7 @@ import dosetowater
 import mhdtodicom
 import dicomtomhd
 import gamma
+import overrides
 
 
 
@@ -34,17 +34,19 @@ def check_integrity( outputdir ):
     pass
 
 
-def get_field_names( outputdir ):
-    """Return fieldnames contained in directory
-    Corresponds to first part of filename_xx_xx.mhd
-    """
-    fieldnames = []    
-    filelist = os.listdir(outputdir)
-    for entry in filelist:
-        name = entry.split("_")[0]
-        if name not in fieldnames:
-            fieldnames.append(name)                
-    return fieldnames
+#def get_field_names( outputdir ):
+#    """Return fieldnames contained in directory
+#    Corresponds to first part of filename_xx_xx.mhd
+#    """
+#    fieldnames = []    
+#    filelist = os.listdir(outputdir)
+#    for entry in filelist:
+#        name = entry.split("_")[0]
+#        if name not in fieldnames:
+#            fieldnames.append(name)
+#
+#    fieldnames = ["G280_T10_RS0","G80_T270_RS0","G80_T345_RS0"]             
+#    return fieldnames
     
 
 def count_prims_simulated( outputdir, field ):
@@ -103,22 +105,21 @@ def full_analysis( outputdir ):
     """ 
     print("\nData directory: ",outputdir)
 
-
-    # Get absolute path to template/data files
-    base_path = Path(__file__).parent
-    path_to_templates = (base_path / "../../data/templates").resolve()
-    
+    # Get absolute path to simulation data files  
+    parentdir = dirname(outputdir)   
     #TODO: read this from config file
-    #material_db = "patient-HUmaterials_UCLHv1.db"
-    hu2matfile = "patient-HU2mat_UCLHv1.txt"
+    hu2matfile = "PhilipsBody-HU2mat.txt"
     emcalc = "emcalc.txt"
-    #material_db_path = join(path_to_templates, material_db)
-    hu2mat_path = join(path_to_templates, hu2matfile)
-    emcalc_path = join(path_to_templates, emcalc)
+    hu2mat_path = join(parentdir,"data",hu2matfile)
+    emcalc_path = join(parentdir,"data",emcalc)
+    
 
     ## check_integrity( outputdir )  #TODO
         
-    fieldnames = get_field_names( outputdir )
+    #fieldnames = get_field_names( outputdir )
+    fieldnames = config.get_beam_names( outputdir )
+    
+    
     print("Fields found: ", fieldnames)
     
     for field in fieldnames:
@@ -136,7 +137,7 @@ def full_analysis( outputdir ):
         nreq = config.get_req_prims( outputdir, field )
         nfractions = config.get_fractions( outputdir )
         
-        scalefactor = (nreq / nsim) * nfractions * 1.1 ## For RBE
+        scalefactor = (nreq / nsim) * nfractions * 1.1   ## RBE
         
         print("  Primaries simulated: ",nsim)
         print("  Primaries required: ",nreq)
@@ -191,6 +192,41 @@ def full_analysis( outputdir ):
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
             mhdtodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
 
+            
+            
+            ### Override dose outside of patient contour ###
+            # Means in Mephysto use panel A (targ) for Eclipse; B (ref) for MC dose
+            #struct_file = r"P:\Protons\SteveCourt_P\__TRIALS__\NB_IMAT_06\dcm\RS.1.2.246.352.71.4.179454110911.10729.20220325132333.dcm"
+            #pt_contour = "External"
+            #dose_none_ext = overrides.set_external_dose_zero( scaledimg, struct_file, pt_contour )
+            ##itk.imwrite(dose_none_ext, join(outputdir, field+"_Gate_DoseToWater_NoneExt.mhd") )      
+            #mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_Gate_DoseToWater_NoneExt.dcm") )
+            #
+            #
+            #print("  Performing gamma analysis for GD2W")
+            #tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
+            #gamma_img_gd2w = gamma.gamma_image(   tps_dose , dose_none_ext )
+            ##itk.imwrite(gamma_img, join(outputdir, field+"_Gamma_NoneExt.mhd") )
+            #pass_rate = gamma.get_pass_rate( gamma_img_gd2w )
+            #print("    XXXXXXXXX gamma pass rate = {}%".format( round(pass_rate,2) ))
+            #
+            # Make dcm for gamnma image for visualizaiton
+            #print("  Converting gamma image to dicom")
+            #gamma_dcm = join(outputdir, field+"_Gamma.dcm")
+            #mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
+     
+        
+        
+        
+        let = field+"_merged-LET.mhd"
+        if let in [basename(f) for f in mergedfiles]:
+            print("  Converting LET img to dicom")
+            letimg = join(outputdir, let)
+            beamref = config.get_beam_ref_no( outputdir, field )
+            path_to_dcmdose = mhdtodicom.get_dcm_file_path( outputdir, beamref )
+            dcm_out = join(outputdir, field+"_LET.dcm")
+            mhdtodicom.mhd2dcm( letimg, path_to_dcmdose, dcm_out )
+            
         
         
         

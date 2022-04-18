@@ -321,7 +321,7 @@ def calc_dose_offset( mhdimgpath, dcmdose ):
 ##    DIFFERENT IMAGES FOR EACH FIELD, CROPPED FOR MINIMUM MEMORY USAGE
     
 ##def generate_files(ct_files, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
-def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE, CONFIG, ct_mhd, sim_dir):
+def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, configpath, ct_mhd, sim_dir):
     """Method to generate all description and mac files"""
     
     mhdimgpath = join(sim_dir,"data",ct_mhd)
@@ -337,25 +337,26 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
     req_prims = fieldstats.get_required_primaries( dcmPlan )
     print("Required primaries = ",  req_prims )
     # Update simconfig.ini file
-    config.add_prims_to_config( CONFIG, req_prims )
+    config.add_prims_to_config( configpath, req_prims )
 
         
     for field in dcmPlan.IonBeamSequence:   
         
         beamname = str(field.BeamName).replace(" ","")
         
-        # Add beam ref number to config file
+        # Add beam ref number and name to config file
         beam_ref_no = field.BeamNumber
-        config.add_beam_ref_no( CONFIG, beamname, beam_ref_no )
+        config.add_beam_ref_no( configpath, beamname, beam_ref_no )
+        config.add_beam_name( configpath, beamname )
         
         # Calculate correct origin for dose output
         # THIS IS NO LONGER IMPORTED INTO SIMULATION OUTPUT.
         # CHECK THAT IT IS REDUNDANT BEFORE REMOVAL.
         dose_origin = calc_dose_offset( mhdimgpath, dose_files[0] )   #OKKKK
-        config.add_correct_dose_offset(CONFIG, beamname, dose_origin)
+        config.add_correct_dose_offset(configpath, beamname, dose_origin)
         
         # Rangeshifter object
-        rs = rangeshifter.get_props( field )  
+        rs = rangeshifter.get_props( field, DATA["RS_WET_OPTIONS"] )  
         
         
         ##### Make field-specific PlanDescriptionFile
@@ -374,7 +375,7 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
         translation_vector = get_translation_vector(mhdimgpath, ct_file, field, rotation_matrix )
         #print( translation_vector )
         mac_filename = join(sim_dir,"mac",beamname+".mac")
-        write_mac_file(TEMPLATE_MAC, mac_filename, pdf_filename,
+        write_mac_file(join(PATH_TO_TEMPLATES,DATA["MAC_TEMPLATE"]), mac_filename, pdf_filename,
                        setRotationAngle=angle,
                        setRotationAxis=axis,
                        setTranslation=translation_vector,
@@ -388,16 +389,15 @@ def generate_files(ct_file, plan_file, dose_files, TEMPLATE_MAC, TEMPLATE_SOURCE
     
         ##### Split field mac file here ####
         # Simulate Nreq/2000 for reasonable stats
-        splits = 35 
-        nprotons = int( req_prims[field.BeamName]/2000 )      
+        splits = 25
+        nprotons = int( req_prims[field.BeamName]/1500 )      
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
- 
        
         # Make SLURM job script
         scriptname = "submit_"+beamname+".sh"
         scriptpath = join(sim_dir, scriptname )
-        slurm.make_script(sim_dir, beamname, splits, scriptpath)
+        slurm.make_script(DATA["CLUSTER_NFS"], sim_dir, beamname, splits, scriptpath)
 
 
 

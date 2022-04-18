@@ -63,6 +63,19 @@ def get_beam_ref_no( outputdir, field ):
     return beamref
 
 
+def get_beam_names( outputdir ):
+    """Return beam reference number (used in dcm)"""
+    ########## ASSUME CONFIG FILE IN /../data
+    parent = dirname(outputdir)
+    configfile = join(parent,"data","simconfig.ini")
+    ########################################
+    
+    config = configparser.ConfigParser()
+    config.read(configfile)
+    beam_names = config.get("Plan", "beam_names").split(",")
+    return beam_names
+
+
 def get_ct_path( outputdir ):
     """Return path to ct image used in simulation"""
     ########## ASSUME CONFIG FILE IN /../data

@@ -10,16 +10,23 @@ import itk
 
 
 
-def crop_to_structure( mhdfile, dcm_struct_file, struct_name, outputimg, margin=0 ):
+def crop_to_structure( image, dcm_struct_file, struct_name, margin=0 ):
     """Crop mhd img to ROI in dicom structure file
     
     Optional margin (# voxels) applied isotropically
     """
-    img = itk.imread( mhdfile )
+    img = None 
+    if type(image)==str:
+        #Assume we have file path
+        img = itk.imread( image )
+    else:
+        #Assume we have itk image object
+        img = image  
+    
     # Find limits of roi in dicom coords
     mincorner,maxcorner = roi_bb_corners( dcm_struct_file, struct_name )
     cropped_img = crop_mhd(img, mincorner, maxcorner, margin)
-    itk.imwrite( cropped_img, outputimg )
+    return cropped_img
     
 
 

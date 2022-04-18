@@ -58,8 +58,8 @@
 # Create parameterized phantom object
 /gate/GlobalVol/daughters/name                      patient
 /gate/GlobalVol/daughters/insert                    ImageNestedParametrisedVolume
-/gate/geometry/setMaterialDatabase              {path}/data/patient-HUmaterials_UCLHv1.db
-/gate/patient/geometry/setHUToMaterialFile      {path}/data/patient-HU2mat_UCLHv1.txt
+/gate/geometry/setMaterialDatabase              {path}/data/PhilipsBody-HUmaterials.db
+/gate/patient/geometry/setHUToMaterialFile      {path}/data/PhilipsBody-HU2mat.txt
 
 # Position patient 
 /gate/patient/geometry/setImage                {path}/data/XXXX
@@ -111,9 +111,9 @@
 /gate/physics/Electron/SetCutInRegion   patient 0.1 mm
 /gate/physics/Positron/SetCutInRegion   patient 0.1 mm
 
-/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.5 mm 
-/gate/physics/Electron/SetCutInRegion   rangeshifter 0.5 mm
-/gate/physics/Positron/SetCutInRegion   rangeshifter 0.5 mm
+/gate/physics/Gamma/SetCutInRegion      rangeshifter 0.1 mm 
+/gate/physics/Electron/SetCutInRegion   rangeshifter 0.1 mm
+/gate/physics/Positron/SetCutInRegion   rangeshifter 0.1 mm
 
 /gate/physics/displayCuts
 
@@ -123,7 +123,7 @@
 #=====================================================
 
 /gate/actor/addActor                     DoseActor  dose3d
-/gate/actor/dose3d/save                  {path}/output/3d-pat.mhd
+/gate/actor/dose3d/save                  {path}/output/{run}_3d-pat.mhd
 /gate/actor/dose3d/attachTo    	         patient
 /gate/actor/dose3d/stepHitType           random
 /gate/actor/dose3d/setVoxelSize          XX XX XX mm
@@ -135,10 +135,10 @@
 /gate/actor/dose3d/enableUncertaintyDose false
 /gate/actor/dose3d/enableNumberOfHits    false
 #/gate/actor/dose3d/normaliseDoseToMax   false
-/gate/actor/dose3d/enableDoseToWater     false
+/gate/actor/dose3d/enableDoseToWater     true
 
 #/gate/actor/addActor                 LETActor  let3d
-#/gate/actor/let3d/save               {path}/output/letActor.mhd
+#/gate/actor/let3d/save               {path}/output/{run}_letActor.mhd
 #/gate/actor/let3d/attachTo           patient
 #/gate/actor/let3d/saveEveryNSeconds     12000
 #/gate/actor/let3d/setVoxelSize       XX XX XX mm
@@ -147,7 +147,7 @@
 #/gate/actor/let3d/particleFilter/addParticle   proton
 
 /gate/actor/addActor               SimulationStatisticActor stat
-/gate/actor/stat/save              {path}/output/stat-pat.txt
+/gate/actor/stat/save              {path}/output/{run}_stat-pat.txt
 /gate/actor/stat/saveEveryNSeconds 12000
 
 
