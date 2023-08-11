@@ -109,6 +109,7 @@ def full_analysis( outputdir ):
     parentdir = dirname(outputdir)   
     #TODO: read this from config file
     hu2matfile = "PhilipsBody-HU2mat.txt"
+    #hu2matfile = "PSQA-HU2mat.txt"
     emcalc = "emcalc.txt"
     hu2mat_path = join(parentdir,"data",hu2matfile)
     emcalc_path = join(parentdir,"data",emcalc)
@@ -143,6 +144,7 @@ def full_analysis( outputdir ):
         print("  Primaries required: ",nreq)
         print("  Fractions planned: ",nfractions)
         
+        
         dose = field+"_merged-Dose.mhd"
         if dose in [basename(f) for f in mergedfiles]:
             print("  Scaling merged-Dose.mhd")
@@ -163,7 +165,7 @@ def full_analysis( outputdir ):
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
             mhdtodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
-                     
+        """              
             print("  Performing gamma analysis")
             tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
             gamma_img = gamma.gamma_image(  d2wimg, tps_dose )
@@ -175,7 +177,7 @@ def full_analysis( outputdir ):
             print("  Converting gamma image to dicom")
             gamma_dcm = join(outputdir, field+"_Gamma.dcm")
             mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
-
+        """
             
             
         dose2water = field+"_merged-DoseToWater.mhd"

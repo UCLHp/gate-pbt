@@ -210,6 +210,7 @@ def main():
     
     print("Converting dcm CT files to mhd image")
     ctimg = read_dicom( ct_files )
+    #ctimg = overrides.override_hu( ctimg, struct_file, "BODY", 999 )    ##### !!!!!!!!!!!!!!! 
     #itk.imwrite(ctimg, join(sim_dir,"data","ct_orig.mhd")) 
     
     print("Reorientating image to enforce positive directionality")
@@ -223,7 +224,8 @@ def main():
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
     structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
-                      "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire"]
+                      "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire",
+                      "z_Wire", "NS_Wire"]
     for s in structs_to_air:
         if structure_exists( struct_file, s ):
             print("Overriding",s,"to air")
@@ -236,13 +238,16 @@ def main():
     
     ##### OVERRIDE FOR PSQA
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
-     
+    #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "zMetal", 4998 )
     
  
     
     # Crop image to structure
     crop_to_contour = overrides.get_external_name( struct_file )
-    crop_to_contour="Dose0.001%"
+    #
+    #!!!!!!
+    crop_to_contour="Dose 0.1[%]" #"D0.001%"  #"Dose0.001%"
+    #
     print("Cropping img to", crop_to_contour)
     ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, crop_to_contour) #optional margin
     itk.imwrite(ct_cropped, join(sim_dir,"data","ct_cropped.mhd"))

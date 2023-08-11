@@ -40,7 +40,7 @@ letimg = itk.imread(r"")
 
 weightedimg = let_mcmahon2018(doseimg, letimg)
 
-itk.imwrite(weightedimg, "G180_McMahonLET.mhd")
+itk.imwrite(weightedimg, "")
 
 
 
