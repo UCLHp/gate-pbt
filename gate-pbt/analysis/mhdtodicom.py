@@ -108,7 +108,7 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     dcm.SOPInstanceUID = sopinstanceuid[:-digits_to_modify] + digits
     #####################################################
     
-    dcm.PixelSpacing = list( mhd.GetSpacing() )[0:2]
+    dcm.PixelSpacing = [mhd.GetSpacing()[1], mhd.GetSpacing()[0]]
     dcm.ImagePositionPatient =  list( mhd.GetOrigin() )
     
     d = mhd.GetDirection() * [1,1,1]
