@@ -13,6 +13,7 @@ Automated analysis of Gate simulation output:
 import sys
 import os
 from os.path import join, basename, dirname
+import re
 
 import easygui
 import itk
@@ -54,14 +55,13 @@ def count_prims_simulated( outputdir, field ):
     filelist = os.listdir(outputdir)
     tot = 0
     for f in filelist:
-        if "stat-pat.txt" in f:
-            if field in f:
-                file = join(outputdir,f)
-                lines = open(file).readlines()
-                for line in lines:
-                    if "NumberOfEvents" in line:
-                        prims = int(line.split("=")[1].strip())
-                        tot += prims
+        if re.search(field+"_\d+(_stat-pat\.txt)",f):
+            file = join(outputdir,f)
+            lines = open(file).readlines()
+            for line in lines:
+                if "NumberOfEvents" in line:
+                    prims = int(line.split("=")[1].strip())
+                    tot += prims
     if tot<=0:
         print("  ERROR; no simulated primaries in ", field, outputdir)
         exit(3)
