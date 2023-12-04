@@ -13,6 +13,7 @@ Automated analysis of Gate simulation output:
 import sys
 import os
 from os.path import join, basename, dirname
+import re
 
 import easygui
 import itk
@@ -54,14 +55,13 @@ def count_prims_simulated( outputdir, field ):
     filelist = os.listdir(outputdir)
     tot = 0
     for f in filelist:
-        if "stat-pat.txt" in f:
-            if field in f:
-                file = join(outputdir,f)
-                lines = open(file).readlines()
-                for line in lines:
-                    if "NumberOfEvents" in line:
-                        prims = int(line.split("=")[1].strip())
-                        tot += prims
+        if re.search(field+"_\d+(_stat-pat\.txt)",f):
+            file = join(outputdir,f)
+            lines = open(file).readlines()
+            for line in lines:
+                if "NumberOfEvents" in line:
+                    prims = int(line.split("=")[1].strip())
+                    tot += prims
     if tot<=0:
         print("  ERROR; no simulated primaries in ", field, outputdir)
         exit(3)
@@ -109,6 +109,7 @@ def full_analysis( outputdir ):
     parentdir = dirname(outputdir)   
     #TODO: read this from config file
     hu2matfile = "PhilipsBody-HU2mat.txt"
+    #hu2matfile = "PSQA-HU2mat.txt"
     emcalc = "emcalc.txt"
     hu2mat_path = join(parentdir,"data",hu2matfile)
     emcalc_path = join(parentdir,"data",emcalc)
@@ -143,6 +144,7 @@ def full_analysis( outputdir ):
         print("  Primaries required: ",nreq)
         print("  Fractions planned: ",nfractions)
         
+        
         dose = field+"_merged-Dose.mhd"
         if dose in [basename(f) for f in mergedfiles]:
             print("  Scaling merged-Dose.mhd")
@@ -163,7 +165,7 @@ def full_analysis( outputdir ):
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
             mhdtodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
-                     
+        """              
             print("  Performing gamma analysis")
             tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
             gamma_img = gamma.gamma_image(  d2wimg, tps_dose )
@@ -175,7 +177,7 @@ def full_analysis( outputdir ):
             print("  Converting gamma image to dicom")
             gamma_dcm = join(outputdir, field+"_Gamma.dcm")
             mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
-
+        """
             
             
         dose2water = field+"_merged-DoseToWater.mhd"

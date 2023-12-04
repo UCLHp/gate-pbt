@@ -9,6 +9,7 @@ Methods to merge cluster simulation results:
 from os import listdir
 from os.path import isfile, join, basename
 import math
+import re
 
 import easygui
 import itk
@@ -215,14 +216,15 @@ def merge_results( directory, fieldname=None ):
         fieldfiles = allfilepaths
         fieldname = ""
     else:
-        fieldfiles =  [f for f in allfilepaths if fieldname in basename(f)]
-  
+        fieldfiles =  [f for f in allfilepaths if fieldname in basename(f)]        
 
-    dosefiles = [f for f in fieldfiles if "pat-Dose.mhd" in f ]
-    dosetowaterfiles = [f for f in fieldfiles if "pat-DoseToWater.mhd" in f ]
-    letfiles = [f for f in fieldfiles if "-doseAveraged.mhd" in f]
-    dosesquaredfiles = [f for f in fieldfiles if "-Dose-Squared.mhd" in f]
-    statfiles = [f for f in fieldfiles if "stat-pat.txt" in f ]
+    # REPAINTING BUG: "G160_T0_RS0_1_" and "G160_T0_RS0_B_1_"; first was double counted; use regexp
+    dosefiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_3d-pat-Dose\.mhd)",f) ]
+    dosetowaterfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_3d-pat-DoseToWater\.mhd)",f) ]
+    letfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_letActor-doseAveraged.mhd)",f)]
+    dosesquaredfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_3d-pat-Dose-Squared\.mhd)",f)]
+    statfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_stat-pat\.txt)",f) ]
+
     
     filesmade = []
     
