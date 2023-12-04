@@ -221,7 +221,7 @@ def merge_results( directory, fieldname=None ):
     # REPAINTING BUG: "G160_T0_RS0_1_" and "G160_T0_RS0_B_1_"; first was double counted; use regexp
     dosefiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_3d-pat-Dose\.mhd)",f) ]
     dosetowaterfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_3d-pat-DoseToWater\.mhd)",f) ]
-    letfiles = [f for f in fieldfiles if re.match(fieldname+"_\d+(_letActor-doseAveraged.mhd)",f)]
+    letfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_letActor-doseAveraged.mhd)",f)]
     dosesquaredfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_3d-pat-Dose-Squared\.mhd)",f)]
     statfiles = [f for f in fieldfiles if re.search(fieldname+"_\d+(_stat-pat\.txt)",f) ]
 
