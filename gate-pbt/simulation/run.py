@@ -223,19 +223,19 @@ def main():
     ct_air_override = overrides.set_air_external( ct_reor, struct_file )
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
-    structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
-                      "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire",
-                      "z_Wire", "NS_Wire"]
-    for s in structs_to_air:
-        if structure_exists( struct_file, s ):
-            print("Overriding",s,"to air")
-            ct_air_override = overrides.override_hu( ct_air_override, struct_file, s, -1000 )    
     
-    
+    #
+    #structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
+    #                  "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire",
+    #                  "z_Wire", "NS_Wire"]
+    #for s in structs_to_air:
+    #    if structure_exists( struct_file, s ):
+    #        print("Overriding",s,"to air")
+    #        ct_air_override = overrides.override_hu( ct_air_override, struct_file, s, -1000 )    
+      
     # TODO: Check for density overrides and apply
     #override_hu( image, structure_file, structure, hu )
-    
-    
+  
     ##### OVERRIDE FOR PSQA
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "zMetal", 4998 )
@@ -246,7 +246,7 @@ def main():
     crop_to_contour = overrides.get_external_name( struct_file )
     #
     #!!!!!!
-    crop_to_contour="Dose 0.1[%]" #"D0.001%"  #"Dose0.001%"
+    crop_to_contour="Dose0.1%"   #"D0.001%"  
     #
     print("Cropping img to", crop_to_contour)
     ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, crop_to_contour) #optional margin
