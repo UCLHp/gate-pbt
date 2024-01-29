@@ -23,6 +23,7 @@ import overrides
 import generatefiles
 import config
 import cropimage
+import slurm
 
 
 
@@ -55,6 +56,7 @@ def make_gate_dirs(dir_name, path_to_templates):
         source = join(path_to_templates,f)  
         destination = join(dir_name,"data",f)
         shutil.copyfile(source,destination)
+        slurm.dos2unix( destination, destination )
     # Copy over mac files
     for f in DATA["MACS_TO_COPY"]:
         source = join(path_to_templates,f)  
