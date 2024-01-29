@@ -39,8 +39,39 @@ def get_external_name( structure_file ):
     return contour
 
 
-
 def set_air_external( image, structure_file ):
+    """Set all HUs outside of BODY/EXTERNAL contour to air HU=-1000
+    
+    The img_file must be the .mhd
+    """
+    
+    img = None 
+    if type(image)==str:
+        #Assume we have file path
+        img = itk.imread( image )
+    else:
+        #Assume we have itk image object
+        img = image   
+        
+    ds = pydicom.dcmread( structure_file )   
+    contour = get_external_name( structure_file )
+      
+    # get_mask() doesn't work for HFP setup; need to reorientate
+    aroi = roiutils.region_of_interest(ds,contour)
+    mask = aroi.get_mask(img, corrected=False)
+       
+    pix_mask = itk.array_view_from_image(mask)
+    pix_img = itk.array_view_from_image(img)   
+    
+    new_img = (pix_img * pix_mask) - 1000 + (pix_mask * 1000)  
+    
+    img_modified = itk.image_view_from_array( new_img )    
+    img_modified.CopyInformation(img)
+    return img_modified
+
+
+'''
+def set_air_external_OLD( image, structure_file ):
     """Set all HUs outside of BODY/EXTERNAL contour to air HU=-1000
     
     The img_file must be the .mhd
@@ -78,9 +109,7 @@ def set_air_external( image, structure_file ):
     
     img_modified.CopyInformation(img)
     return img_modified
-
-
-
+'''
 
 
 def override_hu( image, structure_file, structure, hu ):   #MAYBE JUST PASS THE IMAGE OBJECT AND DICOM OBJECT??

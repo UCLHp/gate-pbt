@@ -11,6 +11,7 @@ from os.path import join, basename, isdir, exists
 import shutil
 from pathlib import Path
 import json
+import time
 
 import pydicom
 import easygui
@@ -23,6 +24,7 @@ import overrides
 import generatefiles
 import config
 import cropimage
+import slurm
 
 
 
@@ -55,6 +57,7 @@ def make_gate_dirs(dir_name, path_to_templates):
         source = join(path_to_templates,f)  
         destination = join(dir_name,"data",f)
         shutil.copyfile(source,destination)
+        slurm.dos2unix( destination, destination )
     # Copy over mac files
     for f in DATA["MACS_TO_COPY"]:
         source = join(path_to_templates,f)  
@@ -217,11 +220,16 @@ def main():
     ct_reor = reorientate.force_positive_directionality(ctimg)
     #itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))   
     
-    
-    
+    #t1 = time.perf_counter()
+
     print("Overriding all external structures to air")
     ct_air_override = overrides.set_air_external( ct_reor, struct_file )
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
+    
+    #t2 = time.perf_counter();
+    #tt = (t2-t1)/60
+    #print("  -> Time to override external air = ", tt) 
+    
     
     
     #
