@@ -391,7 +391,7 @@ def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, conf
         # Simulate Nreq/2000 for reasonable stats
         splits = 25
         #nprotons = int( req_prims[field.BeamName]/2000 )
-        nprotons = 2000000
+        nprotons = 2000000 * splits
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
        
