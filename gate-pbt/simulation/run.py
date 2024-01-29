@@ -254,7 +254,7 @@ def main():
     crop_to_contour = overrides.get_external_name( struct_file )
     #
     #!!!!!!
-    crop_to_contour="Dose 0.1[%]"   #"D0.001%"  
+    crop_to_contour="Dose0.1%"   #"D0.001%"  
     #
     print("Cropping img to", crop_to_contour)
     ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, crop_to_contour) #optional margin
