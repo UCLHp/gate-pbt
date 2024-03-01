@@ -165,6 +165,21 @@ def full_analysis( outputdir ):
             ##print("XXX ", path_to_dcmdose)
             dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
             mhdtodicom.mhd2dcm( d2wimg, path_to_dcmdose, dcm_out )
+            
+            
+            ### Override dose outside of patient contour ###
+            # Means in Mephysto use panel A (targ) for Eclipse; B (ref) for MC dose
+            print("  Overriding dose outside of body to zero for gamma analysis")
+            struct_file = mhdtodicom.get_struct_file_path( outputdir )
+            body = overrides.get_external_name( struct_file )
+            dose_none_ext = overrides.set_external_dose_zero( d2wimg, struct_file, body )
+            itk.imwrite(dose_none_ext, join(outputdir, field+"_Gate_DoseToWater_NoneExt.mhd") )      
+            mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_Gate_DoseToWater_NoneExt.dcm") )
+            
+            
+            
+            
+            
         """              
             print("  Performing gamma analysis")
             tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
@@ -194,15 +209,8 @@ def full_analysis( outputdir ):
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
             mhdtodicom.mhd2dcm( scaledimg, path_to_dcmdose, dcm_out )
 
+                
             
-            
-            ### Override dose outside of patient contour ###
-            # Means in Mephysto use panel A (targ) for Eclipse; B (ref) for MC dose
-            #struct_file = r"P:\Protons\SteveCourt_P\__TRIALS__\NB_IMAT_06\dcm\RS.1.2.246.352.71.4.179454110911.10729.20220325132333.dcm"
-            #pt_contour = "External"
-            #dose_none_ext = overrides.set_external_dose_zero( scaledimg, struct_file, pt_contour )
-            ##itk.imwrite(dose_none_ext, join(outputdir, field+"_Gate_DoseToWater_NoneExt.mhd") )      
-            #mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_Gate_DoseToWater_NoneExt.dcm") )
             #
             #
             #print("  Performing gamma analysis for GD2W")

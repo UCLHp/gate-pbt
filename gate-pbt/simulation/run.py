@@ -66,8 +66,11 @@ def make_gate_dirs(dir_name, path_to_templates):
         
 
 
-def copy_dcm_doses( dcmfiles, destinationdir ):
+def copy_dcm_files( dcmfiles, destinationdir ):
     """Copy dcm dose files to simdir/data; needed later for analaysis"""
+    if isinstance( dcmfiles, str ):
+        dcmfiles = [dcmfiles]
+        
     for dcmfile in dcmfiles:
         fname = basename(dcmfile)
         dest = join(destinationdir, fname)
@@ -275,7 +278,11 @@ def main():
       
     # Copy over dicom dose files to /data
     print("Copying dcm dose files over")
-    copy_dcm_doses( dose_files, join(sim_dir,"data") )   
+    copy_dcm_files( dose_files, join(sim_dir,"data") )
+    print("Copying dcm structure file over")
+    copy_dcm_files( struct_file, join(sim_dir,"data") )
+    #config.add_structure_to_config( configpath, struct_file )
+
       
     # Generate all files required for simulation
     print("Generating simulation files")

@@ -50,6 +50,37 @@ def get_dcm_file_path( outputdir, beamref ):
         print(" !! Corresponding dicom dose file not found !!")
     else:
         return dcmfile
+    
+    
+def get_struct_file_path( outputdir ):
+    """ Return path to structure dicom file
+    
+    Dicom files are in /data directory, one back from outputdir
+    
+    **TODO: add reference to correct structure set (to be stored in config)**
+    Currently just selecting random one if there are multiple
+    
+    """
+    parent = dirname(outputdir)
+    datadir = join(parent,"data")
+    
+    filepaths = [join(datadir,f) for f in listdir(datadir) if isfile(join(datadir,f))]
+    dcmpaths = [f for f in filepaths if f[-4:]==".dcm" ]
+
+    dcmfile = None
+    for dcm in dcmpaths:
+        dcmdose = pydicom.dcmread(dcm)
+        cnt = 0;
+        if dcmdose.Modality=="RTSTRUCT":
+            cnt += 1
+            dcmfile = dcm
+
+    if dcmfile is None:
+        print(" !! Corresponding dicom dose file not found !!")
+    elif cnt > 1:
+        print("Warning: Multiple structure sets detected; wrong one may have been selected") ## use this for VN and JW temp; do properly in next release
+    else:
+        return dcmfile
         
 
 
