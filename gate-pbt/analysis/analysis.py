@@ -173,26 +173,29 @@ def full_analysis( outputdir ):
             struct_file = mhdtodicom.get_struct_file_path( outputdir )
             body = overrides.get_external_name( struct_file )
             dose_none_ext = overrides.set_external_dose_zero( d2wimg, struct_file, body )
-            itk.imwrite(dose_none_ext, join(outputdir, field+"_Gate_DoseToWater_NoneExt.mhd") )      
-            mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_Gate_DoseToWater_NoneExt.dcm") )
-            
-            
-            
-            
-            
-        """              
-            print("  Performing gamma analysis")
-            tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose ) 
-            gamma_img = gamma.gamma_image(  d2wimg, tps_dose )
-            itk.imwrite(gamma_img, join(outputdir, field+"_Gamma.mhd") )
+            path_to_none_ext =  join(outputdir, field+"_DoseToWater_NoneExt.mhd" )  
+            itk.imwrite(dose_none_ext, path_to_none_ext)      
+            mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_DoseToWater_NoneExt.dcm") )
+                    
+      
+            tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose )                 
+            print("  Performing gamma analysis 3%/3mm: post-sim D2W vs Eclipse")
+            gamma_img = gamma.gamma_image(  path_to_none_ext, tps_dose, 3, 3 )
+            itk.imwrite(gamma_img, join(outputdir, field+"_Gamma_33.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img )
-            print("    gamma pass rate = {}%".format( round(pass_rate,2) ))
+            print("   *** Gamma pass rate @ 3%/3mm = {}%".format( round(pass_rate,2) ))
+            
+            print("  Performing gamma analysis 2%/2mm: post-sim D2W vs Eclipse")
+            gamma_img_22 = gamma.gamma_image(  path_to_none_ext, tps_dose, 2, 2 )
+            itk.imwrite(gamma_img_22, join(outputdir, field+"_Gamma_22.mhd") )
+            pass_rate = gamma.get_pass_rate( gamma_img_22 )
+            print("   *** Gamma pass rate @ 2%/2mm = {}%".format( round(pass_rate,2) ))
             #
             # Make dcm for gamnma image for visualizaiton
-            print("  Converting gamma image to dicom")
-            gamma_dcm = join(outputdir, field+"_Gamma.dcm")
-            mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
-        """
+            #print("  Converting gamma image to dicom")
+            #gamma_dcm = join(outputdir, field+"_Gamma.dcm")
+            #mhdtodicom.mhd2dcm( gamma_img, path_to_dcmdose, gamma_dcm )
+        
             
             
         dose2water = field+"_merged-DoseToWater.mhd"

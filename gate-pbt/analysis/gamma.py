@@ -26,14 +26,14 @@ import reorientate
 
 
 ########################################################################
-DTA = 3                 # mm
-DD = 3                  # %
+#DTA = 3                 # mm
+#DD = 3                  # %
 DOSE_THRESHOLD = 0.1    # Absolute threshold = this * max tps dose
 ########################################################################
 
 
 
-def gamma_image( ref_dose, target_dose ):
+def gamma_image( ref_dose, target_dose, dta_val, dd_val ):
     """ Gamma analysis of MC and TPS beam dose using GateTools
     
     Accepts ITK-like image, or path to image
@@ -63,7 +63,7 @@ def gamma_image( ref_dose, target_dose ):
     ##print("    max tps dose = ", max_tps_dose)
     gamma_threshold = max_tps_dose * DOSE_THRESHOLD   
     #gamma = gi.get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)  
-    gamma = gamma_index.get_gamma_index( ref, targ, dta=DTA, dd=DD, ddpercent=True, threshold=gamma_threshold)  
+    gamma = gamma_index.get_gamma_index( ref, targ, dta=dta_val, dd=dd_val, ddpercent=True, threshold=gamma_threshold)  
     
     return gamma
 
