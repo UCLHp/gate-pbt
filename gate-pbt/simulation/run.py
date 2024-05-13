@@ -202,7 +202,8 @@ def main():
     # Make Gate directory structure and copy fixed files
     print("Making directories")
     plandcm = pydicom.dcmread(plan_file)
-    identifier = plandcm.PatientID+"--"+(plandcm.RTPlanLabel).replace(" ","_")
+    pat_id = plandcm.PatientID.replace("/","").replace("\\","")
+    identifier = pat_id+"--"+(plandcm.RTPlanLabel).replace(" ","_")
     sim_dir = join(PATH_TO_SIMFILES, identifier)
     make_gate_dirs(sim_dir, PATH_TO_TEMPLATES)   
     
@@ -218,19 +219,24 @@ def main():
     
     print("Reorientating image to enforce positive directionality")
     ct_reor = reorientate.force_positive_directionality(ctimg)
-    #itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))   
+    itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))   
     
     #t1 = time.perf_counter()
+    
+    # Crop image to structure
+    crop_to_contour = overrides.get_external_name( struct_file )   
+    crop_to_contour="Dose0.1%"   
+    print("Cropping img to", crop_to_contour)
+    ct_cropped = cropimage.crop_to_structure( ct_reor, struct_file, crop_to_contour) #optional margin
 
+        
     print("Overriding all external structures to air")
-    ct_air_override = overrides.set_air_external( ct_reor, struct_file )
+    ct_cropped = overrides.set_air_external( ct_cropped, struct_file )
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
     #t2 = time.perf_counter();
     #tt = (t2-t1)/60
     #print("  -> Time to override external air = ", tt) 
-    
-    
     
     #
     #structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
@@ -247,23 +253,15 @@ def main():
     ##### OVERRIDE FOR PSQA
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "zMetal", 4998 )
+       
+    #itk.imwrite(ct_cropped, join(sim_dir,"data","ct_cropped.mhd"))
     
- 
-    
-    # Crop image to structure
-    crop_to_contour = overrides.get_external_name( struct_file )
-    #
-    #!!!!!!
-    crop_to_contour="Dose0.1%"   #"D0.001%"  
-    #
-    print("Cropping img to", crop_to_contour)
-    ct_cropped = cropimage.crop_to_structure( ct_air_override, struct_file, crop_to_contour) #optional margin
-    itk.imwrite(ct_cropped, join(sim_dir,"data","ct_cropped.mhd"))
-
     # TODO: set automatically for different cropping / override options
     ct_for_simulation = "ct_cropped.mhd"
     ct_sim_path = join(sim_dir,"data",ct_for_simulation)
     itk.imwrite(ct_cropped, ct_sim_path)
+    
+    
     
     # Add number fractions to config
     nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned
