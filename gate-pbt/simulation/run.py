@@ -11,7 +11,6 @@ from os.path import join, basename, isdir, exists
 import shutil
 from pathlib import Path
 import json
-import time
 
 import pydicom
 import easygui
@@ -219,9 +218,8 @@ def main():
     
     print("Reorientating image to enforce positive directionality")
     ct_reor = reorientate.force_positive_directionality(ctimg)
-    itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))   
+    #itk.imwrite(ct_reor,join(sim_dir, "data", "ct_orig_reorientate.mhd"))   
     
-    #t1 = time.perf_counter()
     
     # Crop image to structure
     crop_to_contour = overrides.get_external_name( struct_file )   
@@ -234,11 +232,7 @@ def main():
     ct_cropped = overrides.set_air_external( ct_cropped, struct_file )
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
-    #t2 = time.perf_counter();
-    #tt = (t2-t1)/60
-    #print("  -> Time to override external air = ", tt) 
-    
-      
+   
     #
     #structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
     #                  "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire",
@@ -251,12 +245,7 @@ def main():
     # TODO: Check for density overrides and apply
     #override_hu( image, structure_file, structure, hu )
   
-    ##### OVERRIDE FOR PSQA
-    #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
-    #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "zMetal", 4998 )
-       
 
-    
     
     # TODO: set automatically for different cropping / override options
     ct_for_simulation = "ct_cropped.mhd"
