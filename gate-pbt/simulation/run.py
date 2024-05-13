@@ -238,6 +238,7 @@ def main():
     #tt = (t2-t1)/60
     #print("  -> Time to override external air = ", tt) 
     
+      
     #
     #structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
     #                  "zscarwire", "zscar_wire", "zScarWire", "zScar_Wire",
@@ -254,7 +255,8 @@ def main():
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "BODY", 51 )
     #ct_air_override = overrides.override_hu( ct_air_override, struct_file, "zMetal", 4998 )
        
-    #itk.imwrite(ct_cropped, join(sim_dir,"data","ct_cropped.mhd"))
+
+    
     
     # TODO: set automatically for different cropping / override options
     ct_for_simulation = "ct_cropped.mhd"
