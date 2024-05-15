@@ -450,6 +450,6 @@ Corticalbone_37: d=2.40876 g/cm3 ; n=9;
 +el: name=Calcium; f=0.225
 
 # Material corresponding to H=[ 3100;3101 ]
-MetallImplants_38: d=2.42418 g/cm3 ; n=1; 
+MetallImplants_38: d=4.502 g/cm3 ; n=1; 
 +el: name=Titanium; f=1
 
