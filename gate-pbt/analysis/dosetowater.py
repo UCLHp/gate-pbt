@@ -38,7 +38,7 @@ def resample( img, refimg ):
 
 
 
-def get_rsps_from_emcalc(emcalcpath):
+def get_d2w_factors_from_emcalc(emcalcpath):
     """Return dictionary of materials and RSPs found in simulation"""
     lines = open(emcalcpath,"r").readlines()
     
@@ -51,20 +51,20 @@ def get_rsps_from_emcalc(emcalcpath):
             print("    msp_water = ",msp_water)
       
     # Form dictionary of RSPs
-    rsps = {}
+    d2w_factors = {}
     start_reading = False
     for line in lines:
         if start_reading and "#" not in line and len(line)>1:
             cols = line.split()
             material = cols[0]
-            #rsp = float(cols[7])*float(cols[1])  / msp_water
-            rsp = float(cols[7])  / msp_water
-            rsps[material] = rsp
-            print("    material={}; rsp={}; dens={}".format(material,round(rsps[material],3),cols[1]  )  )
+            d2w_factor = float(cols[7])  / msp_water
+            d2w_factors[material] = d2w_factor
+            rsp = d2w_factor * float(cols[1])
+            print("    material={}; rsp={}; dens={}".format(material,round(rsp,3),cols[1]  )  )
         if "worldDefaultAir" in line:
             start_reading = True
     
-    return rsps
+    return d2w_factors
 
 
 
@@ -76,7 +76,7 @@ def convert_dose_to_water(ctpath, dosepath, emcalcpath, hu2matpath, output=None)
     Input: paths to ct image and doseToMaterial image   
     """
     
-    rsps = get_rsps_from_emcalc(emcalcpath)
+    d2w_factor = get_d2w_factors_from_emcalc(emcalcpath)
     hu2mat = open(hu2matpath,"r").readlines()
     
     # Read lower HU bracket and physical density from materials database
@@ -114,7 +114,7 @@ def convert_dose_to_water(ctpath, dosepath, emcalcpath, hu2matpath, output=None)
                 print(" NO MATERIAL ASSIGNED for HU={}".format(hu))
                 material = "Adiposetissue3"
                         
-            rsp = rsps[material]
+            rsp = d2w_factor[material]
             d2w = doses_flat[i] / rsp
        
             if d2w<0:
