@@ -109,9 +109,10 @@ def full_analysis( outputdir ):
     parentdir = dirname(outputdir)   
     #TODO: read this from config file
     hu2matfile = "PhilipsBody-HU2mat.txt"
-    #hu2matfile = "PSQA-HU2mat.txt"
+    humaterialsfile = "PhilipsBody-HUmaterials.db"
     emcalc = "emcalc.txt"
     hu2mat_path = join(parentdir,"data",hu2matfile)
+    humaterials_path = join(parentdir,"data",humaterialsfile)
     emcalc_path = join(parentdir,"data",emcalc)
     
 
@@ -156,7 +157,7 @@ def full_analysis( outputdir ):
             ctpath = config.get_ct_path( outputdir )
             ##ctpath = os.path.join( outputdir, ctname )
             d2wimg = join(outputdir, field+"_AbsoluteDoseToWater.mhd")
-            dosetowater.convert_dose_to_water( ctpath, scaledimg, emcalc_path, hu2mat_path, output=d2wimg )
+            dosetowater.convert_dose_to_water( ctpath, scaledimg, emcalc_path, hu2mat_path, humaterials_path, output=d2wimg )
             
             print("  Converting mhd dose to dicom")
             beamref = config.get_beam_ref_no( outputdir, field )

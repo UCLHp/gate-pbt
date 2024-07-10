@@ -1,0 +1,13 @@
+ObjectType = Image
+NDims = 3
+BinaryData = True
+BinaryDataByteOrderMSB = False
+CompressedData = False
+TransformMatrix = 1 0 0 0 1 0 0 0 1
+Offset = -132.03100000000001 -308.59399999999999 48
+CenterOfRotation = 0 0 0
+AnatomicalOrientation = RAI
+ElementSpacing = 2.5390600000000001 2.5390600000000001 2
+DimSize = 114 99 84
+ElementType = MET_FLOAT
+ElementDataFile = resampled_densities.raw

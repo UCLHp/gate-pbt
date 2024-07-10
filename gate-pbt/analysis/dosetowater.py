@@ -11,6 +11,8 @@ therapy".
 import itk
 import numpy as np
 
+import density_image as di
+
 
 
 def resample( img, refimg ):
@@ -37,7 +39,51 @@ def resample( img, refimg ):
     return resampleFilter.GetOutput()
 
 
+def get_material_from_density(dens,dlut):
+    """Return material name from density
+    
+    dlut is list of lists [density_lower, material] **ordered in density**
+    """
+    material="Air_0"
+    for i in dlut:
+        if dens >= i[0]:
+            material = i[1]
+        else:
+            break
+    return material        
 
+
+def get_rsp_dict(emcalcpath):
+    """Return dictionary of materials and RSPs found in simulation"""
+    lines = open(emcalcpath,"r").readlines()
+    
+    # Get mass stopping power of water
+    msp_water = 5.30047  # default I=78 and density 1g/cm3   
+    for line in lines:
+        if "G4_WATER" in line:
+            cols = line.split()
+            msp_water = float(cols[7])
+            print("    msp_water = ",msp_water)
+      
+    # Form dictionary of RSPs
+    rsp_dict = {}
+    start_reading = False
+    for line in lines:
+        if start_reading and "#" not in line and len(line)>1:
+            cols = line.split()
+            material = cols[0].strip()
+            rsp = float(cols[1]) * float(cols[7])  / msp_water 
+            rsp_dict[material] = rsp
+            print("    material={}; rsp={}; dens={}".format(material,round(rsp,3),cols[1]  )  )
+        if "worldDefaultAir" in line:
+            start_reading = True
+    
+    print("***")
+    print(rsp_dict)
+    return rsp_dict
+
+
+'''
 def get_d2w_factors_from_emcalc(emcalcpath):
     """Return dictionary of materials and RSPs found in simulation"""
     lines = open(emcalcpath,"r").readlines()
@@ -65,11 +111,97 @@ def get_d2w_factors_from_emcalc(emcalcpath):
             start_reading = True
     
     return d2w_factors
+'''
 
 
 
 
-def convert_dose_to_water(ctpath, dosepath, emcalcpath, hu2matpath, output=None):
+def convert_dose_to_water(ctpath, dosepath, emcalcpath, hu2matpath, humaterialspath, output=None):
+    """Convert a doseimg (to material) to dose-to-water
+       Divide dose-to-tissue by RSP; see Paganetti2019
+       
+    Input: paths to ct image and doseToMaterial image   
+    """
+    
+
+    
+    #hu2mat = open(hu2matpath,"r").readlines()
+    # Read lower HU bracket and physical density from materials database
+    #hu_lims, den_lims = read_densities(materialdbpath)
+       
+    ctimg = itk.imread( ctpath )
+    doseimg = itk.imread( dosepath )
+       
+    hlut = di.get_hlut(humaterialspath)
+    densities = di.create_density_image(ctimg,hlut)
+    
+    dlut = di.get_dlut(humaterialspath)
+    rsp_dict = get_rsp_dict(emcalcpath)    
+
+    #### Resample CT image to match voxel resolution of dose image
+    ###resampledimg = resample( ctimg, doseimg )
+    #itk.imwrite(resampledimg, "resampled_ct.mhd")  
+    
+    # Resample density image to match voxel resolution of dose image
+    resampled_densities = resample( densities, doseimg )
+    itk.imwrite(resampled_densities, "resampled_densities.mhd")  
+    
+    dens = itk.array_from_image( resampled_densities )
+    doses = itk.array_from_image( doseimg )
+    shape = dens.shape 
+    
+    densities_flat = dens.flatten()
+    doses_flat = doses.flatten() 
+    d2water = np.zeros(len(densities_flat))
+     
+    if len(densities_flat)!=len(doses_flat):
+        print("ERROR: resampled image does not match dose image dimensions")
+        exit()
+    else:
+        for i,dr in enumerate(densities_flat):
+
+            # Get material name from resampled density
+            material = get_material_from_density(dr,dlut)
+            rsp = rsp_dict[material]
+
+
+            ####
+            if(i==1000):
+                print("------------------------")
+                print("i = ", i)
+                print("materiual = ", material)
+                print("dr = ", dr)
+                print("rsp = ", rsp)
+                print(" dlut = ")
+                for x in dlut :
+                    print("  ", x)
+                    
+                print(" d2m = ", doses_flat[i])
+                print(" d2w = ", doses_flat[i] * dr / rsp)
+            #######
+            
+            
+            d2w_factor = dr / rsp
+            d2w = doses_flat[i] * d2w_factor
+            
+            
+            assert d2w >= 0, "  WARNING: d2water < 0 detected"
+            d2water[i] = d2w
+            
+        d2water_arr = d2water.reshape( shape )
+        
+        dosetowater = itk.image_view_from_array( d2water_arr )
+        dosetowater.CopyInformation(doseimg)
+        
+        if output is not None:
+            itk.imwrite(dosetowater, output)      
+        return dosetowater
+    
+
+
+
+'''
+def convert_dose_to_water_OLD(ctpath, dosepath, emcalcpath, hu2matpath, humaterialspath, output=None):
     """Convert a doseimg (to material) to dose-to-water
        Divide dose-to-tissue by RSP; see Paganetti2019
        
@@ -129,7 +261,7 @@ def convert_dose_to_water(ctpath, dosepath, emcalcpath, hu2matpath, output=None)
         if output is not None:
             itk.imwrite(dosetowater, output)      
         return dosetowater
-    
+ '''   
     
     
 

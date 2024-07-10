@@ -1,0 +1,13 @@
+ObjectType = Image
+NDims = 3
+BinaryData = True
+BinaryDataByteOrderMSB = False
+CompressedData = False
+TransformMatrix = 1 0 0 0 1 0 0 0 1
+Offset = -132.666015625 -309.228515625 48
+CenterOfRotation = 0 0 0
+AnatomicalOrientation = RAI
+ElementSpacing = 1.26953125 1.26953125 2
+DimSize = 228 198 84
+ElementType = MET_FLOAT
+ElementDataFile = density_oesoph_M.raw
