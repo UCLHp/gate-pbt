@@ -9,8 +9,11 @@ Methods to apply HU overrides directly to image pixels. Should:
 
 import itk
 import pydicom
+import numpy as np
 import gatetools.roi_utils as roiutils
+import gatetools_altered.roi_utils_altered as roiutils_altered
 ##import roiutils
+
 
 
 ########################
@@ -70,20 +73,25 @@ def set_air_external( image, structure_file ):
     else:
         #Assume we have itk image object
         img = image   
-        
+    
     ds = pydicom.dcmread( structure_file )   
     contour = get_external_name( structure_file )
-      
+    
     # get_mask() doesn't work for HFP setup; need to reorientate
+   
     aroi = roiutils.region_of_interest(ds,contour)
     mask = aroi.get_mask(img, corrected=False)
-       
+    
+
     pix_mask = itk.array_view_from_image(mask)
     pix_img = itk.array_view_from_image(img)   
     
+    pix_img = pix_img.astype(np.int16)
+    pix_mask = pix_mask.astype(np.int16)
+
     new_img = (pix_img * pix_mask) - 1000 + (pix_mask * 1000)  
     
-    img_modified = itk.image_view_from_array( new_img )    
+    img_modified = itk.GetImageFromArray( new_img )    
     img_modified.CopyInformation(img)
     return img_modified
 
@@ -140,20 +148,28 @@ def override_hu( image, structure_file, structure, hu ):   #MAYBE JUST PASS THE 
         img = itk.imread(image)
     else:
         #Assume we have itk image object
-        img = image   
+        img = image
     
-    aroi = roiutils.region_of_interest(ds,structure)
-    mask = aroi.get_mask(img, corrected=False)    
- 
+
+    #aroi = roiutils.region_of_interest(ds,structure)
+    #mask = aroi.get_mask(img, corrected=False)
+
+    aroi = roiutils_altered.region_of_interest_complex(ds, structure)
+    mask = aroi.get_mask_complex(img, corrected = False)
+
+    
     pix_mask = itk.array_view_from_image(mask)
     pix_img = itk.array_view_from_image(img) 
     if( pix_mask.shape!=pix_img.shape ):
         print( "Inconsistent shapes of mask and image"  )
     
+
     pix_img_flat = pix_img.flatten()
     for i,val in enumerate( pix_mask.flatten() ):
         if val==1:
             pix_img_flat[i] = hu
+           
+
     pix_img = pix_img_flat.reshape( pix_img.shape )
     img_modified = itk.image_view_from_array( pix_img )
     

@@ -65,7 +65,7 @@ def get_rotation_matrix(mhdimgpath, ct_file, field):
     # Offset all by 0.001 to prevent a symmetric matrix.
     rot_matrix = None    
     if patient_position=="HFS":
-        rot_matrix = rotation_matrix_y(0.0001)
+        rot_matrix = rotation_matrix_y(0.0001) # ?
     elif patient_position=="HFP":
         rot_matrix = rotation_matrix_z(180.0001)
     elif patient_position=="FFS":
@@ -375,6 +375,8 @@ def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, conf
         translation_vector = get_translation_vector(mhdimgpath, ct_file, field, rotation_matrix )
         #print( translation_vector )
         mac_filename = join(sim_dir,"mac",beamname+".mac")
+        print(' VOXEL SIZE IS ', dose_vox_dims)
+
         write_mac_file(join(PATH_TO_TEMPLATES,DATA["MAC_TEMPLATE"]), mac_filename, pdf_filename,
                        setRotationAngle=angle,
                        setRotationAxis=axis,
@@ -386,7 +388,7 @@ def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, conf
                        rangeshift_thick=rs.thickness
                       )
  
-    
+ 
         ##### Split field mac file here ####
         # Simulate Nreq/2000 for reasonable stats
         splits = 25
@@ -394,12 +396,12 @@ def generate_files(ct_file, plan_file, dose_files, PATH_TO_TEMPLATES, DATA, conf
         #nprotons = 2000000 * splits
         jobsplitter.split_by_primaries( mac_filename, primaries=nprotons, splits=splits)
         
-       
+
         # Make SLURM job script
         scriptname = "submit_"+beamname+".sh"
         scriptpath = join(sim_dir, scriptname )
         slurm.make_script(DATA["CLUSTER_NFS"], sim_dir, beamname, splits, scriptpath)
-
+        print('DONE')
 
 
 

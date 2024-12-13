@@ -183,7 +183,6 @@ def structure_exists( dcmfile, struct ):
 
 
 def main():
-    
      
     # Select directory containing the DICOM files
     msg = "Select directory containing DICOM files"
@@ -225,9 +224,22 @@ def main():
     crop_to_contour="Dose 0.1[%]"   
     print("Cropping img to", crop_to_contour)
     ct_cropped = cropimage.crop_to_structure( ct_reor, struct_file, crop_to_contour) #optional margin
-  
+    
+    
     print("Overriding all external structures to air")
+
+    print(f"Type after overrides: {type(ct_cropped)}")
     ct_cropped = overrides.set_air_external( ct_cropped, struct_file )
+
+    #ct_cropped = overrides.override_hu( ct_cropped, struct_file, 'zWire', 5000)
+    #ct_cropped = overrides.override_hu( ct_cropped, struct_file, 'test_override1', 5000)
+    #ct_cropped = overrides.override_hu( ct_cropped, struct_file, 'test_override2', 5000)
+
+    print(f"Type after overrides: {type(ct_cropped)}")
+    print('Overriding -1000')
+
+
+    
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
     #structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
@@ -246,6 +258,7 @@ def main():
     ct_for_simulation = "ct_cropped.mhd"
     ct_sim_path = join(sim_dir,"data",ct_for_simulation)
     itk.imwrite(ct_cropped, ct_sim_path)
+    
     
     
 
