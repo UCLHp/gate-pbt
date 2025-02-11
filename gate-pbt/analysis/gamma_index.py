@@ -146,11 +146,8 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
     targetArray = itk.array_view_from_image(targetImage).swapaxes(0, 2)
 
     gamma_array = np.full(targetArray.shape, -1.0, dtype=float)
-    gamma_array_linear = np.full(targetArray.shape, -1.0, dtype=float)
-    gamma_array_cubic = np.full(targetArray.shape, -1.0, dtype=float)
 
     max_targ = np.max(targetArray) # Maximum target dose value, use for finding 10% cut off
-    
     
     if len(referenceArray.shape) != 3 or len(targetArray.shape) != 3: # classic check
         return None
@@ -183,10 +180,6 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
     z_tgt = targetArrayOrigin[2] + np.arange(K_t) * targetArraySpacing[2]
     
 
-    # testing how proper cubic interpolation changes results
-    source_interpolator_cubic = RegularGridInterpolator(
-        (x_ref, y_ref, z_ref), referenceArray, bounds_error=False, fill_value=None, method='cubic'
-    )
     
     gamma, total = 0,0 # for gamma calc in testing
     
@@ -214,35 +207,13 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                 # we are now considering this voxel - Gamma is instantiated as fail
 
                 gamma_array[tuple(tgt_index)] = 1.1 
-                gamma_array_linear[tuple(tgt_index)] = 1.1
-                
+                                
 
                 # Find the 4 closest points in the source grid
                 distances, indices = tree.query(np.array([Xt, Yt, Zt]), k=4) # 4 chosen for speed, recall voxels share z coord
 
                
                 found = False  # Flag to indicate when to exit all loops
-
-                # 3d cubic interpolation method - ---------------------------OVERKILL-----------------------
-                done =  0
-                # iterate over the the local area 
-                for xi in np.linspace(Xt-referenceArraySpacing[0], Xt+referenceArraySpacing[0], 3):
-                    if done ==1:
-                        break
-                    for yi in np.linspace(Yt-referenceArraySpacing[1], Yt+referenceArraySpacing[1], 3):
-                        if done ==1:
-                            break
-                        for zi in np.linspace(Zt-referenceArraySpacing[2], Zt+referenceArraySpacing[2], 3):
-                            if done ==1:
-                                break
-                            point = np.array([xi,yi,zi])
-                            interpolated_value_cubic = source_interpolator_cubic([point])[0]
-                            gamma_cubic = GetGamma(tgt_value, interpolated_value_cubic, Xt, xi, Yt, yi, Zt, zi, max_targ, dd, dta, gamma_method)
-                            if gamma_cubic <1:
-                                gamma_array_cubic[tuple(tgt_index)] = gamma_cubic
-                                done=1
-
-                # ------------------------------------OVERKILL-----------------------------------------
 
                 # iterate over 4 closest references voxels
                 for idx in indices:
@@ -269,8 +240,6 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                         found = True # we have passed this target voxel
                         # update gamma array values for each method
                         gamma_array[tuple(tgt_index)] = Gamma
-                        gamma_array_linear[tuple(tgt_index)] = Gamma
-                        gamma_array_cubic[tuple(tgt_index)] = Gamma
                         break  # Exit the outer loop
                     
 
@@ -312,9 +281,11 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                             elif D == 2:
                                 if k_ref + dirn > referenceArray.shape[D]:
                                     continue
-                                elif k_ref +dirn  <= 0:
+                                elif k_ref + dirn  <= 0:
                                     continue
-                                ref_value_next = referenceArray[i_ref, j_ref, int(k_ref + dirn)]                    
+                                ref_value_next = referenceArray[i_ref, j_ref, int(k_ref + dirn)]
+                                if ref_value == ref_value_next:
+                                    continue
                                 z, interpolated_value = min_gamma(Z, Z + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Zt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], gamma_method)
                                 if z == False:
                                     continue
@@ -322,14 +293,8 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                             # simple gamma calc function
                             Gamma = GetGamma(tgt_value, interpolated_value, Xt, x, Yt, y, Zt, z, max_targ, dd, dta, gamma_method)
 
-                            #find interpolated value with cubic interpolation
-                            point = np.array([x, y, z])
-                            interpolated_value_linear = source_interpolator_cubic([point])[0]
-                            Gamma_linear = GetGamma(tgt_value, interpolated_value_linear, Xt, x, Yt, y, Zt, z, max_targ, dd, dta, gamma_method)
-
                             # do they pass?
-                            if Gamma_linear <= 1:
-                                gamma_array_linear[tuple(tgt_index)] = Gamma_linear
+                            
                             if Gamma <= 1:
                                 gamma += 1
                                 found = True
@@ -341,11 +306,6 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                         break
     
     print('Linear optimum  linear interpolation method = ',100.0 - 100*gamma_array[gamma_array>1].size / gamma_array[gamma_array>0].size, '%')
-    
-    print('Linear optimum cubic interpolation method = ', 100.0 - 100*gamma_array_linear[gamma_array_linear>1].size / gamma_array_linear[gamma_array_linear>0].size, '%')
-
-    print('3D cubic interpolation at target position method = ',100.0 - 100*gamma_array_cubic[gamma_array_cubic>1].size / gamma_array_cubic[gamma_array_cubic>0].size, '%')
-
     
     # convert to image, note we copy information from targetimage
     gimg=itk.image_from_array(gamma_array.swapaxes(0,2).astype(np.float32).copy())
@@ -387,8 +347,6 @@ def min_gamma(x1, x2, y1, y2, tx, ty, dd, dta, Max, spacing, gamma_method):
     If the optimal position is not between the two reference voxels, it returns False.
     """
     
-    # this is something I was just testing 
-    linear_fit_param = 2 # 2.5 this is crazy! changing from 2.5 to 3 really  ruins you
 
     # y = grad * x + c
     grad = (y2-y1)/(x2-x1)
@@ -404,13 +362,9 @@ def min_gamma(x1, x2, y1, y2, tx, ty, dd, dta, Max, spacing, gamma_method):
     else:
         print('Please specify gamma method correctly, local or global.')
         return False, False
+    
     if (min(x1, x2) > x_opto) or (x_opto > max(x1, x2)): # point is invalid
         # not in limit
         return False, False
-    elif min(x1, x2) < x_opto < min(x1, x2) + spacing/linear_fit_param: # point is valid in this linear approx
+    elif min(x1, x2) < x_opto < max(x1, x2):
         return x_opto, grad*x_opto+c
-    elif max(x1, x2) - spacing/linear_fit_param < x_opto < max(x1, x2): # also valid
-        return x_opto, grad*x_opto+c
-    else:
-        return x1 + spacing/linear_fit_param ,(grad*(x1+spacing/linear_fit_param) +c) # else return bounds of acceptance (midpoint)
-
