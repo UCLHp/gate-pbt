@@ -17,7 +17,6 @@ TODO: Modify for local gamma analysis.
 import numpy as np
 import itk
 from scipy.spatial import cKDTree
-from scipy.interpolate import RegularGridInterpolator
 
 def get_gamma_index(ref,target,**kwargs):
     """
@@ -99,7 +98,7 @@ def GetGamma(d0, d1, x0, x1, y0, y1, z0, z1, Max, dd, dta, gamma_method):
     else:
         print('Please specify gamma method correctly, local or global.')
         return False
-
+    
     return np.sqrt(
         (d1 - d0) ** 2 / (0.01 * dd * norm_val) ** 2 +
         (x1 - x0) ** 2 / dta ** 2 +
@@ -181,7 +180,7 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
     
 
     
-    gamma, total = 0,0 # for gamma calc in testing
+    gamma, gammaLocal, total = 0, 0, 0 # for gamma calc in testing
     
     # Loop over each target position 
     for Xt in x_tgt:
@@ -214,11 +213,13 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
 
                
                 found = False  # Flag to indicate when to exit all loops
+                foundLoc = False
 
                 # iterate over 4 closest references voxels
                 for idx in indices:
-                    if found:
-                        break  # Exit the outer loop if found
+                    if foundLoc:
+                        if found:
+                            break  # Exit the outer loop if found
                     
                     closest_ref_point = ref_coords[idx]  # (x, y, z) coordinates of closest reference point
                     X, Y, Z = closest_ref_point[0], closest_ref_point[1], closest_ref_point[2]
@@ -235,13 +236,21 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                     # strictly speaking, this is not a first filter, as we only loop over 4 voxels
                     # in reality, we would need to loop over all voxels within dta and check for filter 1
                     Gamma = GetGamma(tgt_value, ref_value, Xt, X, Yt, Y, Zt, Z, max_targ, dd, dta, gamma_method)
+                    GammaLocal = GetGamma(tgt_value, ref_value, Xt, X, Yt, Y, Zt, Z, max_targ, dd, dta, 'local')
+                    if GammaLocal <=1:
+                        gammaLocal +=1
+                        foundLoc = True
+                        
                     if Gamma <= 1: 
                         gamma += 1
-                        found = True # we have passed this target voxel
+                        found = True
                         # update gamma array values for each method
                         gamma_array[tuple(tgt_index)] = Gamma
-                        break  # Exit the outer loop
+                        #break  # Exit the outer loop
                     
+                    if foundLoc:
+                        if found:
+                            break
 
                     dirns = [+1, -1]
 
@@ -251,6 +260,7 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                         # loop over both directions, i.e. +X or -X
                         for dirn in dirns:
                             x,y,z = X,Y,Z
+                            xLoc,yLoc,zLoc = X,Y,Z
                             # interpolating in X
                             if D == 0:
                                 # check we are not at a boundary
@@ -263,6 +273,7 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
 
                                 #calculate the optimum x position, and the corresponding dose value
                                 x, interpolated_value = min_gamma(X, X + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Xt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], gamma_method)
+                                xLoc, interpolated_valueLoc = min_gamma(X, X + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Xt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], 'local')
 
                                 # simple check to see if x is within bounds of approximation
                                 if x == False:
@@ -275,6 +286,7 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                                     continue
                                 ref_value_next = referenceArray[i_ref, int(j_ref + dirn), k_ref]
                                 y, interpolated_value = min_gamma(Y, Y + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Yt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], gamma_method)
+                                yLoc, interpolated_valueLoc = min_gamma(Y, Y + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Yt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], 'local')
                                 if y == False:
                                     continue
                             # interpolating in Z
@@ -287,25 +299,36 @@ def gamma_index_3d(imgref, imgtarget, dta=3., dd=3., ddpercent=True, threshold=0
                                 if ref_value == ref_value_next:
                                     continue
                                 z, interpolated_value = min_gamma(Z, Z + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Zt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], gamma_method)
+                                zLoc, interpolated_valueLoc = min_gamma(Z, Z + dirn*referenceArraySpacing[D], ref_value, ref_value_next, Zt, tgt_value, dd, dta, max_targ, referenceArraySpacing[D], 'local')
                                 if z == False:
                                     continue
 
                             # simple gamma calc function
                             Gamma = GetGamma(tgt_value, interpolated_value, Xt, x, Yt, y, Zt, z, max_targ, dd, dta, gamma_method)
-
-                            # do they pass?
+                            GammaLocal = GetGamma(tgt_value, interpolated_valueLoc, Xt, xLoc, Yt, yLoc, Zt, zLoc, max_targ, dd, dta, 'local')
                             
+                            
+                            
+                            # do they pass?
+                            if GammaLocal <=1:
+                                gammaLocal +=1
+                                foundLoc =True
                             if Gamma <= 1:
                                 gamma += 1
                                 found = True
                                 gamma_array[tuple(tgt_index)] = Gamma
-                                break  # Exit the inner loop if condition is met
+                            if foundLoc:
+                                if found:
+                                    break
+                        if foundLoc:
+                            if found:
+                                break  # Exit the outer loop if inner loop condition was met
+                    if foundLoc:
                         if found:
-                            break  # Exit the outer loop if inner loop condition was met
-                    if found:
-                        break
+                            break
     
-    print('Linear optimum  linear interpolation method = ',100.0 - 100*gamma_array[gamma_array>1].size / gamma_array[gamma_array>0].size, '%')
+    print('Global Gamma - linear interpolation method = ',100.0 - 100*gamma_array[gamma_array>1].size / gamma_array[gamma_array>0].size, '%')
+    print('Local Gamma - linear interpolation method = ', gammaLocal/total * 100, '%')
     
     # convert to image, note we copy information from targetimage
     gimg=itk.image_from_array(gamma_array.swapaxes(0,2).astype(np.float32).copy())
@@ -356,7 +379,7 @@ def min_gamma(x1, x2, y1, y2, tx, ty, dd, dta, Max, spacing, gamma_method):
     # optimal x position for local or global gamma
    
     if gamma_method == 'local':
-        x_opto = (grad*ty/(dd*0.01*ty)**2 + tx*1/(dta)**2 - grad*c/(dd*0.01*ty)**2)/(grad**2/(dd*0.01*ty)**2 + 1/dta**2)
+        x_opto= (grad*ty/(dd*0.01*ty)**2 + tx*1/(dta)**2 - grad*c/(dd*0.01*ty)**2)/(grad**2/(dd*0.01*ty)**2 + 1/dta**2)
     elif gamma_method == 'global':
         x_opto = (grad*ty/(dd*0.01*Max)**2 + tx*1/(dta)**2 - grad*c/(dd*0.01*Max)**2)/(grad**2/(dd*0.01*Max)**2 + 1/dta**2)
     else:

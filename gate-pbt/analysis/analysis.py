@@ -25,6 +25,7 @@ import mhdtodicom
 import dicomtomhd
 import gamma
 import overrides
+from uncertainty_stats import getUncertaintyPlots
 
 
 
@@ -153,9 +154,10 @@ def full_analysis( outputdir ):
     
     
     print("Fields found: ", fieldnames)
-    
     for field in fieldnames:
-        
+
+      
+            
         print("\nAnalyzing field: ", field)
 
         print("  Merging results...")
@@ -181,7 +183,7 @@ def full_analysis( outputdir ):
 
         
         path_to_dcmdose = mhdtodicom.get_dcm_file_path( outputdir, beamref )
-        tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose )        
+        tps_dose = dicomtomhd.dcm2mhd( path_to_dcmdose )      
         print("  Overriding TPS outside of zSurface to zero for gamma analysis")
         struct_file = mhdtodicom.get_struct_file_path( outputdir )
         tps_dose = overrides.set_external_dose_zero( tps_dose, struct_file, "zSurface" )    ## hard-coded
@@ -224,7 +226,8 @@ def full_analysis( outputdir ):
             #itk.imwrite(dose_none_ext, path_to_none_ext)      
             #mhdtodicom.mhd2dcm(dose_none_ext, path_to_dcmdose, join(outputdir, field+"_DoseToWater_NoneExt.dcm") )
    
-               
+            #'''
+            
             print("  Performing gamma analysis 3%/3mm: post-sim D2W vs Eclipse")
             gamma_img = gamma.gamma_image(  d2wimg, tps_dose, 3, 3 )
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma_33.mhd") )
@@ -242,7 +245,8 @@ def full_analysis( outputdir ):
             itk.imwrite(gamma_img_22, join(outputdir, field+"_Gamma_22.mhd") )
             pass_rate = gamma.get_pass_rate( gamma_img_22 )
             print("   *** Gamma pass rate @ 2%/2mm = {}%".format( round(pass_rate,2) ))
-            
+
+            #'''
 
         
         dose2water = field+"_merged-DoseToWater.mhd"
@@ -250,6 +254,7 @@ def full_analysis( outputdir ):
             print("\n")
             print("  Scaling merged-DoseToWater.mhd")
             doseimg_path = join(outputdir, dose2water)
+
             
             # Read DoseMask to set dose outside zSurface to zero
             dosemask = itk.imread(join(parentdir,"data","DoseMask.mhd"))  # TODO; read from config file
@@ -272,6 +277,24 @@ def full_analysis( outputdir ):
             print("   *** Gamma GD2W pass rate @ 3%/3mm = {}%".format( round(pass_rate,2) ))          
             print("  Converting gamma image to dicom")
             gamma_dcm = join(outputdir, field+"_Gamma_GD2W_33.dcm")
+        
+
+        # Maybe we add uncertainy metrics here?
+
+        dose = field+"_merged-Uncertainty.mhd"
+        if dose in [basename(f) for f in mergedfiles]:
+            print("\n")
+            print("Calculating uncertainty")
+            doseUncert_path = join(outputdir, dose)
+            dose2W = d2wimg
+            print("Number of Primaries Simulated", nsim)
+            results = getUncertaintyPlots(doseUncert_path, dose2W, nsim)
+            
+
+        # Dose To Water MHD file
+        
+
+
 
 
         

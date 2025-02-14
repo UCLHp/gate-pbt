@@ -84,7 +84,7 @@ def combine_uncertainty(dosefiles, dosesquaredfiles, statfiles, output):
         #treatment planning" and dividing by dose/N for relative uncertainty...
         if sumdosesq[i]!=0 and sumdose[i]!=0 and N>1: 
             uncertainty[i] = math.sqrt( 1.0/(N-1) * (sumdosesq[i]/N - (sumdose[i]/N)**2) ) / (sumdose[i]/N)
-
+    
     combinedUncert = uncertainty.reshape( shape )
     uncertimg = itk.image_from_array( combinedUncert.astype(np.float32)  ) ## ITK CANNOT WRITE DOUBLES, MUST CAST TO FLOAT
     uncertimg.CopyInformation( img1 )
