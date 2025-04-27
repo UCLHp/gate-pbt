@@ -109,6 +109,7 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
         print("  Dose scaling of {} used in mhd2dcm".format(dosescaling))
     
     dcm = pydicom.dcmread(dcmFile)
+    
     mhd=None
     if type(mhdFile)==str:
         # Assume file path
@@ -159,7 +160,7 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     # TODO: check this is safe
     # TODO: should this ever negative? - NO!
     dcm.GridFrameOffsetVector = [ x*mhd.GetSpacing()[2] for x in range(mhdpix.shape[0]) ]
-         
+
     dose_abs = mhdpix * dosescaling
     
     scale_to_int = 1E4   # Dicom stores array of integers only
@@ -174,5 +175,4 @@ def mhd2dcm(mhdFile, dcmFile, output, dosescaling=None):
     #dosescaling = dcm.DoseGridScaling
     #FrameIncrementPointer ?
    
-    dcm.save_as( output )
-
+    dcm.save_as( output)

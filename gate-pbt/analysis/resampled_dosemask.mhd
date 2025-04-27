@@ -1,0 +1,13 @@
+ObjectType = Image
+NDims = 3
+BinaryData = True
+BinaryDataByteOrderMSB = False
+CompressedData = False
+TransformMatrix = 1 0 0 0 1 0 0 0 1
+Offset = -102.29000000000001 33.5655 -44
+CenterOfRotation = 0 0 0
+AnatomicalOrientation = RAI
+ElementSpacing = 1.96234 1.97088 2
+DimSize = 106 55 85
+ElementType = MET_UCHAR
+ElementDataFile = resampled_dosemask.raw

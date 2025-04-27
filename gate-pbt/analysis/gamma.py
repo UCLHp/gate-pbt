@@ -20,7 +20,7 @@ import numpy as np
 import itk
 
 #from gatetools import gamma_index as gi
-import gamma_index
+import gamma_index as gamma_index
 
 import reorientate
 
@@ -39,7 +39,7 @@ def gamma_image( ref_dose, target_dose, dta_val, dd_val ):
     Accepts ITK-like image, or path to image
     Returns image matching dimensions of target
     Set ref -> MC dose, target -> TPS dose
-    """    
+    """   
     ref, targ = None, None 
     if type(ref_dose)==str:
         #Assume we have file path
