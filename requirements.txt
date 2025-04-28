@@ -17,7 +17,7 @@ itk-numerics==5.1.1.post1
 itk-registration==5.1.1.post1
 itk-segmentation==5.1.1.post1
 itsdangerous==1.1.0
-Jinja2==2.11.3
+Jinja2==3.1.5
 kiwisolver==1.2.0
 lz4==3.1.10
 MarkupSafe==1.1.1
