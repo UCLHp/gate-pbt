@@ -27,7 +27,7 @@ completed_job_mointor
 dcmfile
 
 # gamma results
-gamma_results
+gamma_results.xlsx
 
 # numeric only folders in root
 [0-9]*/
