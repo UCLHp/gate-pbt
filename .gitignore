@@ -13,8 +13,8 @@ wheels/
 _internal/
 
 # executable files
-run
-analysis
+run.exe
+analysis.exe
 
 # patient specific folders
 completed_patients/
