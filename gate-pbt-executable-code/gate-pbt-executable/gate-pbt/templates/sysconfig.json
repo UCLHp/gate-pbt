@@ -1,0 +1,29 @@
+{
+  "_comment1": "JSON file holding system config info for simulations",
+
+  "MAC_TEMPLATE": "mac_template.txt",
+
+  "CONFIG_FILE": "simconfig.ini",
+
+  "DATA_TO_COPY": [
+    "GateMaterials.db",
+    "PhilipsBody-HU2mat.txt",
+    "PhilipsBody-HUmaterials.db",
+    "simconfig.ini",
+    "SourceDescriptionFile.txt",
+    "emcalc.txt"
+  ],
+
+  "MACS_TO_COPY": ["verbose.mac", "visu.mac"],
+
+  "CLUSTER_NFS": "/mnt/clustshare",
+
+  "_comment2":  "Dict of rangeshifter WET and physical thickness",
+  "RS_WET_OPTIONS": {
+    "57.0": 50,
+    "34.0": 30,
+    "23.0": 20
+  }
+
+
+}

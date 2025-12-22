@@ -1,0 +1,104 @@
+#############################################################
+# Template mac file for verification fields into water tank
+#############################################################
+
+#=====================================================
+# VERBOSE and VISUALISATION
+#=====================================================
+
+/control/execute   verbose.mac
+#/control/execute   visu.mac
+
+#=====================================================
+# GEOMETRY
+#=====================================================
+
+/gate/geometry/setMaterialDatabase   {path}/data/GateMaterials.db
+/gate/geometry/setIonisationPotential Water 78 eV
+
+# World
+/gate/world/geometry/setXLength   3 m
+/gate/world/geometry/setYLength   3 m
+/gate/world/geometry/setZLength   3 m
+/gate/world/setMaterial   Air
+/gate/world/vis/setVisible   1
+/gate/world/vis/setColor   blue
+
+
+# Water Box
+/gate/world/daughters/name waterbox
+/gate/world/daughters/insert box
+/gate/waterbox/geometry/setXLength 40 cm
+/gate/waterbox/geometry/setYLength 40 cm
+/gate/waterbox/geometry/setZLength 40 cm
+# z translation should be -0.5*(tank height)+(depth of iso)
+/gate/waterbox/placement/setTranslation 0 0 -10 cm
+/gate/waterbox/setMaterial Water
+/gate/waterbox/vis/setVisible 1
+/gate/waterbox/vis/setColor blue
+
+
+#=====================================================
+# PHYSICS
+#=====================================================
+
+/gate/physics/addPhysicsList QGSP_BIC_EMZ
+
+/gate/physics/Gamma/SetCutInRegion   world 1 m
+/gate/physics/Electron/SetCutInRegion   world 1 m
+/gate/physics/Positron/SetCutInRegion   world 1 m
+
+/gate/physics/Gamma/SetCutInRegion   waterbox 0.1 mm
+/gate/physics/Electron/SetCutInRegion   waterbox 0.1 mm
+/gate/physics/Positron/SetCutInRegion   waterbox 0.1 mm
+
+/gate/physics/displayCuts
+
+
+#=====================================================
+# DETECTORS
+#=====================================================
+
+/gate/actor/addActor   SimulationStatisticActor   stat
+/gate/actor/stat/save  {path}/output/{run}_stat.txt
+/gate/actor/stat/saveEveryNSeconds   100
+
+/gate/actor/addActor DoseActor doseDistribution
+/gate/actor/doseDistribution/attachTo waterbox
+/gate/actor/doseDistribution/stepHitType random
+/gate/actor/doseDistribution/setVoxelSize 2 2 2 mm
+/gate/actor/doseDistribution/saveEveryNSeconds 6000
+/gate/actor/doseDistribution/enableEdep false
+/gate/actor/doseDistribution/enableDose true
+/gate/actor/doseDistribution/enableUncertaintyDose false
+/gate/actor/doseDistribution/enableSquaredDose true
+/gate/actor/doseDistribution/enableNumberOfHits false
+/gate/actor/doseDistribution/save {path}/output/{run}_dose.txt
+
+#=====================================================
+# INITIALISATION
+#=====================================================
+
+/gate/run/initialize
+
+#=====================================================
+# BEAMS
+#=====================================================
+
+/gate/source/addSource   PBS   TPSPencilBeam
+/gate/source/PBS/setTestFlag   false
+/gate/source/PBS/setPlan   {path}/data/PlanDescriptionFile.txt
+/gate/source/PBS/setFlatGenerationFlag   false
+/gate/source/PBS/setSpotIntensityAsNbIons   false
+/gate/source/PBS/setSortedSpotGenerationFlag   false
+/gate/source/PBS/setSigmaEnergyInMeVFlag   false
+/gate/source/PBS/setSourceDescriptionFile   {path}/data/SourceDescriptionFile.txt
+
+#=====================================================
+# START BEAMS
+#=====================================================
+
+/gate/random/setEngineName   MersenneTwister
+/gate/random/setEngineSeed   auto
+/gate/application/setTotalNumberOfPrimaries   1000
+/gate/application/start

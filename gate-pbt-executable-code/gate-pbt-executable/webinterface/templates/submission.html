@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+MC submit
+{% endblock %}
+
+{% block navbartext %}
+User: {{username}} 
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container">
+    
+
+        <div class="row my-5">
+
+        <div class="col col-lg-9">
+
+            <h3>Submission request</h3>
+        
+
+        <form action="#" method="post">
+          <div class="row my-2 pt-5">
+            <label for="patientid" class="col-2 col-form-label">Patient ID:</label>
+            <div class="col-3">
+              <input type="text" class="form-control" id="patientid" name="patientid" required>
+            </div>
+          </div>
+          <div class="row my-2">
+            <label for="plan" class="col-2 col-form-label">Plan:</label>
+            <div class="col-3">
+              <input type="text" class="form-control" id="plan" name="plan" required>
+            </div>
+          </div>
+
+          <fieldset class="row mb-4">
+            <legend class="col-form-label col-2 pt-3">Options:</legend>
+             <div class="col-3 pt-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="let" name="let">
+                  <label class="form-check-label" for="let">
+                    Calculate LET
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="neutrons" name="neutrons">
+                  <label class="form-check-label" for="neutrons">
+                    Include neutrons
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="dosetowater" name="dosetowater">
+                  <label class="form-check-label" for="dosetowater">
+                    Dose-to-water
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="highpriority" name="highpriority">
+                  <label class="form-check-label" for="highpriority">
+                    High priority
+                  </label>
+                </div>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+    </div><!--col-->
+
+    <!--
+    <div class="col col-lg-1">
+    <p> SOME TEXT HERE. </p>
+    </div>      
+    -->
+
+    </div><!-- row -->
+
+<div>
+
+{% endblock %}
+
+
+
