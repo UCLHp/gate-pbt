@@ -1,5 +1,33 @@
-data/simulationfiles/
-gate-pbt/simulation/__pycache__/
-gate-pbt/analysis/__pycache__/
-gate-pbt/verification/code/__pycache__/
-**/*~
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# executable folders
+_internal/
+
+# executable files
+run.exe
+analysis.exe
+
+# patient specific folders
+completed_patients/
+simulationfiles/
+exported_patient_data/
+submitted_jobs/
+
+# monitor text debug files
+completed_job_mointor
+dcmfile
+
+# gamma results
+gamma_results.xlsx
+
+# numeric only folders in root
+[0-9]*/
