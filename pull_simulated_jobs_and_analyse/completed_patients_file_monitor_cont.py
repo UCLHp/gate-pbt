@@ -220,6 +220,12 @@ def pull_simulation_back(completed_simulations, directory_containing_completed_s
                     # Download directory recursively
                     _download_directory(sftp, remote_path, local_path)
                     print(f" Folder downloaded successfully: {patient_folder_name}")
+
+                    try:
+                        _delete_remote_directory(sftp, remote_path)
+                        print(f" Deleted from remote: {patient_folder_name}")
+                    except Exception as e:
+                        print(f" Warning: Failed to delete remote folder {patient_folder_name}: {e}")
                     
                 except FileNotFoundError:
                     print(f" Remote path not found: {remote_path}")
@@ -238,6 +244,35 @@ def pull_simulation_back(completed_simulations, directory_containing_completed_s
         print(f" SFTP connection failed: {e}")
         import traceback
         traceback.print_exc()
+
+
+def _delete_remote_directory(sftp, remote_dir):
+    """Recursively delete a directory on the remote server via SFTP"""
+    import stat
+    
+    # Safety check: don't delete root-level paths
+    if remote_dir.rstrip('/') in ['', '/mnt', '/mnt/clustshare']:
+        raise ValueError(f"Refusing to delete protected path: {remote_dir}")
+    
+    try:
+        items = sftp.listdir_attr(remote_dir)
+        
+        for item in items:
+            remote_item = os.path.join(remote_dir, item.filename).replace('\\', '/')
+            
+            if stat.S_ISDIR(item.st_mode):
+                # Recursively delete subdirectory
+                _delete_remote_directory(sftp, remote_item)
+            else:
+                # Delete file
+                sftp.remove(remote_item)
+        
+        # After all contents deleted, remove the now-empty directory
+        sftp.rmdir(remote_dir)
+        
+    except Exception as e:
+        print(f"Error deleting remote directory {remote_dir}: {e}")
+        raise
 
 
 def run_analysis_exec(output_folder_string="", executable_path=""):
