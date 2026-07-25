@@ -110,7 +110,7 @@ def search_dcm_dir( input_dir ):
     dcmfiles = [ f for f in allfiles if f[-4:]==".dcm" ]
 
     cnt_CT, cnt_plan, cnt_struct, cnt_dose = 0,0,0,0   
-    studyInstanceUID = pydicom.dcmread(dcmfiles[0]).StudyInstanceUID
+    #PSQA   studyInstanceUID = pydicom.dcmread(dcmfiles[0]).StudyInstanceUID
     
     problem = False
     ct_files = []
@@ -122,9 +122,9 @@ def search_dcm_dir( input_dir ):
 
         dcm = pydicom.dcmread(f)
         
-        if dcm.StudyInstanceUID != studyInstanceUID:
-            problem = True
-            print("File {} has inconsistent StudyInstanceUID".format(f) )
+        #PSQA   if dcm.StudyInstanceUID != studyInstanceUID:
+        #    problem = True
+        #    print("File {} has inconsistent StudyInstanceUID".format(f) )
         
         if dcm.Modality=="CT":
             cnt_CT+=1
@@ -228,6 +228,14 @@ def main():
   
     print("Overriding all external structures to air")
     ct_cropped = overrides.set_air_external( ct_cropped, struct_file )
+    
+    
+    
+    # Set HU -980 to 5000 as solid water RW3 in materials file
+    ct_cropped = overrides.override_hu( ct_cropped, struct_file, "BODY", 51)
+    
+    
+    
     #itk.imwrite(ct_air_override, join(sim_dir,"data","ct_air.mhd"))
     
     #structs_to_air = ["zbb", "zBB", "zbbs", "zBBs", "bb", "BB", "bbs", "BBs",
