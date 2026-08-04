@@ -5,7 +5,7 @@ Air_0: d=1.21 mg/cm3; n=3;
 +el: name=Oxygen; f=0.232
 +el: name=Argon; f=0.013
 
-# Material corresponding to H=[ -980; 3000 ]
+# Material corresponding to H=[ -980; 5000 ]
 RW3: d=1.057 g/cm3; n=4; state=solid
 +el: name=Hydrogen;   f=0.076
 +el: name=Carbon;     f=0.904
