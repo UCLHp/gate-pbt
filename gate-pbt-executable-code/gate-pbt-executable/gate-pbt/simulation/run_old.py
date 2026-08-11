@@ -129,67 +129,12 @@ except Exception as e:
     raise
 ##############################################################################
 
-# ============================================================================
-# CHANGE 1 - VERIFICATION (WATER PHANTOM) MODE SETTINGS
-# ----------------------------------------------------------------------------
-# If the RTPLAN's PlanIntent (0300A,000A) is "VERIFICATION" the plan was
-# measured/planned on a solid water phantom, so instead of using the patient's
-# real voxelised CT densities we override the whole body to solid water,
-# exactly as the legacy (water phantom) version of this script did.
-# ============================================================================
 
-# DICOM PlanIntent value that triggers water phantom mode
-VERIFICATION_PLAN_INTENT = "VERIFICATION"
-
-# HU value used for solid water (RW3) - taken from the legacy script
-WATER_PHANTOM_HU = 51
-
-# Candidate names for the external/body contour, tried in order.
-# The legacy script hardcoded "BODY"; the others are fallbacks.
-BODY_STRUCTURE_NAMES = ["BODY", "Body", "body", "EXTERNAL", "External", "external"]
-
-# In verification mode, should the per-ROI electron density overrides read from
-# the RTSTRUCT still be applied? Legacy behaviour = False (everything is water).
-# Set to True if your verification plans contain genuine density inserts.
-APPLY_DENSITY_OVERRIDES_IN_VERIFICATION = False
-
-# Append "--VERIFICATION" to the simulation directory name so verification runs
-# are obvious on disk. Set to False if anything downstream globs on the exact
-# "<PatientID>--<RTPlanLabel>" directory name.
-TAG_VERIFICATION_IN_DIRNAME = True
-
-# ============================================================================
-# CHANGE 2 - FILENAME SANITISING
-# ----------------------------------------------------------------------------
-# Characters that are illegal / awkward in file and directory names. These get
-# swapped for "_" rather than being deleted, so "A/B" -> "A_B" not "AB".
-# ============================================================================
-ILLEGAL_FILENAME_CHARS = ['/', '\\', '&', ':', '*', '?', '"', '<', '>', '|', '\t', '\n', '\r']
-##############################################################################
-
-
-def make_gate_dirs(dir_name, path_to_templates, is_verification=False):
+def make_gate_dirs(dir_name, path_to_templates):
     """Make dir structure for gate files and copy fixed files"""
     debug_print(f"\n--- make_gate_dirs called ---")
     debug_print(f"dir_name: {dir_name}")
     debug_print(f"path_to_templates: {path_to_templates}")
-    debug_print(f"is_verification: {is_verification}")
-    
-    # ----------------------------------------------------------------------
-    # CHANGE 3: for VERIFICATION runs, copy the water-phantom lookup tables
-    # instead of the patient ones. The DESTINATION filename is unchanged, so
-    # nothing in the .mac files needs editing - only the source file differs.
-    # Mapping lives in sysconfig.json under "VERIFICATION_DATA_SWAPS".
-    # ----------------------------------------------------------------------
-    file_swaps = DATA.get("VERIFICATION_DATA_SWAPS", {}) if is_verification else {}
-    if is_verification:
-        if not file_swaps:
-            raise Exception(
-                "VERIFICATION plan but no 'VERIFICATION_DATA_SWAPS' entry found "
-                "in sysconfig.json - refusing to run a water phantom sim with "
-                "the patient HU->material lookup tables."
-            )
-        debug_print(f"Verification file swaps: {file_swaps}")
     
     # Make directory tree
     if not exists(dir_name):
@@ -205,17 +150,8 @@ def make_gate_dirs(dir_name, path_to_templates, is_verification=False):
     # Copy over data files
     debug_print(f"Copying {len(DATA['DATA_TO_COPY'])} data files")
     for f in DATA["DATA_TO_COPY"]:
-        # CHANGE 3: source may be swapped, destination name never changes
-        source_name = file_swaps.get(f, f)
-        source = join(path_to_templates, source_name)
+        source = join(path_to_templates,f)  
         destination = join(dir_name,"data",f)
-        if source_name != f:
-            debug_print(f"  [VERIFICATION SWAP] {f} <- {source_name}")
-            if not exists(source):
-                raise Exception(
-                    f"Verification lookup file '{source_name}' not found in "
-                    f"templates ({path_to_templates})"
-                )
         debug_print(f"  Copying: {source} -> {destination}")
         shutil.copyfile(source,destination)
         slurm.dos2unix( destination, destination )
@@ -434,60 +370,6 @@ def structure_exists( dcmfile, struct ):
                         break
     return exists
 
-def sanitise_for_filename(text, replacement="_"):
-    """CHANGE 2: Make a DICOM string safe to use in a file/directory name.
-
-    Swaps "/", "\\", "&" (and other illegal characters) plus spaces for "_",
-    then collapses any runs of "_" and trims leading/trailing "_".
-    e.g. "SMITH/JONES & CO" -> "SMITH_JONES_CO"
-    """
-    if text is None:
-        return "UNKNOWN"
-
-    cleaned = str(text).strip()
-    for ch in ILLEGAL_FILENAME_CHARS:
-        cleaned = cleaned.replace(ch, replacement)
-    cleaned = cleaned.replace(" ", replacement)
-
-    # Collapse repeated replacement chars: "A__B" -> "A_B"
-    while replacement + replacement in cleaned:
-        cleaned = cleaned.replace(replacement + replacement, replacement)
-    cleaned = cleaned.strip(replacement + ". ")
-
-    return cleaned if cleaned else "UNKNOWN"
-
-
-def get_plan_intent(plandcm):
-    """CHANGE 1: Read PlanIntent (0300A,000A) from the RTPLAN.
-
-    Returns the uppercased intent string, or "" if the tag is absent.
-    """
-    intent = getattr(plandcm, "PlanIntent", None)
-    if intent is None:
-        debug_print("WARNING: RTPLAN has no PlanIntent (0300A,000A) tag")
-        debug_print("         -> defaulting to standard voxelised CT workflow")
-        return ""
-
-    intent = str(intent).strip().upper()
-    debug_print(f"PlanIntent (0300A,000A) = '{intent}'")
-    return intent
-
-
-def find_body_structure(struct_file):
-    """CHANGE 1: Find the external/body contour to override to solid water.
-
-    Tries each name in BODY_STRUCTURE_NAMES and returns the first that exists
-    and is actually contoured. Returns None if none are found.
-    """
-    for name in BODY_STRUCTURE_NAMES:
-        if structure_exists(struct_file, name):
-            debug_print(f"Body/external structure found: '{name}'")
-            return name
-
-    debug_print(f"ERROR: none of {BODY_STRUCTURE_NAMES} found in the RTSTRUCT")
-    return None
-
-
 def load_edensity_calibration_file():
     """
     Loads a calibration file that is located in templates/TEST.txt
@@ -564,41 +446,11 @@ def main():
         # Make Gate directory structure and copy fixed files
         debug_print("\n--- Making directories ---")
         plandcm = pydicom.dcmread(plan_file)    
-
-        # ------------------------------------------------------------------
-        # CHANGE 1: decide voxelised CT vs water phantom (verification) mode
-        # ------------------------------------------------------------------
-        plan_intent = get_plan_intent(plandcm)
-        is_verification = (plan_intent == VERIFICATION_PLAN_INTENT)
-
-        debug_print("\n" + "-"*60)
-        if is_verification:
-            debug_print("MODE: VERIFICATION - water phantom")
-            debug_print(f"      body will be overridden to HU {WATER_PHANTOM_HU} (solid water RW3)")
-        else:
-            debug_print("MODE: PATIENT - voxelised CT")
-            debug_print("      real CT densities kept, ROI density overrides applied")
-        debug_print("-"*60)
-
-        # ------------------------------------------------------------------
-        # CHANGE 2: sanitise PatientID and RTPlanLabel for the directory name
-        # ------------------------------------------------------------------
-        pat_id = sanitise_for_filename(plandcm.PatientID)
-        plan_label = sanitise_for_filename(getattr(plandcm, "RTPlanLabel", "NOLABEL"))
-        identifier = pat_id + "--" + plan_label
-
-        # CHANGE 1: flag verification runs in the directory name
-        if is_verification and TAG_VERIFICATION_IN_DIRNAME:
-            identifier = identifier + "--VERIFICATION"
-
-        debug_print(f"PatientID   (raw -> safe): '{plandcm.PatientID}' -> '{pat_id}'")
-        debug_print(f"RTPlanLabel (raw -> safe): '{getattr(plandcm, 'RTPlanLabel', '')}' -> '{plan_label}'")
-        debug_print(f"Identifier: {identifier}")
-
+        pat_id = plandcm.PatientID.replace("/","").replace("\\","")
+        identifier = pat_id+"--"+(plandcm.RTPlanLabel).replace(" ","_")
         sim_dir = join(PATH_TO_SIMFILES, identifier)
         debug_print(f"Simulation directory: {sim_dir}")
-        # CHANGE 3: is_verification selects the water-phantom lookup tables
-        make_gate_dirs(sim_dir, PATH_TO_TEMPLATES, is_verification)   
+        make_gate_dirs(sim_dir, PATH_TO_TEMPLATES)   
         
         # Define simconfig.ini configuration file
         configpath = join(sim_dir, "data", DATA["CONFIG_FILE"])
@@ -614,51 +466,41 @@ def main():
         debug_print(f"Type after reorientate: {type(ct_reor)}")
         debug_print('Overriding -1000')
 
-        # ------------------------------------------------------------------
-        # CHANGE 1: ROI electron-density overrides.
-        # Skipped in VERIFICATION mode - the whole body becomes solid water,
-        # so patient ROI densities are meaningless there.
-        # ------------------------------------------------------------------
-        apply_roi_overrides = (not is_verification) or APPLY_DENSITY_OVERRIDES_IN_VERIFICATION
+        # TODO: Check for density overrides and apply
+        debug_print("\n--- Processing ROI density overrides ---")
+        roi_density_dict = {}
 
-        if not apply_roi_overrides:
-            debug_print("\n--- VERIFICATION mode: skipping ROI density overrides ---")
-        else:
-            # TODO: Check for density overrides and apply
-            debug_print("\n--- Processing ROI density overrides ---")
-            roi_density_dict = {}
+        structdcm = pydicom.dcmread(struct_file)
+        
+        # Create a mapping of ROI Number to ROI Name
+        roi_name_dict = {
+            roi_item.ROINumber: roi_item.ROIName
+            for roi_item in structdcm.StructureSetROISequence
+        }
+        
+        roi_density_dict = {}
+        for roi_obs in structdcm.RTROIObservationsSequence:
+            if hasattr(roi_obs, "ROIPhysicalPropertiesSequence"):
+                for prop in roi_obs.ROIPhysicalPropertiesSequence:
+                    if getattr(prop, "ROIPhysicalProperty", None) == "REL_ELEC_DENSITY":
+                        density_value = getattr(prop, "ROIPhysicalPropertyValue", None)
+                        if density_value is not None:
+                            roi_id = getattr(roi_obs, "ReferencedROINumber", None)
+                            structure_name = roi_name_dict.get(roi_id, f"ROI_{roi_id}") if roi_id is not None else "Unknown"
+                            roi_density_dict[structure_name] = density_value
+                            debug_print(f"Found ROI strucutre {structure_name}, with density value {density_value}")
 
-            structdcm = pydicom.dcmread(struct_file)
+        debug_print(f"Found {len(roi_density_dict)} ROIs with density overrides:")
+        for struct_name, density in roi_density_dict.items():
+            debug_print(f"  {struct_name}: {density}")
         
-            # Create a mapping of ROI Number to ROI Name
-            roi_name_dict = {
-                roi_item.ROINumber: roi_item.ROIName
-                for roi_item in structdcm.StructureSetROISequence
-            }
+        X, Y = load_edensity_calibration_file()
+        hu_dict = convert_eDensity_HU(X, Y, roi_density_dict)
         
-            roi_density_dict = {}
-            for roi_obs in structdcm.RTROIObservationsSequence:
-                if hasattr(roi_obs, "ROIPhysicalPropertiesSequence"):
-                    for prop in roi_obs.ROIPhysicalPropertiesSequence:
-                        if getattr(prop, "ROIPhysicalProperty", None) == "REL_ELEC_DENSITY":
-                            density_value = getattr(prop, "ROIPhysicalPropertyValue", None)
-                            if density_value is not None:
-                                roi_id = getattr(roi_obs, "ReferencedROINumber", None)
-                                structure_name = roi_name_dict.get(roi_id, f"ROI_{roi_id}") if roi_id is not None else "Unknown"
-                                roi_density_dict[structure_name] = density_value
-                                debug_print(f"Found ROI strucutre {structure_name}, with density value {density_value}")
-
-            debug_print(f"Found {len(roi_density_dict)} ROIs with density overrides:")
-            for struct_name, density in roi_density_dict.items():
-                debug_print(f"  {struct_name}: {density}")
-        
-            X, Y = load_edensity_calibration_file()
-            hu_dict = convert_eDensity_HU(X, Y, roi_density_dict)
-        
-            debug_print("\n--- Applying HU overrides ---")
-            for structure, hu_value in hu_dict.items():
-                debug_print(f"Overriding {structure} to HU {hu_value:.2f}")
-                ct_reor = overrides.override_hu(ct_reor, struct_file, structure, hu_value)
+        debug_print("\n--- Applying HU overrides ---")
+        for structure, hu_value in hu_dict.items():
+            debug_print(f"Overriding {structure} to HU {hu_value:.2f}")
+            ct_reor = overrides.override_hu(ct_reor, struct_file, structure, hu_value)
 
         # NOW crop after all overrides are applied
         
@@ -671,25 +513,7 @@ def main():
         debug_print(f"Type after overrides: {type(ct_cropped)}")
         ct_cropped = overrides.set_air_external( ct_cropped, struct_file )
 
-        # ------------------------------------------------------------------
-        # CHANGE 1: VERIFICATION -> override the body to solid water (RW3).
-        # Same order as the legacy script: crop, then air external, then the
-        # body override, so the water fill sits inside the external contour.
-        # ------------------------------------------------------------------
-        if is_verification:
-            body_struct = find_body_structure(struct_file)
-            if body_struct is None:
-                raise Exception(
-                    "VERIFICATION plan but no body/external contour found in the "
-                    f"RTSTRUCT (tried {BODY_STRUCTURE_NAMES}). Cannot build the "
-                    "water phantom - aborting rather than simulating real CT "
-                    "densities for a verification plan."
-                )
-            debug_print(f"\n--- Overriding '{body_struct}' to HU {WATER_PHANTOM_HU} (solid water RW3) ---")
-            ct_cropped = overrides.override_hu(
-                ct_cropped, struct_file, body_struct, WATER_PHANTOM_HU
-            )
-
+        
         
         # TODO: set automatically for different cropping / override options
         ct_for_simulation = "ct_cropped.mhd"
