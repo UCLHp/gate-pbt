@@ -1,0 +1,40 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+# executable folders
+_internal/
+
+# executable files
+run.exe
+analysis.exe
+
+# patient specific folders
+completed_patients/
+simulationfiles/
+exported_patient_data/
+submitted_jobs/
+
+# monitor text debug files
+completed_job_monitor.log
+dcmfile.log
+
+completed_job_monitor
+dcmfile
+
+FRED
+
+# gamma results
+gamma_results
+gamma_analysis_results.csv
+
+# numeric only folders in root
+[0-9]*/

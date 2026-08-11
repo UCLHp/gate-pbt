@@ -1,0 +1,3434 @@
+[Materials]
+# Material corresponding to H=[ -1010;-980 ]
+Air_0: d=1.21 mg/cm3; n=3; 
++el: name=Nitrogen; f=0.755
++el: name=Oxygen; f=0.232
++el: name=Argon; f=0.013
+
+# Material corresponding to H=[ -980;-970.737 ]
+Lung_1: d=25.5129 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -970.737;-961.474 ]
+Lung_2: d=34.5387 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -961.474;-952.212 ]
+Lung_3: d=43.5646 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -952.212;-942.949 ]
+Lung_4: d=52.5904 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -942.949;-933.686 ]
+Lung_5: d=61.6162 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -933.686;-924.423 ]
+Lung_6: d=70.6421 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -924.423;-915.161 ]
+Lung_7: d=79.6679 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -915.161;-905.898 ]
+Lung_8: d=88.6937 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -905.898;-896.635 ]
+Lung_9: d=97.7195 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -896.635;-887.372 ]
+Lung_10: d=106.745 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -887.372;-878.109 ]
+Lung_11: d=115.771 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -878.109;-868.847 ]
+Lung_12: d=124.797 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -868.847;-859.584 ]
+Lung_13: d=133.823 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -859.584;-850.321 ]
+Lung_14: d=142.849 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -850.321;-841.058 ]
+Lung_15: d=151.871 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -841.058;-831.795 ]
+Lung_16: d=160.89 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -831.795;-822.533 ]
+Lung_17: d=169.909 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -822.533;-813.27 ]
+Lung_18: d=178.928 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -813.27;-804.007 ]
+Lung_19: d=187.947 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -804.007;-794.744 ]
+Lung_20: d=196.966 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -794.744;-785.482 ]
+Lung_21: d=205.985 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -785.482;-776.219 ]
+Lung_22: d=215.004 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -776.219;-766.956 ]
+Lung_23: d=224.023 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -766.956;-757.693 ]
+Lung_24: d=233.042 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -757.693;-748.43 ]
+Lung_25: d=242.061 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -748.43;-739.168 ]
+Lung_26: d=251.08 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -739.168;-729.905 ]
+Lung_27: d=260.091 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -729.905;-720.642 ]
+Lung_28: d=269.082 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -720.642;-711.379 ]
+Lung_29: d=278.073 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -711.379;-702.116 ]
+Lung_30: d=287.064 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -702.116;-692.854 ]
+Lung_31: d=296.054 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -692.854;-683.591 ]
+Lung_32: d=305.045 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -683.591;-674.328 ]
+Lung_33: d=314.036 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -674.328;-665.065 ]
+Lung_34: d=323.027 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -665.065;-655.803 ]
+Lung_35: d=332.017 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -655.803;-646.54 ]
+Lung_36: d=341.008 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -646.54;-637.277 ]
+Lung_37: d=349.999 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -637.277;-628.014 ]
+Lung_38: d=358.989 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -628.014;-618.751 ]
+Lung_39: d=367.98 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -618.751;-609.489 ]
+Lung_40: d=376.971 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -609.489;-600.226 ]
+Lung_41: d=385.962 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -600.226;-590.963 ]
+Lung_42: d=394.952 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -590.963;-581.7 ]
+Lung_43: d=403.977 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -581.7;-572.438 ]
+Lung_44: d=413.008 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -572.438;-563.175 ]
+Lung_45: d=422.039 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -563.175;-553.912 ]
+Lung_46: d=431.07 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -553.912;-544.649 ]
+Lung_47: d=440.101 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -544.649;-535.386 ]
+Lung_48: d=449.133 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -535.386;-526.124 ]
+Lung_49: d=458.164 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -526.124;-516.861 ]
+Lung_50: d=467.195 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -516.861;-507.598 ]
+Lung_51: d=476.226 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -507.598;-498.335 ]
+Lung_52: d=485.258 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -498.335;-489.072 ]
+Lung_53: d=494.289 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -489.072;-479.81 ]
+Lung_54: d=503.32 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -479.81;-470.547 ]
+Lung_55: d=512.351 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -470.547;-461.284 ]
+Lung_56: d=521.382 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -461.284;-452.021 ]
+Lung_57: d=530.414 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -452.021;-442.759 ]
+Lung_58: d=539.445 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -442.759;-433.496 ]
+Lung_59: d=548.476 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -433.496;-424.233 ]
+Lung_60: d=557.507 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -424.233;-414.97 ]
+Lung_61: d=566.538 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -414.97;-405.707 ]
+Lung_62: d=575.57 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -405.707;-396.445 ]
+Lung_63: d=584.601 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -396.445;-387.182 ]
+Lung_64: d=593.632 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -387.182;-377.919 ]
+Lung_65: d=602.663 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -377.919;-368.656 ]
+Lung_66: d=611.695 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -368.656;-359.393 ]
+Lung_67: d=620.726 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -359.393;-350.131 ]
+Lung_68: d=629.757 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -350.131;-340.868 ]
+Lung_69: d=642.263 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -340.868;-331.605 ]
+Lung_70: d=658.445 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -331.605;-322.342 ]
+Lung_71: d=674.627 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -322.342;-313.08 ]
+Lung_72: d=690.809 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -313.08;-303.817 ]
+Lung_73: d=706.991 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -303.817;-294.554 ]
+Lung_74: d=723.173 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -294.554;-285.291 ]
+Lung_75: d=739.355 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -285.291;-276.028 ]
+Lung_76: d=755.537 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -276.028;-266.766 ]
+Lung_77: d=771.719 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -266.766;-257.503 ]
+Lung_78: d=787.901 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -257.503;-250 ]
+Lung_79: d=802.546 mg/cm3; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.105
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.749
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.003
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ -250;-236.36 ]
+Adiposetissue3_80: d=814.121 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -236.36;-222.721 ]
+Adiposetissue3_81: d=824.162 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -222.721;-209.081 ]
+Adiposetissue3_82: d=834.204 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -209.081;-195.441 ]
+Adiposetissue3_83: d=844.245 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -195.441;-181.802 ]
+Adiposetissue3_84: d=854.287 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -181.802;-168.162 ]
+Adiposetissue3_85: d=864.328 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -168.162;-154.522 ]
+Adiposetissue3_86: d=874.37 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -154.522;-140.883 ]
+Adiposetissue3_87: d=884.411 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -140.883;-127.243 ]
+Adiposetissue3_88: d=894.453 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -127.243;-113.603 ]
+Adiposetissue3_89: d=904.494 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -113.603;-99.9635 ]
+Adiposetissue3_90: d=914.536 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -99.9635;-86.3239 ]
+Adiposetissue3_91: d=924.577 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -86.3239;-72.6842 ]
+Adiposetissue3_92: d=934.441 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -72.6842;-63 ]
+Adiposetissue3_93: d=942.75 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.116
++el: name=Carbon; f=0.681
++el: name=Nitrogen; f=0.002
++el: name=Oxygen; f=0.198
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -63;-49.7052 ]
+Adiposetissue2_94: d=951.2 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.114
++el: name=Carbon; f=0.598
++el: name=Nitrogen; f=0.007
++el: name=Oxygen; f=0.278
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -49.7052;-40 ]
+Adiposetissue2_95: d=959.85 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.114
++el: name=Carbon; f=0.598
++el: name=Nitrogen; f=0.007
++el: name=Oxygen; f=0.278
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -40;-26.8012 ]
+Adiposetissue1_96: d=968.571 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -26.8012;-13.6025 ]
+Adiposetissue1_97: d=978.699 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -13.6025;-0.403727 ]
+Adiposetissue1_98: d=988.598 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ -0.403727;12.795 ]
+Adiposetissue1_99: d=998.497 mg/cm3; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ 12.795;25.9938 ]
+Adiposetissue1_100: d=1.00835 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ 25.9938;39.1925 ]
+Adiposetissue1_101: d=1.01768 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ 39.1925;45 ]
+Adiposetissue1_102: d=1.02551 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.112
++el: name=Carbon; f=0.517
++el: name=Nitrogen; f=0.013
++el: name=Oxygen; f=0.355
++el: name=Sodium; f=0.001
++el: name=Sulfur; f=0.001
++el: name=Chlorine; f=0.001
+
+# Material corresponding to H=[ 45;57.7907 ]
+SoftTissue_103: d=1.0329 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 57.7907;70.5814 ]
+SoftTissue_104: d=1.0429 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 70.5814;83.3721 ]
+SoftTissue_105: d=1.0529 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 83.3721;96.1628 ]
+SoftTissue_106: d=1.0629 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 96.1628;108.953 ]
+SoftTissue_107: d=1.0729 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 108.953;121.744 ]
+SoftTissue_108: d=1.0829 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 121.744;122 ]
+SoftTissue_109: d=1.088 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.103
++el: name=Carbon; f=0.154
++el: name=Nitrogen; f=0.029
++el: name=Oxygen; f=0.704
++el: name=Sodium; f=0.002
++el: name=Phosphor; f=0.002
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.002
++el: name=Potassium; f=0.002
+
+# Material corresponding to H=[ 122;140.881 ]
+ConnectiveTissue_110: d=1.09532 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.094
++el: name=Carbon; f=0.207
++el: name=Nitrogen; f=0.062
++el: name=Oxygen; f=0.622
++el: name=Sodium; f=0.006
++el: name=Sulfur; f=0.006
++el: name=Chlorine; f=0.003
+
+# Material corresponding to H=[ 140.881;159.762 ]
+ConnectiveTissue_111: d=1.10975 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.094
++el: name=Carbon; f=0.207
++el: name=Nitrogen; f=0.062
++el: name=Oxygen; f=0.622
++el: name=Sodium; f=0.006
++el: name=Sulfur; f=0.006
++el: name=Chlorine; f=0.003
+
+# Material corresponding to H=[ 159.762;178.643 ]
+ConnectiveTissue_112: d=1.12418 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.094
++el: name=Carbon; f=0.207
++el: name=Nitrogen; f=0.062
++el: name=Oxygen; f=0.622
++el: name=Sodium; f=0.006
++el: name=Sulfur; f=0.006
++el: name=Chlorine; f=0.003
+
+# Material corresponding to H=[ 178.643;197.524 ]
+ConnectiveTissue_113: d=1.13861 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.094
++el: name=Carbon; f=0.207
++el: name=Nitrogen; f=0.062
++el: name=Oxygen; f=0.622
++el: name=Sodium; f=0.006
++el: name=Sulfur; f=0.006
++el: name=Chlorine; f=0.003
+
+# Material corresponding to H=[ 197.524;216.406 ]
+ConnectiveTissue_114: d=1.14438 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.094
++el: name=Carbon; f=0.207
++el: name=Nitrogen; f=0.062
++el: name=Oxygen; f=0.622
++el: name=Sodium; f=0.006
++el: name=Sulfur; f=0.006
++el: name=Chlorine; f=0.003
+
+# Material corresponding to H=[ 216.406;230 ]
+ConnectiveTissue_115: d=1.14503 g/cm3 ; n=7; 
++el: name=Hydrogen; f=0.094
++el: name=Carbon; f=0.207
++el: name=Nitrogen; f=0.062
++el: name=Oxygen; f=0.622
++el: name=Sodium; f=0.006
++el: name=Sulfur; f=0.006
++el: name=Chlorine; f=0.003
+
+# Material corresponding to H=[ 230;247.42 ]
+Sternum_116: d=1.15031 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 247.42;264.84 ]
+Sternum_117: d=1.16032 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 264.84;282.259 ]
+Sternum_118: d=1.17033 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 282.259;299.679 ]
+Sternum_119: d=1.18034 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 299.679;317.099 ]
+Sternum_120: d=1.19035 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 317.099;334.519 ]
+Sternum_121: d=1.20036 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 334.519;351.939 ]
+Sternum_122: d=1.21037 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 351.939;369.359 ]
+Sternum_123: d=1.22038 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 369.359;386.778 ]
+Sternum_124: d=1.2304 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 386.778;404.198 ]
+Sternum_125: d=1.24041 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 404.198;421.618 ]
+Sternum_126: d=1.25039 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 421.618;439.038 ]
+Sternum_127: d=1.26036 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 439.038;456.458 ]
+Sternum_128: d=1.27033 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 456.458;469 ]
+Sternum_129: d=1.27891 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.078
++el: name=Carbon; f=0.316
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.04
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.085
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 469;486.192 ]
+Sacrummale_130: d=1.2875 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.074
++el: name=Carbon; f=0.302
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.045
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.098
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 486.192;503.384 ]
+Sacrummale_131: d=1.2975 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.074
++el: name=Carbon; f=0.302
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.045
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.098
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 503.384;520.576 ]
+Sacrummale_132: d=1.3075 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.074
++el: name=Carbon; f=0.302
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.045
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.098
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 520.576;529 ]
+Sacrummale_133: d=1.31495 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.074
++el: name=Carbon; f=0.302
++el: name=Nitrogen; f=0.037
++el: name=Oxygen; f=0.438
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.045
++el: name=Sulfur; f=0.002
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.098
++el: name=Iron; f=0.001
+
+# Material corresponding to H=[ 529;546.785 ]
+Vertcolwhole_134: d=1.3224 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.071
++el: name=Carbon; f=0.258
++el: name=Nitrogen; f=0.036
++el: name=Oxygen; f=0.472
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.051
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.105
+
+# Material corresponding to H=[ 546.785;564.57 ]
+Vertcolwhole_135: d=1.3324 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.071
++el: name=Carbon; f=0.258
++el: name=Nitrogen; f=0.036
++el: name=Oxygen; f=0.472
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.051
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.105
+
+# Material corresponding to H=[ 564.57;582.356 ]
+Vertcolwhole_136: d=1.3424 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.071
++el: name=Carbon; f=0.258
++el: name=Nitrogen; f=0.036
++el: name=Oxygen; f=0.472
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.051
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.105
+
+# Material corresponding to H=[ 582.356;600.141 ]
+Vertcolwhole_137: d=1.3524 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.071
++el: name=Carbon; f=0.258
++el: name=Nitrogen; f=0.036
++el: name=Oxygen; f=0.472
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.051
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.105
+
+# Material corresponding to H=[ 600.141;617.926 ]
+Vertcolwhole_138: d=1.3624 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.071
++el: name=Carbon; f=0.258
++el: name=Nitrogen; f=0.036
++el: name=Oxygen; f=0.472
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.051
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.105
+
+# Material corresponding to H=[ 617.926;635 ]
+Vertcolwhole_139: d=1.3722 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.071
++el: name=Carbon; f=0.258
++el: name=Nitrogen; f=0.036
++el: name=Oxygen; f=0.472
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.051
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.105
+
+# Material corresponding to H=[ 635;651.832 ]
+Sacrumfemale_140: d=1.382 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.066
++el: name=Carbon; f=0.271
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.058
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.125
+
+# Material corresponding to H=[ 651.832;668.663 ]
+Sacrumfemale_141: d=1.392 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.066
++el: name=Carbon; f=0.271
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.058
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.125
+
+# Material corresponding to H=[ 668.663;685.495 ]
+Sacrumfemale_142: d=1.402 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.066
++el: name=Carbon; f=0.271
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.058
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.125
+
+# Material corresponding to H=[ 685.495;686 ]
+Sacrumfemale_143: d=1.40715 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.066
++el: name=Carbon; f=0.271
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.058
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.125
+
+# Material corresponding to H=[ 686;704.161 ]
+VertcolC4exclcartilage_144: d=1.4123 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.063
++el: name=Carbon; f=0.261
++el: name=Nitrogen; f=0.039
++el: name=Oxygen; f=0.436
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.061
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.133
+
+# Material corresponding to H=[ 704.161;722.323 ]
+VertcolC4exclcartilage_145: d=1.4223 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.063
++el: name=Carbon; f=0.261
++el: name=Nitrogen; f=0.039
++el: name=Oxygen; f=0.436
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.061
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.133
+
+# Material corresponding to H=[ 722.323;740.484 ]
+VertcolC4exclcartilage_146: d=1.4323 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.063
++el: name=Carbon; f=0.261
++el: name=Nitrogen; f=0.039
++el: name=Oxygen; f=0.436
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.061
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.133
+
+# Material corresponding to H=[ 740.484;758.646 ]
+VertcolC4exclcartilage_147: d=1.4423 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.063
++el: name=Carbon; f=0.261
++el: name=Nitrogen; f=0.039
++el: name=Oxygen; f=0.436
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.061
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.133
+
+# Material corresponding to H=[ 758.646;767 ]
+VertcolC4exclcartilage_148: d=1.4496 g/cm3 ; n=11; 
++el: name=Hydrogen; f=0.063
++el: name=Carbon; f=0.261
++el: name=Nitrogen; f=0.039
++el: name=Oxygen; f=0.436
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.061
++el: name=Sulfur; f=0.003
++el: name=Chlorine; f=0.001
++el: name=Potassium; f=0.001
++el: name=Calcium; f=0.133
+
+# Material corresponding to H=[ 767;784.256 ]
+Claviclescapula_149: d=1.4569 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 784.256;801.512 ]
+Claviclescapula_150: d=1.4669 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 801.512;818.768 ]
+Claviclescapula_151: d=1.4769 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 818.768;836.024 ]
+Claviclescapula_152: d=1.4869 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 836.024;853.28 ]
+Claviclescapula_153: d=1.4969 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 853.28;870.536 ]
+Claviclescapula_154: d=1.5069 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 870.536;887.792 ]
+Claviclescapula_155: d=1.5169 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 887.792;905.048 ]
+Claviclescapula_156: d=1.5269 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 905.048;922.304 ]
+Claviclescapula_157: d=1.5369 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 922.304;939.56 ]
+Claviclescapula_158: d=1.5469 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 939.56;956.816 ]
+Claviclescapula_159: d=1.5569 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 956.816;974.072 ]
+Claviclescapula_160: d=1.5669 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 974.072;991.328 ]
+Claviclescapula_161: d=1.5769 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 991.328;1008.58 ]
+Claviclescapula_162: d=1.5869 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 1008.58;1011 ]
+Claviclescapula_163: d=1.5926 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.06
++el: name=Carbon; f=0.313
++el: name=Nitrogen; f=0.031
++el: name=Oxygen; f=0.37
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.001
++el: name=Phosphor; f=0.07
++el: name=Sulfur; f=0.002
++el: name=Calcium; f=0.152
+
+# Material corresponding to H=[ 1011;1028.54 ]
+Cranium_164: d=1.5983 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1028.54;1046.08 ]
+Cranium_165: d=1.6083 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1046.08;1063.62 ]
+Cranium_166: d=1.6183 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1063.62;1081.15 ]
+Cranium_167: d=1.6283 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1081.15;1098.69 ]
+Cranium_168: d=1.6383 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1098.69;1116.23 ]
+Cranium_169: d=1.6483 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1116.23;1125 ]
+Cranium_170: d=1.6558 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.05
++el: name=Carbon; f=0.212
++el: name=Nitrogen; f=0.04
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.081
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.176
+
+# Material corresponding to H=[ 1125;1142.36 ]
+Mandible_171: d=1.6633 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1142.36;1159.72 ]
+Mandible_172: d=1.6733 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1159.72;1177.08 ]
+Mandible_173: d=1.6833 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1177.08;1194.44 ]
+Mandible_174: d=1.6933 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1194.44;1211.81 ]
+Mandible_175: d=1.7033 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1211.81;1229.17 ]
+Mandible_176: d=1.7133 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1229.17;1246.53 ]
+Mandible_177: d=1.7233 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1246.53;1250 ]
+Mandible_178: d=1.7293 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.046
++el: name=Carbon; f=0.199
++el: name=Nitrogen; f=0.041
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.086
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.187
+
+# Material corresponding to H=[ 1250;1267.4 ]
+Femurcylindricalshaft_179: d=1.7353 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1267.4;1284.8 ]
+Femurcylindricalshaft_180: d=1.7453 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1284.8;1302.21 ]
+Femurcylindricalshaft_181: d=1.7553 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1302.21;1319.61 ]
+Femurcylindricalshaft_182: d=1.7653 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1319.61;1337.01 ]
+Femurcylindricalshaft_183: d=1.7753 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1337.01;1354.41 ]
+Femurcylindricalshaft_184: d=1.7853 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1354.41;1371.81 ]
+Femurcylindricalshaft_185: d=1.7953 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1371.81;1389.22 ]
+Femurcylindricalshaft_186: d=1.8053 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1389.22;1406.62 ]
+Femurcylindricalshaft_187: d=1.8153 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1406.62;1424.02 ]
+Femurcylindricalshaft_188: d=1.8253 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1424.02;1441.42 ]
+Femurcylindricalshaft_189: d=1.8353 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1441.42;1458.82 ]
+Femurcylindricalshaft_190: d=1.8453 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1458.82;1476.23 ]
+Femurcylindricalshaft_191: d=1.8553 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1476.23;1493.63 ]
+Femurcylindricalshaft_192: d=1.8653 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1493.63;1511.03 ]
+Femurcylindricalshaft_193: d=1.8753 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1511.03;1528.43 ]
+Femurcylindricalshaft_194: d=1.8853 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1528.43;1534 ]
+Femurcylindricalshaft_195: d=1.8919 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.042
++el: name=Carbon; f=0.204
++el: name=Nitrogen; f=0.038
++el: name=Oxygen; f=0.415
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.093
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.202
+
+# Material corresponding to H=[ 1534;1551.46 ]
+Corticalbone_196: d=1.8985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1551.46;1568.91 ]
+Corticalbone_197: d=1.9085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1568.91;1586.37 ]
+Corticalbone_198: d=1.9185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1586.37;1603.82 ]
+Corticalbone_199: d=1.9285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1603.82;1621.28 ]
+Corticalbone_200: d=1.9385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1621.28;1638.73 ]
+Corticalbone_201: d=1.9485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1638.73;1656.19 ]
+Corticalbone_202: d=1.9585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1656.19;1673.64 ]
+Corticalbone_203: d=1.9685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1673.64;1691.1 ]
+Corticalbone_204: d=1.9785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1691.1;1708.55 ]
+Corticalbone_205: d=1.9885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1708.55;1726.01 ]
+Corticalbone_206: d=1.9985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1726.01;1743.47 ]
+Corticalbone_207: d=2.0085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1743.47;1760.92 ]
+Corticalbone_208: d=2.0185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1760.92;1778.38 ]
+Corticalbone_209: d=2.0285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1778.38;1795.83 ]
+Corticalbone_210: d=2.0385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1795.83;1813.29 ]
+Corticalbone_211: d=2.0485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1813.29;1830.74 ]
+Corticalbone_212: d=2.0585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1830.74;1848.2 ]
+Corticalbone_213: d=2.0685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1848.2;1865.65 ]
+Corticalbone_214: d=2.0785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1865.65;1883.11 ]
+Corticalbone_215: d=2.0885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1883.11;1900.56 ]
+Corticalbone_216: d=2.0985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1900.56;1918.02 ]
+Corticalbone_217: d=2.1085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1918.02;1935.48 ]
+Corticalbone_218: d=2.1185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1935.48;1952.93 ]
+Corticalbone_219: d=2.1285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1952.93;1970.39 ]
+Corticalbone_220: d=2.1385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1970.39;1987.84 ]
+Corticalbone_221: d=2.1485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 1987.84;2005.3 ]
+Corticalbone_222: d=2.1585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2005.3;2022.75 ]
+Corticalbone_223: d=2.1685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2022.75;2040.21 ]
+Corticalbone_224: d=2.1785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2040.21;2057.66 ]
+Corticalbone_225: d=2.1885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2057.66;2075.12 ]
+Corticalbone_226: d=2.1985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2075.12;2092.57 ]
+Corticalbone_227: d=2.2085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2092.57;2110.03 ]
+Corticalbone_228: d=2.2185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2110.03;2127.49 ]
+Corticalbone_229: d=2.2285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2127.49;2144.94 ]
+Corticalbone_230: d=2.2385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2144.94;2162.4 ]
+Corticalbone_231: d=2.2485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2162.4;2179.85 ]
+Corticalbone_232: d=2.2585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2179.85;2197.31 ]
+Corticalbone_233: d=2.2685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2197.31;2214.76 ]
+Corticalbone_234: d=2.2785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2214.76;2232.22 ]
+Corticalbone_235: d=2.2885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2232.22;2249.67 ]
+Corticalbone_236: d=2.2985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2249.67;2267.13 ]
+Corticalbone_237: d=2.3085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2267.13;2284.58 ]
+Corticalbone_238: d=2.3185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2284.58;2302.04 ]
+Corticalbone_239: d=2.3285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2302.04;2319.5 ]
+Corticalbone_240: d=2.3385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2319.5;2336.95 ]
+Corticalbone_241: d=2.3485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2336.95;2354.41 ]
+Corticalbone_242: d=2.3585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2354.41;2371.86 ]
+Corticalbone_243: d=2.3685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2371.86;2389.32 ]
+Corticalbone_244: d=2.3785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2389.32;2406.77 ]
+Corticalbone_245: d=2.3885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2406.77;2424.23 ]
+Corticalbone_246: d=2.3985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2424.23;2441.68 ]
+Corticalbone_247: d=2.4085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2441.68;2459.14 ]
+Corticalbone_248: d=2.4185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2459.14;2476.59 ]
+Corticalbone_249: d=2.4285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2476.59;2494.05 ]
+Corticalbone_250: d=2.4385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2494.05;2511.51 ]
+Corticalbone_251: d=2.4485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2511.51;2528.96 ]
+Corticalbone_252: d=2.4585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2528.96;2546.42 ]
+Corticalbone_253: d=2.4685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2546.42;2563.87 ]
+Corticalbone_254: d=2.4785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2563.87;2581.33 ]
+Corticalbone_255: d=2.4885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2581.33;2598.78 ]
+Corticalbone_256: d=2.4985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2598.78;2616.24 ]
+Corticalbone_257: d=2.5085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2616.24;2633.69 ]
+Corticalbone_258: d=2.5185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2633.69;2651.15 ]
+Corticalbone_259: d=2.5285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2651.15;2668.6 ]
+Corticalbone_260: d=2.5385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2668.6;2686.06 ]
+Corticalbone_261: d=2.5485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2686.06;2703.52 ]
+Corticalbone_262: d=2.5585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2703.52;2720.97 ]
+Corticalbone_263: d=2.5685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2720.97;2738.43 ]
+Corticalbone_264: d=2.5785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2738.43;2755.88 ]
+Corticalbone_265: d=2.5885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2755.88;2773.34 ]
+Corticalbone_266: d=2.5985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2773.34;2790.79 ]
+Corticalbone_267: d=2.6085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2790.79;2808.25 ]
+Corticalbone_268: d=2.6185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2808.25;2825.7 ]
+Corticalbone_269: d=2.6285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2825.7;2843.16 ]
+Corticalbone_270: d=2.6385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2843.16;2860.61 ]
+Corticalbone_271: d=2.6485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2860.61;2878.07 ]
+Corticalbone_272: d=2.6585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2878.07;2895.53 ]
+Corticalbone_273: d=2.6685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2895.53;2912.98 ]
+Corticalbone_274: d=2.6785 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2912.98;2930.44 ]
+Corticalbone_275: d=2.6885 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2930.44;2947.89 ]
+Corticalbone_276: d=2.6985 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2947.89;2965.35 ]
+Corticalbone_277: d=2.7085 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2965.35;2982.8 ]
+Corticalbone_278: d=2.7185 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 2982.8;3000.26 ]
+Corticalbone_279: d=2.7285 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 3000.26;3017.71 ]
+Corticalbone_280: d=2.7385 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 3017.71;3035.17 ]
+Corticalbone_281: d=2.7485 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 3035.17;3052.62 ]
+Corticalbone_282: d=2.7585 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 3052.62;3070.08 ]
+Corticalbone_283: d=2.7685 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 3070.08;3072 ]
+Corticalbone_284: d=2.77405 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225
+
+# Material corresponding to H=[ 3072;3073 ]
+Corticalbone_285: d=2.7746 g/cm3 ; n=9; 
++el: name=Hydrogen; f=0.034
++el: name=Carbon; f=0.155
++el: name=Nitrogen; f=0.042
++el: name=Oxygen; f=0.435
++el: name=Sodium; f=0.001
++el: name=Magnesium; f=0.002
++el: name=Phosphor; f=0.103
++el: name=Sulfur; f=0.003
++el: name=Calcium; f=0.225

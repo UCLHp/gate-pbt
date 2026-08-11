@@ -1,0 +1,21 @@
+Title: CT Calibration Curve: HOST-10027 Electron_Density
+Time: 19 February 2025 15:33:35
+Page 1 Beam Configuration 16.1.4
+Title: CT Calibration Curve: HOST-10027 Electron_Density
+Time: 19 February 2025 15:33:35
+Page 1 of 1 Beam Configuration 16.1.4
+X = HU Value [HU]
+Y = Rel. Density []
+X Y
+-1050.0 0.000
+-1000.0 0.000
+-793.0 0.190
+-505.0 0.489
+-68.0 0.949
+-30.0 0.976
+-3.0 1.000
+40.0 1.043
+50.0 1.052
+221.0 1.110
+933.0 1.449
+3073.0 2.470
