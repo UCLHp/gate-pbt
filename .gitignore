@@ -36,5 +36,8 @@ FRED
 gamma_results
 gamma_analysis_results.csv
 
+resampled_dosemask.mhd
+resampled_dosemask.raw
+
 # numeric only folders in root
 [0-9]*/
