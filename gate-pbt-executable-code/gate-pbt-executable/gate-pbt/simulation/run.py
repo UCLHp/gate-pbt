@@ -462,15 +462,17 @@ def main():
         
         debug_print("--- Reorientating image to enforce positive directionality ---")
         ct_reor = reorientate.force_positive_directionality(ctimg)
+        # TODO: FIX THIS FOR NON HFS, BY FORCING [1, 1, 1] YOU BREAK OVERRIDES
 
         debug_print(f"Type after reorientate: {type(ct_reor)}")
         debug_print('Overriding -1000')
 
-        # TODO: Check for density overrides and apply
+       
         debug_print("\n--- Processing ROI density overrides ---")
         roi_density_dict = {}
 
         structdcm = pydicom.dcmread(struct_file)
+
         
         # Create a mapping of ROI Number to ROI Name
         roi_name_dict = {
@@ -503,7 +505,6 @@ def main():
             ct_reor = overrides.override_hu(ct_reor, struct_file, structure, hu_value)
 
         # NOW crop after all overrides are applied
-        
         # Crop image to structure
         crop_to_contour="Dose 0.1[%]"
         debug_print(f"\n--- Cropping img to {crop_to_contour} ---")
@@ -512,8 +513,6 @@ def main():
         debug_print("\n--- Overriding all external structures to air ---")
         debug_print(f"Type after overrides: {type(ct_cropped)}")
         ct_cropped = overrides.set_air_external( ct_cropped, struct_file )
-
-        
         
         # TODO: set automatically for different cropping / override options
         ct_for_simulation = "ct_cropped.mhd"
@@ -522,8 +521,11 @@ def main():
         itk.imwrite(ct_cropped, ct_sim_path)
         
         debug_print("\n--- Generate dose mask from zSurface for gamma analysis ---")
-        dosemask = overrides.get_structure_mask( ct_cropped, struct_file, "zSurface" ) # using 0.1 % dose to get something running - zSurface should be used
+        dosemask = overrides.get_structure_mask( ct_cropped, struct_file, "zSurface" ) 
         itk.imwrite( dosemask, join(sim_dir,"data","DoseMask.mhd") )
+    
+
+        
         
         # Add number fractions to config
         nfractions = plandcm.FractionGroupSequence[0].NumberOfFractionsPlanned

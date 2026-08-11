@@ -37,6 +37,15 @@ def crop_mhd(img, mincorner, maxcorner, margin):
     """
     
     dims = np.array(img.GetLargestPossibleRegion().GetSize())
+
+    print(f"[DEBUG crop_mhd] Image dims: {dims}")
+    print(f"[DEBUG crop_mhd] Image origin: {img.GetOrigin()}")
+    print(f"[DEBUG crop_mhd] Image spacing: {img.GetSpacing()}")
+    print(f"[DEBUG crop_mhd] Image direction: {np.array(img.GetDirection())}")
+    print(f"[DEBUG crop_mhd] mincorner (from struct): {mincorner}")
+    print(f"[DEBUG crop_mhd] maxcorner (from struct): {maxcorner}")
+
+    
     if len(dims) != 3:
         print("only 3D images supported in crop_mhd")
         exit(0)
@@ -44,6 +53,7 @@ def crop_mhd(img, mincorner, maxcorner, margin):
     # Transform corner coords to indices of img array
     min_wrong = np.array(img.TransformPhysicalPointToIndex( mincorner ))
     max_wrong = np.array(img.TransformPhysicalPointToIndex( maxcorner ))
+    
     # Ensure min and max correct for all patient orientations
     # (redundant if we reorientate for positive axes directionality)
     min_indices, max_indices = [],[]

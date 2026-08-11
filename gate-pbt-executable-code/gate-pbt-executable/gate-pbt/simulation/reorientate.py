@@ -35,12 +35,24 @@ def force_positive_directionality( image ):
         img = itk.imread( image )
     else:
         #Assume we have itk image object
-        img = image   
+        img = image
+
+    print(f"[DEBUG reorient] BEFORE - Origin: {img.GetOrigin()}")
+    print(f"[DEBUG reorient] BEFORE - Direction: {np.array(img.GetDirection())}")  
 
     spacing = img.GetSpacing()
     origin = img.GetOrigin()
     size = img.GetLargestPossibleRegion().GetSize()
     direction = np.array( img.GetDirection()*[1,1,1] )
+
+    print(f"[DEBUG reorient] Input direction diagonal: {direction}")
+    print(f"[DEBUG reorient] Input origin: {origin}")
+    print(f"[DEBUG reorient] Input size: {size}")
+    print(f"[DEBUG reorient] Input spacing: {spacing}")
+    
+    # Calculate image bounds BEFORE transformation
+    end_coords = [origin[i] + (size[i]-1)*spacing[i]*direction[i] for i in range(3)]
+    print(f"[DEBUG reorient] BEFORE transform - image Z range: {min(origin[2], end_coords[2])} to {max(origin[2], end_coords[2])}")
     
     new_origin=[]
     for d,o,sz,sp in zip( direction, origin, size, spacing ):
@@ -67,11 +79,16 @@ def force_positive_directionality( image ):
         exit(0)
 
     if rot_arr is not None:
-        #Image shape will change for 90 degree rotations (decubitis positions)        
         new_img = itk.image_from_array( rot_arr )
         new_img.CopyInformation(img)
         new_img.SetOrigin( new_origin )
-        new_img.SetDirection( np.array([[1,0,0],[0,1,0],[0,0,1]]) )        
+        new_img.SetDirection( np.array([[1,0,0],[0,1,0],[0,0,1]]) )
+        
+        new_size = new_img.GetLargestPossibleRegion().GetSize()
+        new_end = [new_origin[i] + (new_size[i]-1)*spacing[i] for i in range(3)]
+        print(f"[DEBUG reorient] AFTER transform - new origin: {new_origin}")
+        print(f"[DEBUG reorient] AFTER transform - image Z range: {new_origin[2]} to {new_end[2]}")
+        
         return new_img
     else:
         return img

@@ -31,3 +31,5 @@ gamma_results.xlsx
 
 # numeric only folders in root
 [0-9]*/
+
+PATIENT_DICOM_TEST/
