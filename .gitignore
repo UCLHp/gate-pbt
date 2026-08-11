@@ -39,5 +39,7 @@ gamma_analysis_results.csv
 resampled_dosemask.mhd
 resampled_dosemask.raw
 
+old/
+
 # numeric only folders in root
 [0-9]*/
