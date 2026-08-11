@@ -1,10 +1,7 @@
 {
   "_comment1": "JSON file holding system config info for simulations",
-
   "MAC_TEMPLATE": "mac_template.txt",
-
   "CONFIG_FILE": "simconfig.ini",
-
   "DATA_TO_COPY": [
     "GateMaterials.db",
     "PhilipsBody-HU2mat.txt",
@@ -13,17 +10,17 @@
     "SourceDescriptionFile.txt",
     "emcalc.txt"
   ],
-
+  "_comment2": "Verification (water phantom) runs copy these files INSTEAD of the patient lookup tables. Key = destination name used by the mac files, value = source file in templates/",
+  "VERIFICATION_DATA_SWAPS": {
+    "PhilipsBody-HU2mat.txt": "Water-HU2mat.txt",
+    "PhilipsBody-HUmaterials.db": "Water-HUmaterials.db"
+  },
   "MACS_TO_COPY": ["verbose.mac", "visu.mac"],
-
   "CLUSTER_NFS": "/mnt/clustshare",
-
-  "_comment2":  "Dict of rangeshifter WET and physical thickness",
+  "_comment3": "Dict of rangeshifter WET and physical thickness",
   "RS_WET_OPTIONS": {
     "57.0": 50,
     "34.0": 30,
     "23.0": 20
   }
-
-
 }
