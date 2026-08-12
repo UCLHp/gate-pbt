@@ -1,16 +1,22 @@
 # -*- mode: python ; coding: utf-8 -*-
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules, collect_all
 import os
 
 hiddenimports = collect_submodules('itk')
 # collect_data_files includes .py, .pyi, .pyd, etc. with relative folder paths
 itk_datas = collect_data_files('itk', include_py_files=True)
 
+# Sweep the whole of scipy. PyInstaller's built-in scipy hook misses several
+# dynamically-loaded extension modules (_arpack, _propack, unuran_wrapper,
+# _highs, givens_elimination, _traversal), which fail at import time with a
+# misleading "circular import" error. Returns (datas, binaries, hiddenimports).
+scipy_datas, scipy_binaries, scipy_hidden = collect_all('scipy')
+
 a = Analysis(
     ['analysis\\analysis.py'],
-    binaries=[],
-    datas=itk_datas,
-    hiddenimports=hiddenimports,
+    binaries=scipy_binaries,
+    datas=itk_datas + scipy_datas,
+    hiddenimports=hiddenimports + scipy_hidden,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

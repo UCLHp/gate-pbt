@@ -162,16 +162,6 @@ def full_analysis( outputdir ):
             
         print("\nAnalyzing field: ", field)
 
-        # ------------------------------------------------------------------
-        # CHANGE A: track which dose-to-water images exist for this field.
-        #   postsim_d2w_path = our HU->water conversion (always produced)
-        #   gate_d2w_path    = Gate's on-the-fly D2W (only if enabled in .mac)
-        # Initialised to None so downstream blocks can test for them safely
-        # instead of relying on a variable defined inside an earlier if-block.
-        # ------------------------------------------------------------------
-        postsim_d2w_path = None
-        gate_d2w_path = None
-
         print("  Merging results...")
         mergedfiles = mergeresults.merge_results( outputdir, field )
         print("  Merged files: ", [basename(f) for f in mergedfiles])
@@ -222,8 +212,6 @@ def full_analysis( outputdir ):
             ##ctpath = os.path.join( outputdir, ctname )
             d2wimg = join(outputdir, field+"_AbsoluteDoseToWater.mhd")
             dosetowater.convert_dose_to_water( ctpath, scaledimg_path, emcalc_path, hu2mat_path, output=d2wimg )
-            # CHANGE A: remember the post-sim D2W for later blocks
-            postsim_d2w_path = d2wimg
             
             print("  Converting mhd dose to dicom")
             dcm_out = join(outputdir, field+"_AbsoluteDoseToWater.dcm")
@@ -278,20 +266,12 @@ def full_analysis( outputdir ):
 
         
             
-            # CHANGE B: original four labels kept EXACTLY as they were so any
-            # downstream parsing of gamma_values.txt still works. The PostSim_*
-            # duplicates below make the source explicit now that Gate's
-            # on-the-fly D2W can also appear in this file.
             with open(output_path_gamma, 'a') as f:
                 f.write(f"\n--- {field} ---\n")
                 f.write(f"Gamma_33_GLOBAL = {pass_rate_33}\n")
                 f.write(f"Gamma_22_GLOBAL= {pass_rate_22}\n")
                 f.write(f"Gamma_33_LOCAL= {pass_rate_33_local}\n")
                 f.write(f"Gamma_22_LOCAL= {pass_rate_22_local}\n")
-                f.write(f"PostSim_D2W_Gamma_33_GLOBAL= {pass_rate_33}\n")
-                f.write(f"PostSim_D2W_Gamma_22_GLOBAL= {pass_rate_22}\n")
-                f.write(f"PostSim_D2W_Gamma_33_LOCAL= {pass_rate_33_local}\n")
-                f.write(f"PostSim_D2W_Gamma_22_LOCAL= {pass_rate_22_local}\n")
             
         print(f"Gamma results file updated and saved at: {output_path_gamma}")
         
@@ -312,54 +292,21 @@ def full_analysis( outputdir ):
             scaledimg_path = join(outputdir, field+"_Gate_DoseToWater.mhd")
             write_scaled_dose( doseimg, scaledimg_path, scalefactor )
 
-            # CHANGE A: remember Gate's D2W so later blocks can prefer it
-            gate_d2w_path = scaledimg_path
-
             print("  Converting Gate dose-to-water to dicom")
             dcm_out = join(outputdir, field+"_Gate_DoseToWater.dcm")
             mhdtodicom.mhd2dcm( scaledimg_path, path_to_dcmdose, dcm_out )
             
-            print("  Performing gamma analysis 3%/3mm: Gate D2W vs Eclipse")
-            gamma_img, gamma_img_local = gamma.gamma_image(  scaledimg_path, tps_dose, 3, 3 )
+            print("  Performing gamma analysis for GD2W; 3%/3mm")
+            gamma_img, gamma_img_local = gamma.gamma_image(  scaledimg_path, tps_dose, 3, 3 )                   #### NEED SCALED IMAGE HERE
             itk.imwrite(gamma_img, join(outputdir, field+"_Gamma_GD2W_33.mhd") )
             itk.imwrite(gamma_img_local, join(outputdir, field+"_Gamma_GD2W_33_local.mhd") )
-            gd2w_pass_rate_33 = gamma.get_pass_rate( gamma_img )
-            gd2w_pass_rate_33_local = gamma.get_pass_rate( gamma_img_local )
-            print("   *** Gamma GD2W pass rate @ 3%/3mm GLOBAL = {}%".format( round(gd2w_pass_rate_33,2) )) 
-            print("   *** Gamma GD2W pass rate @ 3%/3mm LOCAL = {}%".format( round(gd2w_pass_rate_33_local,2) ))           
+            pass_rate = gamma.get_pass_rate( gamma_img )
+            print("   *** Gamma GD2W pass rate @ 3%/3mm GLOBAL = {}%".format( round(pass_rate,2) )) 
+            pass_rate_local = gamma.get_pass_rate( gamma_img_local )
+            print("   *** Gamma GD2W pass rate @ 3%/3mm LOCAL = {}%".format( round(pass_rate_local,2) ))           
+            print("  Converting gamma image to dicom")
 
-            # CHANGE C: this dicom conversion was previously dead code - the
-            # path was built but mhd2dcm() was never called. Mirrors the
-            # post-sim block, which exports the LOCAL gamma image.
-            print("  Converting Gate D2W gamma local image to dicom")
-            gamma_dcm_local = join(outputdir, field+"_Gamma_GD2W_33_local.dcm")
-            mhdtodicom.mhd2dcm( gamma_img_local, path_to_dcmdose, gamma_dcm_local )
-
-            # CHANGE C: 2%/2mm added so Gate D2W gets the same four metrics
-            # (global + local at both criteria) as the post-sim D2W.
-            print("  Performing gamma analysis 2%/2mm: Gate D2W vs Eclipse")
-            gamma_img_22, gamma_img_22_local = gamma.gamma_image( scaledimg_path, tps_dose, 2, 2 )
-            itk.imwrite(gamma_img_22, join(outputdir, field+"_Gamma_GD2W_22.mhd") )
-            itk.imwrite(gamma_img_22_local, join(outputdir, field+"_Gamma_GD2W_22_local.mhd") )
-            gd2w_pass_rate_22 = gamma.get_pass_rate( gamma_img_22 )
-            gd2w_pass_rate_22_local = gamma.get_pass_rate( gamma_img_22_local )
-            print("   *** Gamma GD2W pass rate @ 2%/2mm GLOBAL = {}%".format( round(gd2w_pass_rate_22,2) ))
-            print("   *** Gamma GD2W pass rate @ 2%/2mm LOCAL = {}%".format( round(gd2w_pass_rate_22_local,2) ))
-
-            # CHANGE C: GD2W pass rates were previously printed to console only
-            # and never recorded. Appended to the same gamma_values.txt.
-            with open(output_path_gamma, 'a') as f:
-                f.write(f"GateD2W_Gamma_33_GLOBAL= {gd2w_pass_rate_33}\n")
-                f.write(f"GateD2W_Gamma_22_GLOBAL= {gd2w_pass_rate_22}\n")
-                f.write(f"GateD2W_Gamma_33_LOCAL= {gd2w_pass_rate_33_local}\n")
-                f.write(f"GateD2W_Gamma_22_LOCAL= {gd2w_pass_rate_22_local}\n")
-            print(f"  Gate D2W gamma results appended to: {output_path_gamma}")
-
-        else:
-            # CHANGE C: explicit log line so "Gate D2W disabled in the .mac" is
-            # distinguishable from "the merge silently failed to find it".
-            print("\n  No Gate on-the-fly DoseToWater found ({}) - skipping.".format(dose2water))
-            print("  (enableDoseToWater is false in the .mac, or no D2W files were merged)")
+            gamma_dcm = join(outputdir, field+"_Gamma_GD2W_33.dcm")
 
             
 
@@ -372,34 +319,17 @@ def full_analysis( outputdir ):
             print("\n")
             print("Calculating uncertainty")
             doseUncert_path = join(outputdir, dose)
-
-            # ------------------------------------------------------------------
-            # CHANGE D: prefer Gate's on-the-fly D2W when it exists, else fall
-            # back to our post-sim conversion. Previously hardcoded to d2wimg,
-            # which also raised NameError if the merged-Dose block never ran.
-            # ------------------------------------------------------------------
-            if gate_d2w_path is not None:
-                dose2W = gate_d2w_path
-                print("  Using GATE on-the-fly DoseToWater for uncertainty")
-            elif postsim_d2w_path is not None:
-                dose2W = postsim_d2w_path
-                print("  Using POST-SIM DoseToWater for uncertainty")
-            else:
-                dose2W = None
-                print("  WARNING: no dose-to-water image available "
-                      "- skipping uncertainty calculation")
-
-            if dose2W is not None:
-                print("Number of Primaries Simulated", nsim)
-                results = getUncertaintyPlots(doseUncert_path, dose2W, nsim, nreq)
-                output_path = os.path.join(outputdir, 'uncertainty_metrics.txt')
-                with open(output_path, 'w') as f:
-                    headers = '\t'.join(results.keys())
-                    values = '\t'.join(str(x) for x in results.values())
-                    f.write(headers + '\n')
-                    f.write(values + '\n')
-
-                print(f"File saved to: {output_path}")
+            dose2W = d2wimg
+            print("Number of Primaries Simulated", nsim)
+            results = getUncertaintyPlots(doseUncert_path, dose2W, nsim, nreq)
+            output_path = os.path.join(outputdir, 'uncertainty_metrics.txt')
+            with open(output_path, 'w') as f:
+                headers = '\t'.join(results.keys())
+                values = '\t'.join(str(x) for x in results.values())
+                f.write(headers + '\n')
+                f.write(values + '\n')
+            
+            print(f"File saved to: {output_path}")
 
         # Dose To Water MHD file
         
@@ -508,3 +438,7 @@ if __name__=="__main__":
     outputdir = get_output_directory()
     print(outputdir)
     full_analysis( outputdir )
+    
+    
+    
+    
