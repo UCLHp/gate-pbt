@@ -61,3 +61,8 @@ dependencies = [
     "wincertstore==0.2",
     "xxhash==3.5.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.16.0",
+]

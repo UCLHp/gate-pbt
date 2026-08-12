@@ -1,19 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules, collect_all
 
 hiddenimports = collect_submodules('itk')
-
-# collect_data_files includes .py, .pyi, .pyd, etc. with relative folder paths
 itk_datas = collect_data_files('itk', include_py_files=True)
-
+scipy_datas, scipy_binaries, scipy_hidden = collect_all('scipy')
 
 a = Analysis(
     ['simulation\\run.py'],
-    binaries=[],
-    datas = itk_datas + [('templates', 'templates')],
-    hiddenimports=hiddenimports,
+    binaries=scipy_binaries,
+    datas=itk_datas + scipy_datas + [('templates', 'templates')],
+    hiddenimports=hiddenimports + scipy_hidden,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

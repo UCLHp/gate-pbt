@@ -869,6 +869,11 @@ dependencies = [
     { name = "xxhash" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pyinstaller" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "altgraph", specifier = "==0.17.4" },
@@ -927,6 +932,9 @@ requires-dist = [
     { name = "wincertstore", specifier = "==0.2" },
     { name = "xxhash", specifier = "==3.5.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pyinstaller", specifier = ">=6.16.0" }]
 
 [[package]]
 name = "psutil"
